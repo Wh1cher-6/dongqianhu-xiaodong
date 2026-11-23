@@ -1354,6 +1354,19 @@ body.tour-on{overflow:hidden}
 .me-actions{display:flex;gap:8px;margin-top:4px}
 .me-actions .btn{flex:1;font-size:11.5px}
 
+/* ---------- 对话动作与建议分组 ---------- */
+.msg-acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+.msg-act{font-size:10px;padding:5px 10px;border:1px solid var(--line-2);border-radius:2px;background:var(--card);color:var(--ink-2)}
+.msg-act:hover{border-color:var(--clay);color:var(--clay)}
+.sug-tabs{display:flex;gap:4px;padding:0 14px 6px;overflow-x:auto;scrollbar-width:none}
+.sug-tabs::-webkit-scrollbar{display:none}
+.sug-tab{flex:none;font-family:var(--mono);font-size:8.5px;letter-spacing:.04em;padding:4px 9px;border-radius:2px;border:1px solid var(--line);color:var(--muted);background:var(--card)}
+.sug-tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.sug-list{display:flex;gap:5px;overflow-x:auto;padding:0 14px 8px;scrollbar-width:none}
+.sug-list::-webkit-scrollbar{display:none}
+.sug-list button{flex:none;font-size:10.5px;color:var(--ink-2);background:var(--paper);border:1px solid var(--line);padding:5px 10px;border-radius:2px;white-space:nowrap}
+.sug-list button:hover{border-color:var(--clay);color:var(--clay)}
+
 /* ---------- 探案 ---------- */
 .det-wrap{display:grid;grid-template-columns:1.25fr .75fr;gap:14px;margin-top:14px;align-items:start}
 .det-stage{background:#151713;border:1px solid #3e3b31;border-radius:4px;overflow:hidden;display:flex;flex-direction:column}
@@ -5812,6 +5825,7 @@ window.DQH_DATA = (function () {
     if (log) log.scrollTop = log.scrollHeight;
   }
   function addMsg(role, text, silent) {
+    if (role !== "assistant") { lastActions = []; lastMsgEl = null; }
     var wrap = document.createElement("div");
     wrap.className = "msg " + role;
     var av = role === "assistant"
@@ -5821,6 +5835,7 @@ window.DQH_DATA = (function () {
       '<div><div class="bubble">' + rich(text) + '</div>' +
       (role === "assistant" ? '<div class="m-tools"><button type="button" data-speak>语音播报</button><button type="button" data-copy>复制</button></div>' : "") + '</div>';
     $("#chatLog").appendChild(wrap);
+    if (role === "assistant") lastMsgEl = wrap;
     if (!silent) chat.push({ role: role, text: text });
     if (window.DQH_AUTH) window.DQH_AUTH.recordChat(role, text);
     if (role === "assistant") {
@@ -5833,6 +5848,30 @@ window.DQH_DATA = (function () {
     }
     scroll();
   }
+  /* ---------- 回复后的快捷动作 ---------- */
+  var lastActions = [], lastMsgEl = null;
+  function act(label, fn) { return { label: label, fn: fn }; }
+  function renderActions(list) {
+    if (!list || !list.length) return;
+    var target = lastMsgEl || $("#chatLog").lastElementChild;
+    if (!target) return;
+    var old = target.querySelector(".msg-acts");
+    if (old) old.remove();
+    var box = document.createElement("div");
+    box.className = "msg-acts";
+    list.forEach(function (a) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "msg-act";
+      b.textContent = a.label;
+      b.addEventListener("click", function () { a.fn(); });
+      box.appendChild(b);
+    });
+    target.appendChild(box);
+    scroll();
+    lastActions = [];
+  }
+
   function typing(on) {
     var el = $("#typingMsg");
     if (on) {
@@ -5872,10 +5911,107 @@ window.DQH_DATA = (function () {
     var history = /历史|由来|为什么|来历|年代|南宋|北宋|清代|关系|传说|隐居/.test(t);
     var dist = /多远|距离|怎么去|在哪|位置|导航/.test(t);
 
+    /* ---- 软件怎么用 ---- */
+    var howto = /怎么用|如何使用|这个网站|这网站|教程|不会用|功能|图标|按钮|怎么操作|怎么打开|在哪点/.test(t);
+    if (howto) {
+      if (/地图|缩放|放大|拖动/.test(t)) {
+        lastActions = [act("回到地图", function () { APP.go("map"); })];
+        return "地图可以直接拖动；滚轮或双指是连续缩放（不是一级一级跳）。\n右侧按钮从上到下：图层（勾选显示哪些点位）、交通线、HD（更清晰但更费流量）、卫星底图、全域视图、定位。\n左侧列表按人文 / 亲子 / 住宿分组，拖右边缘可以调宽，右上角箭头能收起，收起后不挡地图。";
+      }
+      if (/图层|酒店|住宿|不显示/.test(t)) {
+        lastActions = [act("打开图层", function () { APP.go("map"); setTimeout(function () { var b = $("#layersBtn"); if (b) b.click(); }, 320); })];
+        return "点地图右侧的「图层」按钮，可以分别勾选：人文古迹、亲子玩乐、住宿、服务点、交通线。\n住宿默认是关的——怕一上来满屏酒店。要用时勾上，5 处住宿就出现了，选择会记住。";
+      }
+      if (/英文|英语|语言|english|外国人/.test(t)) {
+        return "顶栏右上角的「EN / 中」按钮可以随时切换中英文，不用刷新页面。导航、标题、筛选、聊天界面、探案流程都会跟着换，景点名也会显示英文名加一句英文简介。";
+      }
+      if (/登录|账号|我的|记录|保存/.test(t)) {
+        lastActions = [act("去「我的」", function () { APP.go("me"); })];
+        return "点「我的」用手机号登录（演示版验证码直接显示在页面上）。登录后，搜索过的词和跟我的对话都会保存；同一手机号换时间回来还能看到，24 小时内不用重复登录。";
+      }
+      if (/定位|位置|蓝点/.test(t)) {
+        lastActions = [act("打开定位", function () { if (window.DQH_GEO) DQH_GEO.openPanel(); else APP.go("map"); })];
+        return "点右下角「定位未开启」或顶栏的定位图标，会弹出定位面板：可以开启定位、停止、跟随。开启后所有距离都按你所在的位置重算，地图上会出现蓝点和精度圈。位置只在你手机里算，不上传。";
+      }
+      if (/探案|石刻|遗址|线索/.test(t)) {
+        lastActions = [act("去做一次探案", function () { APP.go("stone"); })];
+        return "在「文化」页点「石像不说话，衣冠会」，或者从地图上「南宋石刻公园」的详情页进去。\n流程是四步：先观察一尊没写名字的石像、点冠帽笏板衣袖找线索，再判断他是谁，然后我用你点的证据解释，最后和武将并排看差异。大约 90 秒。";
+      }
+      if (/依据|证据|真的|可信/.test(t)) {
+        return "直接问我「这事有依据吗」，比如「西施真的住过陶公岛吗」。我会给一张证据卡，分三栏：当地怎么讲、资料能确认什么、还不能确认什么，最后给出处，还能一键跳到对应景点或文化长卷。";
+      }
+      if (/离线|断网|网络|打不开/.test(t)) {
+        return "底图来自高德，断网时瓦片会加载失败，但点位、讲解、路线文字都还在。\n如果你要现场演示，建议提前在 Wi-Fi 下打开一次，让浏览器缓存页面；手机端也可以「添加到主屏幕」，像 App 一样打开。";
+      }
+      lastActions = [act("看引导", function () { if (window.DQH_TOUR) DQH_TOUR.restart(); })];
+      return "这个网站有六个页面：地图（找点位）、路线（三条主题线）、文化（时间线与遗迹）、小东（就是我）、交通（地铁公交船）、服务（厕所停车租车），再加上「我的」存记录。\n想看完整演示，点顶栏的问号可以重播 12 步引导；或者直接问我具体功能，比如「图层怎么用」「怎么切换英文」。";
+    }
+
+    /* ---- 附近有什么 ---- */
+    if (/附近|周边|离我最近|这附近|边上有什么/.test(t)) {
+      var here = APP.getUser();
+      var all = APP.POIS.map(function (p) {
+        return { p: p, d: APP.distTo(p.wgs) };
+      }).sort(function (a, b) { return a.d - b.d; }).slice(0, 4);
+      lastActions = [act("在地图上看看", function () { APP.go("map"); })];
+      return (here.source === "gps" ? "以你现在的位置" : "以游客中心为起点（未开定位）") + "，最近的四处：\n" +
+        all.map(function (x) {
+          return "· " + x.p.name + "（" + APP.fmtDist(x.d) + "，步行约 " + APP.walkMin(x.d) + " 分钟）";
+        }).join("\n") + "\n想按类别找，可以说「最近的厕所」「哪有停车场」。";
+    }
+
+    /* ---- 交通 ---- */
+    if (/地铁|公交|怎么到|怎么来|停车换乘|船|码头|观光船|游船/.test(t)) {
+      lastActions = [act("看交通页", function () { APP.go("transport"); })];
+      if (/船|码头|游船|观光船/.test(t)) {
+        return "湖上有 4 个观光船码头：湖滨码头、陶公岛码头、小普陀码头、韩岭码头，三段航线把西岸、北岸和南岸连起来。\n船是看湖最省脚力的方式，带老人小孩优先考虑。班次和票价以码头现场公告为准，风大或水位变化会停航。";
+      }
+      return "来东钱湖最稳的是地铁 4 号线到「东钱湖站」，出站换环湖公交或打车。\n环湖公交串起游客中心、陶公岛、小普陀、南宋石刻、韩岭这些主要点位；自驾的话节假日韩岭老街车位紧张，建议停游客中心再换乘。";
+    }
+
+    /* ---- 文化 ---- */
+    if (/十景|钱湖十景/.test(t)) {
+      lastActions = [act("看文化长卷", function () { APP.go("culture"); })];
+      return "传统「钱湖十景」是：陶公钓矶、余相书楼、百步耸翠、霞屿锁岚、双虹落彩、二灵夕照、上林晓钟、芦汀宿雁、殷湾渔火、白石仙枰。\n十景的名字在不同资料里略有出入，其中陶公钓矶、霞屿锁岚、二灵夕照能对应到今天的具体地点，其余多是景观意象。";
+    }
+    if (/史氏|史浩|史弥远|史嵩之|一门三宰相/.test(t)) {
+      lastActions = [act("看文化长卷", function () { APP.go("culture"); })];
+      return "南宋鄞县史氏是东钱湖最重要的一家人：史浩、史弥远、史嵩之先后为相，地方上有「一门三宰相，四世两封王，五尚书，七十二进士」的说法。\n史浩为母亲在霞屿建寺（今小普陀），史渐墓道的石刻则成了南宋石刻公园的核心。可以说东钱湖的南宋气质，一半是史家留下的。";
+    }
+    if (/时间线|历史|多少年|起源|最早/.test(t) && !p) {
+      lastActions = [act("看时间线", function () { APP.go("culture"); })];
+      return "东钱湖的文字记录能追到西晋陆云《答车茂安书》；唐天宝三年（744）鄮县令陆南金筑堤扩湖；北宋庆历七年（1047）王安石知鄞县疏浚治湖；北宋政和年间建二灵塔；南宋史氏家族兴起，留下小普陀与墓道石刻；2001、2013 年东钱湖石刻与二灵塔相继列入全国重点文保。\n文化页有完整时间线，每条都能点。";
+    }
+
+    /* ---- 行程生成 ---- */
+    if (/安排|行程|规划|怎么玩|带我|计划/.test(t)) {
+      var half = /半天|半日|2小时|两小时|3小时|三小时/.test(t);
+      var full = /一天|一日|全日|整天/.test(t);
+      var withElder = /老人|父母|爸妈|长辈/.test(t);
+      var withKid = /孩子|小孩|亲子|宝宝/.test(t);
+      var r = withKid ? APP.routeById("manshan") : full ? APP.routeById("qiannian") : half ? APP.routeById("songyun") : null;
+      if (!r) r = withElder ? APP.routeById("songyun") : APP.routeById("qiannian");
+      lastActions = [
+        act("打开这条路线", function () { APP.go("routes"); setTimeout(function () { APP.openRoute(r.id); }, 320); }),
+        act("地图上看点位", function () { APP.go("map"); })
+      ];
+      return "按你说的条件，推荐「" + r.name + "」：\n" + r.desc + "\n共 " + r.stops.length + " 站 · " + r.duration + " · " + r.distance + "\n" +
+        (withElder ? "带长辈的话，尽量用观光船代替长距离步行，中途在游客中心或码头休息。" :
+         withKid ? "带孩子的话，把福泉山那段放在上午，午后热了就去韩岭老街吃点心。" :
+         "如果时间宽裕，可以在韩岭老街留出吃饭的时间。") +
+        "\n点下面的按钮可以直接打开这条线，并让我模拟带你走一遍。";
+    }
+
     if (/你好|你是谁|介绍一下你|你能做什么|小东/.test(t) && !p && !/厕所|停车|路线/.test(t)) {
-      return "我是小东，东钱湖的 AI 讲解员。可以给你讲陶公岛、小普陀、南宋石刻、韩岭、忠应庙、福泉山、岳鄂王庙的故事，也能查厕所、停车、骑行点，按你的时间排路线。想先听哪一处？";
+      lastActions = [act("看使用引导", function () { if (window.DQH_TOUR) DQH_TOUR.restart(); })];
+      return "我是小东，东钱湖的 AI 讲解员。我能做三类事：\n① 讲文化：陶公岛、小普陀、南宋石刻、韩岭、忠应庙、福泉山、岳鄂王庙、二灵塔、庙沟后牌坊；\n② 帮导览：按你的时间排路线、报距离、查厕所停车租车、看船班；\n③ 回答「这事有依据吗」，用证据卡把传说和史实分开。\n也能教你怎么用这个网站。想先听哪一处？";
     }
     if (p) {
+      lastActions = [
+        act("在地图打开", function () { APP.go("map"); APP.focusOn(p, 15); APP.openPoi(p.id); }),
+        act("在线导航", function () { if (window.DQH_NAV) DQH_NAV.open(p); else APP.openAmap(p); }),
+        act("这事有依据吗", function () { send("关于" + p.name + "，这事有依据吗"); })
+      ];
       if (ticket) return p.name + "的" + (p.cat === "hotel" ? "参考房价为 " : "票价为 ") + p.ticket + "（" + p.ticketNote + "），开放时间 " + p.hours + "，建议停留 " + p.stay + "。" + (p.cat === "hotel" ? "房价随房型与季节变化，以酒店官方渠道为准。" : "票价可能随季节调整，出发前以景区公示为准。");
       if (person) {
         if (!p.person) return p.name + "不是以某位历史名人为主角，更适合看它的玩法与实用信息。" + p.one;
@@ -5900,16 +6036,29 @@ window.DQH_DATA = (function () {
       var bs = nearest("bike", 3);
       return "可以租车的地方：\n" + bs.map(function (s) { return "· " + s.name + "（" + APP.fmtDist(APP.distTo(s.wgs)) + "，" + s.desc + "）"; }).join("\n") + "\n环湖骑行注意机动车，部分路段坡度较大。";
     }
-    if (/路线|怎么玩|怎么走|安排|半天|一天|一日|半日|亲子|老人|孩子/.test(t)) {
-      var r = /半天|半日/.test(t) ? APP.routeById("songyun") : /亲子|老人|孩子/.test(t) ? APP.routeById("manshan") : /一天|一日|全日/.test(t) ? APP.routeById("qiannian") : null;
-      if (r) return "推荐「" + r.name + "」：" + r.desc + "\n共 " + r.stops.length + " 站，" + r.duration + "，" + r.distance + "。在“路线”页点开这条线，可以让小东模拟带你走一遍，到站自动讲解。";
+    if (/路线|怎么玩|怎么走|安排|半天|一天|一日|半日|亲子|老人|孩子|爸妈/.test(t)) {
+      var r = /半天|半日/.test(t) ? APP.routeById("songyun") : /亲子|老人|孩子|爸妈/.test(t) ? APP.routeById("manshan") : /一天|一日|全日/.test(t) ? APP.routeById("qiannian") : null;
+      if (r) {
+        lastActions = [
+          act("打开这条路线", function () { APP.go("routes"); setTimeout(function () { APP.openRoute(r.id); }, 320); }),
+          act("地图上看点位", function () { APP.go("map"); })
+        ];
+        return "推荐「" + r.name + "」：" + r.desc + "\n共 " + r.stops.length + " 站，" + r.duration + "，" + r.distance + "。在“路线”页点开这条线，可以让小东模拟带你走一遍，到站自动讲解。";
+      }
+      lastActions = [act("看三条路线", function () { APP.go("routes"); })];
       return "三条路线可以选：\n· 湖上宋韵（半日，陶公岛—小普陀—南宋石刻）\n· 一湖千年（全日，五个坐标）\n· 湖山慢行（亲子，小普陀—韩岭—福泉山）\n告诉我你有半天还是一天、带不带老人孩子，我帮你选。";
     }
     if (ticket) return "各处点位的参考价格：\n" + allTickets() + "\n票价为参考价，酒店为参考起步价，均以官方公示为准。";
     if (/湖|东钱湖|介绍/.test(t)) {
+      lastActions = [act("看文化长卷", function () { APP.go("culture"); }), act("看路线", function () { APP.go("routes"); })];
       return "东钱湖在宁波鄞州，是浙江最大的天然淡水湖之一，素有“西子风韵、太湖气魄”的说法。湖不大，但故事很密：范蠡西施的传说、史浩为母建的小普陀、南宋史氏家族的墓道石刻、王安石治湖的忠应庙，都在湖边。你可以先选一条路线，我陪你慢慢走。";
     }
-    return "这个问题我暂时没有把握。你可以换个问法，比如：\n· “小普陀为什么叫小普陀？”\n· “带爸妈半天怎么走？”\n· “最近的厕所在哪？”\n· “南宋石刻门票多少？”\n我会尽量用东钱湖的资料回答你。";
+    lastActions = [
+      act("看使用引导", function () { if (window.DQH_TOUR) DQH_TOUR.restart(); }),
+      act("帮我排路线", function () { send("帮我排一条半天的路线"); }),
+      act("附近有什么", function () { send("附近有什么"); })
+    ];
+    return "这个我把握不大，换个说法我可能就懂了。可以这样问：\n· 用法类：「图层怎么用」「怎么切换英文」「定位怎么开」\n· 文化类：「小普陀为什么叫小普陀」「钱湖十景有哪些」「史氏家族是谁」\n· 导览类：「带爸妈半天怎么走」「最近的厕所在哪」「船怎么坐」\n· 判断类：「西施真的住过陶公岛吗」「这事有依据吗」\n也可以直接说「附近有什么」，我按你当前位置报最近的几处。";
   }
 
   function systemPrompt() {
@@ -5953,6 +6102,7 @@ window.DQH_DATA = (function () {
     text = (text || "").trim();
     if (!text || sending) return;
     sending = true;
+    lastActions = [];
     addMsg("user", text);
     var input = $("#chatText");
     input.value = "";
@@ -5995,6 +6145,7 @@ window.DQH_DATA = (function () {
     typing(false);
     if (reply === "__CARD__") { /* 卡片已单独渲染 */ }
     else addMsg("assistant", reply);
+    renderActions(lastActions);
     if (viaDS && chat.length) chat[chat.length - 1].via = "deepseek";
     sending = false;
   }
@@ -6051,10 +6202,30 @@ window.DQH_DATA = (function () {
   }
 
   function welcome() {
-    addMsg("assistant", "你好，我是小东。东钱湖的九处古迹、亲子与住宿点位、湖边服务、半天或一天的路线，都可以问我。\n你可以先说一句：“我第一次来，只有半天。”", true);
-    var prompts = ["小普陀为什么叫小普陀？", "带爸妈半天怎么走？", "最近的厕所在哪？", "南宋石刻门票多少？", "范蠡和东钱湖有什么关系？"];
-    $("#chatSuggest").innerHTML = prompts.map(function (p) { return '<button type="button">' + esc(p) + "</button>"; }).join("");
-    $$("#chatSuggest button").forEach(function (b) {
+    addMsg("assistant", "你好，我是小东。东钱湖的九处古迹、亲子与住宿点位、湖边服务、半天或一天的路线，都可以问我。\n也可以问「这事有依据吗」，我会给证据卡；不会用这个网站，也可以直接问我「图层怎么用」。\n你可以先说一句：“我第一次来，只有半天。”", true);
+    var GROUPS = [
+      { id: "use", label: "怎么用", items: ["图层怎么用", "怎么切换英文", "定位怎么开", "登录有什么用"] },
+      { id: "culture", label: "文化", items: ["小普陀为什么叫小普陀？", "钱湖十景有哪些", "史氏家族是谁", "范蠡和东钱湖有什么关系？"] },
+      { id: "tour", label: "导览", items: ["带爸妈半天怎么走？", "带孩子一天怎么排", "最近的厕所在哪？", "船怎么坐"] },
+      { id: "taste", label: "吃什么", items: ["附近有什么好吃的", "东钱湖湖鲜去哪吃", "宁波特产带什么"] },
+      { id: "proof", label: "真假", items: ["西施真的住过陶公岛吗？", "小普陀真是史浩为母亲建的吗", "二灵塔真是北宋的吗"] }
+    ];
+    $("#chatSuggest").innerHTML =
+      '<div class="sug-tabs">' + GROUPS.map(function (g, i) {
+        return '<button type="button" class="sug-tab' + (i === 0 ? " active" : "") + '" data-sug="' + g.id + '">' + g.label + "</button>";
+      }).join("") + '</div>' +
+      '<div class="sug-list">' + GROUPS[0].items.map(function (p) { return '<button type="button">' + esc(p) + "</button>"; }).join("") + '</div>';
+    $$(".sug-tab").forEach(function (b) {
+      b.addEventListener("click", function () {
+        $$(".sug-tab").forEach(function (x) { x.classList.toggle("active", x === b); });
+        var g = GROUPS.filter(function (x) { return x.id === b.dataset.sug; })[0];
+        $(".sug-list").innerHTML = g.items.map(function (p) { return '<button type="button">' + esc(p) + "</button>"; }).join("");
+        $$(".sug-list button").forEach(function (x) {
+          x.addEventListener("click", function () { send(x.textContent); });
+        });
+      });
+    });
+    $$(".sug-list button").forEach(function (b) {
       b.addEventListener("click", function () { send(b.textContent); });
     });
   }
@@ -6558,8 +6729,36 @@ window.DQH_DATA = (function () {
     if (u) saveLib(u.phone, store); else write(ANON, store);
   }
 
-  /* ---------- 演示短信 ---------- */
-  var pending = { phone: "", code: "", until: 0 };
+  /* ---------- 演示短信：每个手机号独立验证码 ---------- */
+  /* 每次请求都用密码学随机数重新生成；同一号码只有一个有效码；
+     不同号码之间保证不重复；5 分钟有效，最多试 5 次，60 秒可重发。 */
+  var CODES = {};          // phone -> {code, expires, attempts, sentAt}
+  var VALID = 5 * 60 * 1000;
+  var MAX_TRY = 5;
+  var RESEND = 60 * 1000;
+  var lastSentAt = 0;
+
+  function rnd6() {
+    var c = window.crypto || window.msCrypto;
+    if (c && c.getRandomValues) {
+      var a = new Uint32Array(1);
+      c.getRandomValues(a);
+      return String(100000 + (a[0] % 900000));
+    }
+    return String(Math.floor(100000 + Math.random() * 900000));
+  }
+  function liveCodes(exceptPhone) {
+    return Object.keys(CODES)
+      .filter(function (k) { return k !== exceptPhone && CODES[k].expires > now(); })
+      .map(function (k) { return CODES[k].code; });
+  }
+  function issueCode(phone) {
+    var taken = liveCodes(phone);
+    var code = rnd6(), guard = 0;
+    while (taken.indexOf(code) > -1 && guard++ < 30) code = rnd6();
+    CODES[phone] = { code: code, expires: now() + VALID, attempts: 0, sentAt: now() };
+    return CODES[phone];
+  }
   function mask(p) { return p.replace(/^(\d{3})\d{4}(\d{4})$/, "$1****$2"); }
   function validPhone(p) { return /^1[3-9]\d{9}$/.test(p); }
 
@@ -6570,14 +6769,23 @@ window.DQH_DATA = (function () {
     var input = document.getElementById("mePhone");
     var p = (input.value || "").replace(/\D/g, "");
     if (!validPhone(p)) { toast(L("请输入 11 位手机号", "Enter an 11-digit phone number")); return; }
-    var code = String(Math.floor(100000 + Math.random() * 900000));
-    pending = { phone: p, code: code, until: now() + 60000 };
+    if (now() - lastSentAt < RESEND) {
+      var wait = Math.ceil((RESEND - (now() - lastSentAt)) / 1000);
+      toast(L("请 " + wait + " 秒后再获取", "Please wait " + wait + "s"));
+      return;
+    }
+    var rec = issueCode(p);
+    lastSentAt = now();
     input.value = p;
     var box = document.getElementById("meCodeHint");
     box.classList.add("show");
     box.innerHTML = L(
-      "<b>演示模式</b>：短信通道未接入，本次验证码为 <em>" + code + "</em>。正式上线后由短信服务商发送。<br>同一手机号登录后，可随时查看历史搜索与对话。",
-      "<b>Demo mode</b>: no SMS gateway is connected. Your code is <em>" + code + "</em>. In production it is sent by SMS.<br>Sign in with the same number to see your search and chat history."
+      "<b>演示模式</b>：本站没有接入短信网关，这条验证码只发给本机这个号码。<br>" +
+      "手机号 <em>" + mask(p) + "</em> · 验证码 <em>" + rec.code + "</em><br>" +
+      "有效期 5 分钟，最多可试 5 次；同一号码重新获取会作废旧码，不同号码的验证码互不相同。",
+      "<b>Demo mode</b>: no SMS gateway here — this code is issued only for this number on this device.<br>" +
+      "Phone <em>" + mask(p) + "</em> · code <em>" + rec.code + "</em><br>" +
+      "Valid 5 minutes, 5 attempts; re-requesting replaces the old code, and different numbers never share a code."
     );
     var btn = document.getElementById("meSend");
     btn.disabled = true;
@@ -6595,9 +6803,24 @@ window.DQH_DATA = (function () {
     var p = (document.getElementById("mePhone").value || "").replace(/\D/g, "");
     var c = (document.getElementById("meCode").value || "").replace(/\D/g, "");
     if (!validPhone(p)) { toast(L("手机号格式不对", "Invalid phone number")); return; }
-    if (!pending.code || pending.phone !== p) { toast(L("请先获取验证码", "Request a code first")); return; }
-    if (now() > pending.until) { toast(L("验证码已过期，请重新获取", "Code expired, request again")); return; }
-    if (c !== pending.code) { toast(L("验证码不正确", "Wrong code")); return; }
+    var rec = CODES[p];
+    if (!rec) { toast(L("请先获取验证码", "Request a code first")); return; }
+    if (now() > rec.expires) {
+      delete CODES[p];
+      toast(L("验证码已过期，请重新获取", "Code expired, request again"));
+      return;
+    }
+    if (rec.attempts >= MAX_TRY) {
+      delete CODES[p];
+      toast(L("尝试次数过多，请重新获取验证码", "Too many attempts, request a new code"));
+      return;
+    }
+    if (c !== rec.code) {
+      rec.attempts++;
+      toast(L("验证码不正确，还可试 " + Math.max(0, MAX_TRY - rec.attempts) + " 次", "Wrong code, " + Math.max(0, MAX_TRY - rec.attempts) + " tries left"));
+      return;
+    }
+    delete CODES[p];
     var user = { phone: p, since: now(), expires: now() + TTL };
     write(UKEY, user);
     // 把匿名记录并入该手机号
@@ -6607,14 +6830,14 @@ window.DQH_DATA = (function () {
     mine.chats = (mine.chats || []).concat(anon.chats || []).slice(-80);
     saveLib(p, mine);
     write(ANON, { searches: [], chats: [] });
-    pending = { phone: "", code: "", until: 0 };
     toast(L("登录成功，记录会在 24 小时内保留", "Signed in — history kept for 24 hours"));
     renderMe();
   }
 
   function logout() {
     write(UKEY, null);
-    pending = { phone: "", code: "", until: 0 };
+    CODES = {};
+    lastSentAt = 0;
     toast(L("已退出登录，本机记录仍保留", "Signed out — local history kept"));
     renderMe();
   }
