@@ -4099,7 +4099,7 @@ window.DQH_DATA = (function () {
     var mode = labelMode();
     var z = state.map.zoom;
     /* 自动模式：低缩放只给人文景点留名字，放大后逐步放开 */
-    var autoLimit = z >= 16 ? 99 : z >= 15 ? 6 : z >= 14 ? 3 : 0;
+    var autoLimit = z >= 16 ? 99 : z >= 15 ? 9 : z >= 14 ? 6 : z >= 13 ? 4 : 2;
     var shown = 0;
     $$(".marker", markerLayer).forEach(function (el) {
       var it = el._item;
@@ -5500,8 +5500,8 @@ window.DQH_DATA = (function () {
         var id = row.dataset.layer;
         state.layers[id] = !state.layers[id];
         saveLayers();
-        renderLayers();
         applyFilters();
+        renderLayers();
       });
     });
     $$("#lpLabelSeg button").forEach(function (b) {
@@ -5535,7 +5535,7 @@ window.DQH_DATA = (function () {
         else if (k === "heritage") {
           LAYER_DEF.forEach(function (d) { state.layers[d.id] = d.id === "attraction"; });
         }
-        saveLayers(); renderLayers(); applyFilters();
+        saveLayers(); applyFilters(); renderLayers();
       });
     });
     $$("#lpLabelSeg button").forEach(function (b) {
