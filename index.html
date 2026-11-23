@@ -4099,7 +4099,7 @@ window.DQH_DATA = (function () {
     var mode = labelMode();
     var z = state.map.zoom;
     /* 自动模式：低缩放只给人文景点留名字，放大后逐步放开 */
-    var autoLimit = z >= 16 ? 99 : z >= 15 ? 9 : z >= 14 ? 6 : z >= 13 ? 4 : 2;
+    var autoLimit = z >= 16 ? 99 : z >= 15 ? 10 : z >= 14 ? 7 : z >= 13 ? 5 : 4;
     var shown = 0;
     $$(".marker", markerLayer).forEach(function (el) {
       var it = el._item;
