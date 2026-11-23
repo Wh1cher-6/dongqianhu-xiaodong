@@ -166,6 +166,11 @@ svg{display:block}
   background:rgba(255,253,247,.9);border:1px solid rgba(23,51,45,.1);
   padding:1px 7px;border-radius:999px;box-shadow:0 2px 6px rgba(23,51,45,.12);
 }
+.marker.cat-fun .pin .body{background:linear-gradient(150deg,#3f8f78,#1f5a49)}
+.marker.cat-hotel .pin .body{background:linear-gradient(150deg,#b58a4a,#6e5126)}
+.marker.cat-fun .pin .body span,.marker.cat-hotel .pin .body span{font-size:12px}
+.marker.cat-fun .tag,.marker.cat-hotel .tag{display:none}
+.marker.cat-fun.active .tag,.marker.cat-hotel.active .tag{display:block;font-size:10px}
 .marker.active .pin .body{transform:rotate(-45deg) scale(1.14);background:linear-gradient(150deg,#d36a49,var(--clay-2))}
 .marker.active .tag{background:var(--ink);color:#fff8ee;border-color:var(--ink)}
 .marker.active .pulse{
@@ -295,6 +300,8 @@ svg{display:block}
 .poi-row:hover{background:var(--card-2);border-color:var(--line)}
 .poi-row.active{background:#f3ece0;border-color:rgba(191,90,60,.25)}
 .poi-num{width:25px;height:25px;border-radius:50%;background:var(--clay);color:#fff8ee;display:grid;place-items:center;font-family:var(--serif);font-size:12px;flex:none;margin-top:2px}
+.poi-num.cat-fun{background:#2f7d6a}
+.poi-num.cat-hotel{background:#9a6b2f}
 .poi-info{min-width:0;flex:1}
 .poi-info b{display:block;font-size:13px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .poi-info small{display:block;font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
@@ -869,8 +876,8 @@ body.guiding .map-controls,body.guiding .map-chips{display:none}
       <aside class="map-panel" id="mapPanel" aria-label="景点列表">
         <div class="panel-head">
           <div class="panel-kicker"><span>东钱湖 · 人文坐标</span><span class="dot-live">AI 讲解在线</span></div>
-          <h1>一湖七景</h1>
-          <p>点标点，听小东讲古；也可按路线慢慢走。</p>
+          <h1>一湖十六景</h1>
+          <p>点标点看讲解、票价与住宿；也可按路线慢慢走。</p>
         </div>
         <div class="panel-search">
           <div class="ps-box">
@@ -1135,6 +1142,20 @@ body.guiding .map-controls,body.guiding .map-chips{display:none}
   </div>
 </div>
 
+<!-- 跳转高德确认 -->
+<div class="modal" id="amapModal" role="dialog" aria-modal="true" aria-label="打开高德地图确认">
+  <div class="modal-head"><h2>即将打开高德地图</h2><button class="icon-btn" type="button" id="amapClose" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div>
+  <div class="modal-body">
+    <p>你正在离开「小东智游」，前往高德地图查看 <strong id="amapTargetName">目的地</strong>。</p>
+    <p>高德地图会处理你的定位与导航请求，并受高德的服务条款与隐私政策约束。小东智游不会把你的位置传给高德，跳转后的定位由高德 App 或网页自行申请。</p>
+    <div class="note-box"><b>提示：</b>如果只是想看步行/驾车路线，可以先用本站的「在线导航」；需要路口级语音导航时再到高德。</div>
+  </div>
+  <div class="modal-foot">
+    <button class="btn ghost" type="button" id="amapCancel">留在本站</button>
+    <button class="btn primary" type="button" id="amapGo">继续去高德</button>
+  </div>
+</div>
+
 <!-- DeepSeek 设置 -->
 <div class="modal" id="settingsModal" role="dialog" aria-modal="true" aria-label="DeepSeek 设置">
   <div class="modal-head"><h2>小东 · DeepSeek 接入</h2><button class="icon-btn" type="button" id="settingsClose" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div>
@@ -1163,7 +1184,7 @@ body.guiding .map-controls,body.guiding .map-chips{display:none}
     <h3>这是什么</h3>
     <p>杭州电子科技大学第二届 AIGC 应用创新大赛「AI 辅助开发 · 创意产品原型」参赛作品，公共测试版。选题：东钱湖旅游区可交互导览。</p>
     <h3>核心功能</h3>
-    <p>① 可缩放电子地图：高德街道/卫星底图，标出 7 处景点、交通线、观光船码头与服务点；点标点即出距离、票价、简介。<br>② 小东 AI 助手：本地讲解库 + 可选 DeepSeek API，回答历史、名人、路线、服务问题。<br>③ 到站讲解：选择主题路线后模拟行进，到达景点自动弹出历史与名人讲解。<br>④ 交通与观光船：地铁 4 号线、环湖公交、湖上观光航线。<br>⑤ 联网导航与定位：OSRM 在线路线、步行/驾车切换、手机持续定位与跟随。</p>
+    <p>① 可缩放电子地图：高德街道/卫星底图，标出 7 处人文景点、亲子玩乐、住宿、交通线、观光船码头与服务点；点标点即出距离、票价、简介。<br>② 小东 AI 助手：本地讲解库 + 可选 DeepSeek API，回答历史、名人、路线、服务问题。<br>③ 到站讲解：选择主题路线后模拟行进，到达景点自动弹出历史与名人讲解。<br>④ 交通与观光船：地铁 4 号线、环湖公交、湖上观光航线。<br>⑤ 联网导航与定位：OSRM 在线路线、步行/驾车切换、手机持续定位与跟随。</p>
     <h3>资料与边界</h3>
     <p>历史资料参考维基百科「东钱湖」「南宋石刻公园」「忠应庙」「岳鄂王庙」「史浩」等公开条目；票价为参考价，以景区当日公示为准。服务点为原型模拟点位。地图底图 © 高德地图，仅用于课程原型演示。</p>
     <h3>技术说明</h3>
@@ -1193,7 +1214,9 @@ window.DQH_DATA = (function () {
     visitor: { label: "咨询", short: "i", color: "#ad8748" },
     food: { label: "餐饮", short: "食", color: "#a2662f" },
     transport: { label: "交通", short: "交", color: "#c6473a" },
-    boat: { label: "观光船", short: "船", color: "#2e6f9e" }
+    boat: { label: "观光船", short: "船", color: "#2e6f9e" },
+    fun: { label: "亲子玩乐", short: "乐", color: "#2f7d6a" },
+    hotel: { label: "住宿", short: "宿", color: "#9a6b2f" }
   };
 
   const POIS = [
@@ -1435,6 +1458,222 @@ window.DQH_DATA = (function () {
         "开放时间可能随季节调整，出发前建议确认。"
       ],
       keywords: "岳鄂王庙 岳飞 岳王庙 鄂王 精忠报国 莫须有 莫枝 西瓜庙"
+    },
+    {
+      id: "zoo",
+      name: "宁波野生动物园",
+      en: "NINGBO WILDLIFE PARK",
+      char: "兽",
+      icon: "动",
+      cat: "fun",
+      tag: "亲子 · 动物乐园",
+      wgs: [29.8062862, 121.6716917],
+      ticket: "¥180",
+      ticketNote: "参考价",
+      hours: "09:00–16:30",
+      stay: "3–4 小时",
+      theme: "linear-gradient(135deg,#3f7d5b,#1e3a2a 72%)",
+      one: "东钱湖北岸的大型野生动物园，适合带孩子安排半天到一天。",
+      intro:
+        "宁波野生动物园（雅戈尔动物园）位于东钱湖北岸，园区以车行、步行结合的方式展示多种野生动物，是东钱湖周边最成熟的亲子目的地之一。园区较大，建议预留 3–4 小时，夏天注意防晒和补水。",
+      tips: [
+        "门票与表演场次以景区当日公告为准，节假日建议提前购票。",
+        "园区步行距离较长，带小朋友可考虑租童车。",
+        "夏季建议上午入园，避开正午高温。"
+      ],
+      keywords: "动物园 野生动物园 雅戈尔 亲子 孩子 动物 表演"
+    },
+    {
+      id: "waterpark",
+      name: "东钱湖水上乐园",
+      en: "DONGQIAN LAKE WATER PARK",
+      char: "水",
+      icon: "水",
+      cat: "fun",
+      tag: "夏季 · 玩水",
+      wgs: [29.7900, 121.6620],
+      ticket: "约 ¥120",
+      ticketNote: "参考价",
+      hours: "夏季 10:00–18:00",
+      stay: "3–4 小时",
+      theme: "linear-gradient(135deg,#2b8f9a,#123c46 72%)",
+      one: "东钱湖的夏季玩水目的地，滑道、造浪池和亲子水寨是主角。",
+      intro:
+        "东钱湖水上乐园位于湖区北岸，是夏季限定的玩水项目，包含滑道、造浪池、亲子水寨等设施。营业季节、开放项目和票价会随天气与运营安排调整，出发前请以官方公告为准。",
+      tips: [
+        "仅夏季营业，出发前确认当天是否开放。",
+        "自备泳衣、拖鞋和防水袋，储物柜数量有限。",
+        "水上项目有身高/体重限制，带小朋友先看项目说明。"
+      ],
+      keywords: "水上乐园 玩水 滑道 造浪池 夏天 亲子 水寨"
+    },
+    {
+      id: "hanling-art",
+      name: "韩岭美术馆",
+      en: "HANLING ART MUSEUM",
+      char: "艺",
+      icon: "艺",
+      cat: "fun",
+      tag: "艺术 · 韩岭",
+      wgs: [29.7411709, 121.6616576],
+      ticket: "免费（特展另计）",
+      ticketNote: "参考",
+      hours: "10:00–17:00 · 周一闭馆",
+      stay: "1 小时",
+      theme: "linear-gradient(135deg,#6d6a5d,#25251f 72%)",
+      one: "韩岭老街旁的美术馆，建筑与展览都适合慢慢看。",
+      intro:
+        "韩岭美术馆坐落在韩岭老街入口附近，是东钱湖南岸的新文化空间。馆内常设当代艺术与地方文化展览，建筑本身也值得停留。看完展可以顺路逛老街、吃湖鲜。",
+      tips: [
+        "周一通常闭馆，特展是否收费以馆方公告为准。",
+        "与韩岭老街步行可达，适合安排在同一段时间。",
+        "展厅内保持安静，部分展览禁止拍照。"
+      ],
+      keywords: "韩岭美术馆 艺术 展览 美术馆 韩岭 建筑 打卡"
+    },
+    {
+      id: "huamao-museum",
+      name: "华茂艺术教育博物馆",
+      en: "HUAMAO MUSEUM OF ART EDUCATION",
+      char: "馆",
+      icon: "馆",
+      cat: "fun",
+      tag: "建筑 · 艺术教育",
+      wgs: [29.7895728, 121.6486783],
+      ticket: "预约参观",
+      ticketNote: "参考",
+      hours: "09:00–17:00 · 周一闭馆",
+      stay: "1–1.5 小时",
+      theme: "linear-gradient(135deg,#8b8377,#2f2c27 72%)",
+      one: "东钱湖西北岸的艺术教育博物馆，建筑本身就是一件展品。",
+      intro:
+        "华茂艺术教育博物馆位于东钱湖西北岸，以艺术教育为主题，展示艺术教育的历史、方法与作品。建筑造型轻盈，是东钱湖周边热门的建筑打卡点；参观通常需要预约。",
+      tips: [
+        "多数时段需提前预约，周一通常闭馆。",
+        "建筑内部有大量白色曲面，拍照时注意不要影响他人。",
+        "可与柏悦酒店、陶公岛安排在同一半天。"
+      ],
+      keywords: "华茂 艺术教育 博物馆 建筑 预约 展览 打卡"
+    },
+    {
+      id: "hyatt",
+      name: "宁波柏悦酒店",
+      en: "PARK HYATT NINGBO",
+      char: "宿",
+      icon: "宿",
+      cat: "hotel",
+      tag: "湖景 · 度假",
+      wgs: [29.7699634, 121.6379275],
+      ticket: "¥1500 起",
+      ticketNote: "参考价",
+      hours: "24 小时前台",
+      stay: "1 晚",
+      theme: "linear-gradient(135deg,#6b5a3f,#241f17 72%)",
+      one: "东钱湖西岸的度假酒店，湖景、泳池与安静的园林是主要卖点。",
+      intro:
+        "宁波柏悦酒店位于东钱湖西岸，整体为低密度度假布局，适合想安静住一晚、顺便逛陶公岛和小普陀的游客。房价随季节和房型波动较大，以下为参考起步价。",
+      tips: [
+        "参考价不含早餐/服务费，实际以酒店官方渠道为准。",
+        "湖景房与园景房价差较大，预订时确认房型。",
+        "距陶公岛、小普陀较近，适合自驾。"
+      ],
+      keywords: "柏悦 Park Hyatt 酒店 住宿 湖景 度假 泳池"
+    },
+    {
+      id: "cordis",
+      name: "东钱湖康得思酒店",
+      en: "CORDIS DONGQIAN LAKE",
+      char: "宿",
+      icon: "宿",
+      cat: "hotel",
+      tag: "湖景 · 亲子",
+      wgs: [29.7509802, 121.6740745],
+      ticket: "¥900 起",
+      ticketNote: "参考价",
+      hours: "24 小时前台",
+      stay: "1 晚",
+      theme: "linear-gradient(135deg,#5d5a4a,#211f19 72%)",
+      one: "靠近韩岭与南宋石刻的度假酒店，适合把南岸景点串起来。",
+      intro:
+        "东钱湖康得思酒店位于湖区南部，距离韩岭老街和南宋石刻公园较近。酒店以度假和亲子客群为主，配有泳池与餐饮；具体房价与套餐以官方渠道为准。",
+      tips: [
+        "参考价为起步价，节假日可能明显上浮。",
+        "距韩岭老街、南宋石刻较近，适合南岸行程。",
+        "亲子设施与泳池开放时间以酒店公告为准。"
+      ],
+      keywords: "康得思 Cordis 酒店 住宿 亲子 韩岭 泳池"
+    },
+    {
+      id: "hilton",
+      name: "宁波东钱湖华茂希尔顿",
+      en: "HILTON NINGBO DONGQIAN LAKE",
+      char: "宿",
+      icon: "宿",
+      cat: "hotel",
+      tag: "湖景 · 会议",
+      wgs: [29.7897368, 121.6463039],
+      ticket: "¥800 起",
+      ticketNote: "参考价",
+      hours: "24 小时前台",
+      stay: "1 晚",
+      theme: "linear-gradient(135deg,#4f5b63,#1b2226 72%)",
+      one: "东钱湖西北岸的连锁度假酒店，湖景与会议设施兼备。",
+      intro:
+        "宁波东钱湖华茂希尔顿位于湖区西北岸，靠近华茂艺术教育博物馆与陶公岛。酒店适合家庭度假和小型会议，房型与价格随季节变化，以下为参考起步价。",
+      tips: [
+        "参考价不含早餐/税费，以希尔顿官方渠道为准。",
+        "距华茂艺术教育博物馆较近，可步行或短途驾车。",
+        "节假日房源紧张，建议提前预订。"
+      ],
+      keywords: "希尔顿 Hilton 酒店 住宿 湖景 会议 华茂"
+    },
+    {
+      id: "huajiantang",
+      name: "宁波花间堂·韩岭",
+      en: "BLOSSOM HILL HANLING",
+      char: "宿",
+      icon: "宿",
+      cat: "hotel",
+      tag: "古街 · 精品",
+      wgs: [29.7406206, 121.6623602],
+      ticket: "¥700 起",
+      ticketNote: "参考价",
+      hours: "24 小时前台",
+      stay: "1 晚",
+      theme: "linear-gradient(135deg,#8a5a3c,#2c1d14 72%)",
+      one: "韩岭老街里的精品民宿酒店，适合住下来慢慢逛南岸。",
+      intro:
+        "宁波花间堂·韩岭位于韩岭老街范围内，以江南院落和精品客房为主。住在这里可以把韩岭老街、韩岭美术馆和湖边落日安排得很从容；房价随房型和季节波动。",
+      tips: [
+        "参考价为起步价，老宅房型面积差异较大。",
+        "老街夜间较安静，餐饮选择比市区少。",
+        "适合自驾或打车，公共交通末班时间需提前确认。"
+      ],
+      keywords: "花间堂 韩岭 民宿 精品酒店 住宿 老街 院落"
+    },
+    {
+      id: "guobin",
+      name: "钱湖国宾馆",
+      en: "QIANHU STATE GUESTHOUSE",
+      char: "宿",
+      icon: "宿",
+      cat: "hotel",
+      tag: "湖景 · 园林",
+      wgs: [29.7599525, 121.6673837],
+      ticket: "¥1000 起",
+      ticketNote: "参考价",
+      hours: "24 小时前台",
+      stay: "1 晚",
+      theme: "linear-gradient(135deg,#6d5a45,#262019 72%)",
+      one: "东钱湖东岸的园林式国宾馆，湖景视野开阔。",
+      intro:
+        "钱湖国宾馆位于东钱湖东岸，园区式布局、湖景视野开阔，适合度假和正式接待。客房与餐饮以酒店官方渠道为准，以下为参考起步价。",
+      tips: [
+        "参考价随房型/季节变化，建议直接联系酒店。",
+        "园区较大，进出与用餐可提前询问摆渡安排。",
+        "距小普陀、忠应庙较近，适合东岸行程。"
+      ],
+      keywords: "钱湖国宾馆 国宾 酒店 住宿 园林 湖景 东岸"
     }
   ];
 
@@ -1639,7 +1878,7 @@ window.DQH_DATA = (function () {
     id: "bus-center", name: "游客中心站", type: "bus", line: "环湖观光公交",
     wgs: [29.7387506, 121.6606625], desc: "环湖线始发 · 游客中心",
     detail: "原型示意站点，实际站点以公交公告为准", fare: "¥2", hours: "08:00–17:00", tag: "公交"
-  }].concat(POIS.map(function (p) {
+  }].concat(POIS.filter(function (p) { return p.cat === "attraction"; }).map(function (p) {
     return {
       id: "bus-" + p.id, name: p.name + "站", type: "bus", line: "环湖观光公交",
       wgs: p.wgs, desc: "环湖线 · 近" + p.name, detail: "原型示意站点，实际站点以公交公告为准",
@@ -1955,7 +2194,12 @@ window.DQH_DATA = (function () {
     fitPoints(POIS.map(function (p) { return { lat: p.gcj[0], lon: p.gcj[1] }; }), 50);
   }
   function fitCat(cat) {
-    if (cat === "all" || cat === "attraction") { fitAll(); return; }
+    if (cat === "all") { fitAll(); return; }
+    if (cat === "attraction" || cat === "fun" || cat === "hotel") {
+      var poiPts = POIS.filter(function (p) { return p.cat === cat; }).map(function (p) { return { lat: p.gcj[0], lon: p.gcj[1] }; });
+      if (poiPts.length) fitPoints(poiPts, 80);
+      return;
+    }
     if (cat === "transport") {
       var all = TRANSPORT_ALL.map(function (t) { return { lat: t.gcj[0], lon: t.gcj[1] }; });
       if (all.length) fitPoints(all, 80);
@@ -1980,12 +2224,15 @@ window.DQH_DATA = (function () {
   /* ---------- markers ---------- */
   function buildMarkers() {
     markerLayer.innerHTML = "";
-    POIS.forEach(function (p, i) {
+    POIS.forEach(function (p) {
       var el = document.createElement("div");
-      el.className = "marker attraction";
+      el.className = "marker attraction cat-" + p.cat;
       el._item = p;
+      var mark = p.cat === "attraction"
+        ? (POIS.filter(function (x) { return x.cat === "attraction"; }).indexOf(p) + 1)
+        : (p.icon || CATS[p.cat].short);
       el.innerHTML = '<button class="hit" type="button" aria-label="' + esc(p.name) + '"><span class="pulse"></span>' +
-        '<span class="pin"><span class="body"><span>' + (i + 1) + '</span></span></span><span class="tag">' + esc(p.name) + '</span></button>';
+        '<span class="pin"><span class="body"><span>' + mark + '</span></span></span><span class="tag">' + esc(p.name) + '</span></button>';
       el.querySelector(".hit").addEventListener("click", function (e) {
         e.stopPropagation();
         selectPoi(p.id);
@@ -2023,7 +2270,8 @@ window.DQH_DATA = (function () {
   }
   function applyFilters() {
     $$(".marker.attraction", markerLayer).forEach(function (el) {
-      el._hidden = !(state.cat === "all" || state.cat === "attraction");
+      var c = el._item && el._item.cat;
+      el._hidden = !(state.cat === "all" || state.cat === c);
     });
     $$(".marker.service", markerLayer).forEach(function (el) {
       el._hidden = !(state.cat !== "all" && state.cat !== "attraction" && el._item.cat === state.cat);
@@ -2222,7 +2470,7 @@ window.DQH_DATA = (function () {
   });
 
   /* ---------- chips / poi list ---------- */
-  var CHIPS = [{ id: "all", label: "全部" }, { id: "attraction", label: "景点" }, { id: "transport", label: "交通" }, { id: "boat", label: "观光船" }, { id: "toilet", label: "厕所" }, { id: "parking", label: "停车" }, { id: "bike", label: "骑行" }, { id: "visitor", label: "咨询" }, { id: "food", label: "餐饮" }];
+  var CHIPS = [{ id: "all", label: "全部" }, { id: "attraction", label: "人文" }, { id: "fun", label: "亲子" }, { id: "hotel", label: "住宿" }, { id: "transport", label: "交通" }, { id: "boat", label: "观光船" }, { id: "toilet", label: "厕所" }, { id: "parking", label: "停车" }, { id: "bike", label: "骑行" }, { id: "visitor", label: "咨询" }, { id: "food", label: "餐饮" }];
   function chipHtml() {
     return CHIPS.map(function (c) { return '<button type="button" class="chip' + (c.id === state.cat ? " active" : "") + '" data-cat="' + c.id + '">' + c.label + '</button>'; }).join("");
   }
@@ -2240,7 +2488,10 @@ window.DQH_DATA = (function () {
   }
   function renderPoiList() {
     $("#poiList").innerHTML = POIS.map(function (p, i) {
-      return '<button type="button" class="poi-row" data-poi="' + p.id + '"><span class="poi-num">' + (i + 1) + '</span>' +
+      var num = p.cat === "attraction"
+        ? (POIS.filter(function (x) { return x.cat === "attraction"; }).indexOf(p) + 1)
+        : (p.icon || CATS[p.cat].short);
+      return '<button type="button" class="poi-row" data-poi="' + p.id + '"><span class="poi-num cat-' + p.cat + '">' + num + '</span>' +
         '<span class="poi-info"><b>' + esc(p.name) + '</b><small>' + esc(p.tag) + '</small>' +
         '<span class="poi-meta"><em>' + distWord() + " " + fmtDist(distTo(p.wgs)) + '</em><span>' + esc(p.ticket) + '</span><span>' + esc(p.stay) + '</span></span></span></button>';
     }).join("");
@@ -2332,9 +2583,15 @@ window.DQH_DATA = (function () {
     $("#poiEn").textContent = p.en;
     $("#poiOne").textContent = p.one;
     $("#poiMeta").innerHTML = metaCell("距离", distWord() + " " + fmtDist(distTo(p.wgs))) +
-      metaCell("票价", p.ticket, true) + metaCell("开放", p.hours) + metaCell("建议", p.stay);
+      metaCell(p.cat === "hotel" ? "参考价" : "票价", p.ticket, true) + metaCell("开放", p.hours) + metaCell("建议", p.stay);
+    var hasHistory = !!(p.history && p.history.length);
+    var hasPerson = !!p.person;
+    var hasTips = !!(p.tips && p.tips.length);
     $$("#poiTabs button").forEach(function (b) {
-      var on = b.dataset.tab === "intro";
+      var tab = b.dataset.tab;
+      var show = tab === "intro" || (tab === "history" && hasHistory) || (tab === "person" && hasPerson) || (tab === "tips" && hasTips);
+      b.style.display = show ? "" : "none";
+      var on = tab === "intro";
       b.classList.toggle("active", on);
       b.setAttribute("aria-selected", on ? "true" : "false");
     });
@@ -2349,17 +2606,17 @@ window.DQH_DATA = (function () {
     var el = $("#poiPanel");
     if (tab === "intro") {
       el.innerHTML = '<div class="quote">“' + esc(p.one) + '”</div><p>' + esc(p.intro) + '</p>' +
-        '<p style="color:var(--muted);font-size:11.5px;margin-top:8px">票价为参考价，以景区当日公示为准。</p>';
-    } else if (tab === "history") {
+        '<p style="color:var(--muted);font-size:11.5px;margin-top:8px">' + (p.cat === "hotel" ? "房价为参考起步价，以酒店官方渠道为准。" : "票价为参考价，以景区当日公示为准。") + '</p>';
+    } else if (tab === "history" && p.history) {
       el.innerHTML = p.history.map(function (h) {
         return '<div class="hist-item"><span class="hy">' + esc(h[0]) + '</span><p>' + esc(h[1]) + '</p></div>';
       }).join("");
-    } else if (tab === "person") {
+    } else if (tab === "person" && p.person) {
       el.innerHTML = '<div class="person-card"><div class="person-char">' + esc(p.person.name.slice(0, 1)) + '</div>' +
         '<div class="person-info"><b>' + esc(p.person.name) + '</b><span>' + esc(p.person.meta) + '</span><p>' + esc(p.person.text) + '</p></div></div>';
     } else {
-      el.innerHTML = '<ul class="tips-list">' + p.tips.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + '</ul>' +
-        '<p style="color:var(--muted);font-size:11px;margin-top:8px">开放时间与票价可能随季节调整，出发前建议再确认。</p>';
+      el.innerHTML = '<ul class="tips-list">' + (p.tips || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + '</ul>' +
+        '<p style="color:var(--muted);font-size:11px;margin-top:8px">开放时间与价格可能随季节调整，出发前建议再确认。</p>';
     }
   }
   $$("#poiTabs button").forEach(function (b) {
@@ -2378,7 +2635,7 @@ window.DQH_DATA = (function () {
     closeSheets();
     go("chat");
     setTimeout(function () {
-      if (window.DQH_CHAT) window.DQH_CHAT.ask("请给我讲讲" + p.name + "的历史和名人故事，控制在150字左右。");
+      if (window.DQH_CHAT) window.DQH_CHAT.ask(p.history || p.person ? "请给我讲讲" + p.name + "的历史和名人故事，控制在150字左右。" : "请介绍" + p.name + "的玩法和实用信息，控制在150字左右。");
     }, 260);
   });
   $("#speakPoi").addEventListener("click", function () {
@@ -2805,12 +3062,32 @@ window.DQH_DATA = (function () {
   $("#locBtn").addEventListener("click", locate);
   $("#locateMapBtn").addEventListener("click", locate);
 
+  var pendingAmap = null;
   function openAmap(item) {
+    pendingAmap = item;
+    $("#amapTargetName").textContent = item.name;
+    $("#amapModal").classList.add("open");
+    $("#backdrop").classList.add("show");
+    document.body.classList.add("locked");
+  }
+  function closeAmapConfirm() {
+    $("#amapModal").classList.remove("open");
+    if (!$(".sheet.open") && !$(".modal.open")) {
+      $("#backdrop").classList.remove("show");
+      document.body.classList.remove("locked");
+    }
+  }
+  $("#amapClose").addEventListener("click", closeAmapConfirm);
+  $("#amapCancel").addEventListener("click", closeAmapConfirm);
+  $("#amapGo").addEventListener("click", function () {
+    if (!pendingAmap) return;
+    var item = pendingAmap;
     var g = item.gcj || wgs2gcj(item.wgs);
     var url = "https://uri.amap.com/marker?position=" + g[1].toFixed(6) + "," + g[0].toFixed(6) +
       "&name=" + encodeURIComponent(item.name) + "&src=dongqianhu&coordinate=gaode&callnative=0";
     window.open(url, "_blank", "noopener");
-  }
+    closeAmapConfirm();
+  });
 
   /* ---------- views / sheets ---------- */
   function go(view) {
@@ -2846,8 +3123,13 @@ window.DQH_DATA = (function () {
     $("#backdrop").classList.remove("show");
     document.body.classList.remove("locked");
   }
-  $("#backdrop").addEventListener("click", closeSheets);
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeSheets(); });
+  $("#backdrop").addEventListener("click", function () {
+    closeAmapConfirm();
+    closeSheets();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") { closeAmapConfirm(); closeSheets(); }
+  });
   function openModal(el) {
     closeSheets();
     $("#backdrop").classList.add("show");
@@ -3066,14 +3348,17 @@ window.DQH_DATA = (function () {
       return "我是小东，东钱湖的 AI 讲解员。可以给你讲陶公岛、小普陀、南宋石刻、韩岭、忠应庙、福泉山、岳鄂王庙的故事，也能查厕所、停车、骑行点，按你的时间排路线。想先听哪一处？";
     }
     if (p) {
-      if (ticket) return p.name + "的票价为 " + p.ticket + "（" + p.ticketNote + "），开放时间 " + p.hours + "，建议停留 " + p.stay + "。票价可能随季节调整，出发前以景区公示为准。";
-      if (person) return "和" + p.name + "有关的人物是" + p.person.name + "（" + p.person.meta + "）。" + p.person.text;
+      if (ticket) return p.name + "的" + (p.cat === "hotel" ? "参考房价为 " : "票价为 ") + p.ticket + "（" + p.ticketNote + "），开放时间 " + p.hours + "，建议停留 " + p.stay + "。" + (p.cat === "hotel" ? "房价随房型与季节变化，以酒店官方渠道为准。" : "票价可能随季节调整，出发前以景区公示为准。");
+      if (person) {
+        if (!p.person) return p.name + "不是以某位历史名人为主角，更适合看它的玩法与实用信息。" + p.one;
+        return "和" + p.name + "有关的人物是" + p.person.name + "（" + p.person.meta + "）。" + p.person.text;
+      }
       if (dist) {
         var d = APP.distTo(p.wgs);
         return "从" + (APP.getUser().source === "gps" ? "你现在的位置" : "东钱湖游客中心") + "到" + p.name + "约 " + APP.fmtDist(d) + "，步行约 " + APP.walkMin(d) + " 分钟。点地图上的标点能看到票价和简介，点“导航前往”会打开高德地图。";
       }
-      if (history || /介绍|讲讲|说说|值得/.test(t)) return p.one + "\n" + p.intro + "\n（票价为参考价，以景区公示为准。）";
-      return p.one + " " + p.person.name + "的故事也很值得听。你可以问我“" + p.name + "有什么名人故事”。";
+      if (history || /介绍|讲讲|说说|值得/.test(t)) return p.one + "\n" + p.intro + "\n（" + (p.cat === "hotel" ? "房价为参考起步价，以酒店官方渠道为准。" : "票价为参考价，以景区公示为准。") + "）";
+      return p.one + (p.person ? " " + p.person.name + "的故事也很值得听。" : "") + " 你可以问我“" + p.name + "怎么玩”。";
     }
     if (/厕所|洗手间|卫生间|wc/i.test(t)) {
       var ws = nearest("toilet", 3);
@@ -3101,7 +3386,7 @@ window.DQH_DATA = (function () {
 
   function systemPrompt() {
     var facts = APP.POIS.map(function (p) {
-      return p.name + "（" + p.tag + "，票价" + p.ticket + "，开放" + p.hours + "，" + p.one + "；人物：" + p.person.name + "）";
+      return p.name + "（" + p.tag + "，" + (p.cat === "hotel" ? "参考价" : "票价") + p.ticket + "，开放" + p.hours + "，" + p.one + (p.person ? "；人物：" + p.person.name : "") + "）";
     }).join("；");
     return "你是东钱湖景区的 AI 讲解员“小东”，说话温和、简洁、有画面感，像一位熟悉当地的年轻向导。" +
       "只依据以下资料回答，不要编造票价、年代和人物关系；不确定时就说“以景区展陈为准”。" +
