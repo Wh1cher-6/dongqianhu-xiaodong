@@ -1154,8 +1154,8 @@ body.guiding .map-controls,body.guiding .map-chips{display:none}
         <aside class="chat-side">
           <div class="side-card">
             <h3><svg class="icon"><use href="#i-spark"/></svg>小东能做什么</h3>
-            <p>讲七处古迹的历史与名人，算你到景点的距离，查厕所、停车和骑行点，按时间排路线。</p>
-            <div class="kv"><span>讲解范围</span><b>东钱湖 7 处坐标</b></div>
+            <p>讲九处古迹的历史与名人，也能查亲子、住宿、厕所、停车和骑行点，按时间排路线。</p>
+            <div class="kv"><span>讲解范围</span><b>东钱湖 18 个点位</b></div>
             <div class="kv"><span>服务检索</span><b>厕所 / 停车 / 骑行</b></div>
             <div class="kv"><span>回答方式</span><b>本地库 + 可选 DeepSeek</b></div>
             <div id="dsBadge" class="ds-badge off">DeepSeek 深度问答未启用</div>
@@ -1380,7 +1380,7 @@ body.guiding .map-controls,body.guiding .map-chips{display:none}
     <h3>这是什么</h3>
     <p>杭州电子科技大学第二届 AIGC 应用创新大赛「AI 辅助开发 · 创意产品原型」参赛作品，公共测试版。选题：东钱湖旅游区可交互导览。</p>
     <h3>核心功能</h3>
-    <p>① 可缩放电子地图：高德街道/卫星底图，标出 7 处人文景点、亲子玩乐、住宿、交通线、观光船码头与服务点；点标点即出距离、票价、简介。<br>② 小东 AI 助手：本地讲解库 + 可选 DeepSeek API，回答历史、名人、路线、服务问题。<br>③ 到站讲解：选择主题路线后模拟行进，到达景点自动弹出历史与名人讲解。<br>④ 交通与观光船：地铁 4 号线、环湖公交、湖上观光航线。<br>⑤ 联网导航与定位：OSRM 在线路线、步行/驾车切换、手机持续定位与跟随。</p>
+    <p>① 可缩放电子地图：高德街道/卫星底图，标出 9 处人文景点、亲子玩乐、住宿、交通线、观光船码头与服务点；点标点即出距离、票价、简介。<br>② 小东 AI 助手：本地讲解库 + 可选 DeepSeek API，回答历史、名人、路线、服务问题。<br>③ 到站讲解：选择主题路线后模拟行进，到达景点自动弹出历史与名人讲解。<br>④ 交通与观光船：地铁 4 号线、环湖公交、湖上观光航线。<br>⑤ 联网导航与定位：OSRM 在线路线、步行/驾车切换、手机持续定位与跟随。</p>
     <h3>资料与边界</h3>
     <p>历史资料参考维基百科「东钱湖」「南宋石刻公园」「忠应庙」「岳鄂王庙」「史浩」等公开条目；票价为参考价，以景区当日公示为准。服务点为原型模拟点位。地图底图 © 高德地图，仅用于课程原型演示。</p>
     <h3>技术说明</h3>
@@ -3894,7 +3894,7 @@ window.DQH_DATA = (function () {
       if (r) return "推荐「" + r.name + "」：" + r.desc + "\n共 " + r.stops.length + " 站，" + r.duration + "，" + r.distance + "。在“路线”页点开这条线，可以让小东模拟带你走一遍，到站自动讲解。";
       return "三条路线可以选：\n· 湖上宋韵（半日，陶公岛—小普陀—南宋石刻）\n· 一湖千年（全日，五个坐标）\n· 湖山慢行（亲子，小普陀—韩岭—福泉山）\n告诉我你有半天还是一天、带不带老人孩子，我帮你选。";
     }
-    if (ticket) return "七处景点的参考票价：\n" + allTickets() + "\n票价为参考价，以景区当日公示为准。";
+    if (ticket) return "各处点位的参考价格：\n" + allTickets() + "\n票价为参考价，酒店为参考起步价，均以官方公示为准。";
     if (/湖|东钱湖|介绍/.test(t)) {
       return "东钱湖在宁波鄞州，是浙江最大的天然淡水湖之一，素有“西子风韵、太湖气魄”的说法。湖不大，但故事很密：范蠡西施的传说、史浩为母建的小普陀、南宋史氏家族的墓道石刻、王安石治湖的忠应庙，都在湖边。你可以先选一条路线，我陪你慢慢走。";
     }
@@ -3971,7 +3971,7 @@ window.DQH_DATA = (function () {
   }
 
   function welcome() {
-    addMsg("assistant", "你好，我是小东。东钱湖的七处古迹、湖边服务、半天或一天的路线，都可以问我。\n你可以先说一句：“我第一次来，只有半天。”", true);
+    addMsg("assistant", "你好，我是小东。东钱湖的九处古迹、亲子与住宿点位、湖边服务、半天或一天的路线，都可以问我。\n你可以先说一句：“我第一次来，只有半天。”", true);
     var prompts = ["小普陀为什么叫小普陀？", "带爸妈半天怎么走？", "最近的厕所在哪？", "南宋石刻门票多少？", "范蠡和东钱湖有什么关系？"];
     $("#chatSuggest").innerHTML = prompts.map(function (p) { return '<button type="button">' + esc(p) + "</button>"; }).join("");
     $$("#chatSuggest button").forEach(function (b) {
