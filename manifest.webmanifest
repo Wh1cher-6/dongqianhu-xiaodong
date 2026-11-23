@@ -1,0 +1,20 @@
+{
+  "name": "东钱湖 · 小东智游",
+  "short_name": "小东智游",
+  "description": "东钱湖 AI 导览：地图、历史讲解、交通与观光船、在线导航。",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f6f1e7",
+  "theme_color": "#f6f1e7",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
