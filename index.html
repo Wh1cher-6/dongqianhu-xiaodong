@@ -275,12 +275,25 @@ svg{display:block}
 .map-attrib a{text-decoration:underline;text-underline-offset:2px}
 
 .map-panel{
-  position:absolute;left:18px;top:18px;bottom:18px;z-index:17;width:334px;
+  position:absolute;left:18px;top:18px;bottom:18px;z-index:17;width:var(--panel-w,334px);max-width:46vw;
   display:flex;flex-direction:column;background:rgba(255,253,247,.96);
   border:1px solid rgba(23,51,45,.12);border-radius:22px;box-shadow:var(--shadow);
   overflow:hidden;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  transition:width .18s ease,transform .28s cubic-bezier(.2,.85,.25,1);
 }
-.panel-head{padding:18px 18px 10px;border-bottom:1px solid rgba(23,51,45,.07)}
+.map-panel.resizing{transition:none;user-select:none}
+.panel-collapse{position:absolute;right:10px;top:12px;z-index:4;width:27px;height:27px;border-radius:8px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center;color:var(--muted)}
+.panel-collapse:hover{color:var(--ink);border-color:var(--line-2)}
+.panel-collapse .icon{width:14px;height:14px;transform:rotate(180deg)}
+.panel-resize{position:absolute;right:0;top:0;bottom:0;width:9px;cursor:ew-resize;z-index:5;touch-action:none}
+.panel-resize::after{content:"";position:absolute;right:3px;top:46%;width:2px;height:34px;border-radius:2px;background:var(--line-2);opacity:.55}
+.panel-resize:hover::after,.map-panel.resizing .panel-resize::after{opacity:1;background:var(--clay)}
+.panel-expand{position:absolute;left:0;top:96px;z-index:18;width:29px;height:56px;border-radius:0 12px 12px 0;border:1px solid var(--line);border-left:0;background:rgba(255,253,247,.96);display:none;place-items:center;color:var(--ink-2);box-shadow:var(--shadow-sm)}
+.panel-expand .icon{width:14px;height:14px}
+body.panel-collapsed .map-panel{transform:translateX(calc(-100% - 22px))}
+body.panel-collapsed .panel-expand{display:grid}
+body.panel-collapsed .map-scale{display:none}
+.panel-head{padding:18px 44px 10px 18px;border-bottom:1px solid rgba(23,51,45,.07)}
 .panel-kicker{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:10px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
 .panel-kicker .dot-live{display:inline-flex;align-items:center;gap:5px;color:var(--jade-2);letter-spacing:.05em;font-size:9.5px}
 .panel-kicker .dot-live::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--jade-2);box-shadow:0 0 0 3px rgba(47,122,102,.12)}
@@ -296,6 +309,9 @@ svg{display:block}
 .poi-list{flex:1;overflow-y:auto;padding:4px 10px 10px;scrollbar-width:thin}
 .poi-list::-webkit-scrollbar{width:4px}
 .poi-list::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:4px}
+.poi-group + .poi-group{margin-top:4px}
+.poi-group-head{display:flex;align-items:center;justify-content:space-between;padding:8px 8px 4px;font-size:9.5px;letter-spacing:.12em;color:var(--muted);font-weight:700}
+.poi-group-head span{font-weight:500;letter-spacing:0;border:1px solid var(--line);border-radius:999px;padding:0 6px;font-size:8.5px}
 .poi-row{display:flex;gap:10px;width:100%;text-align:left;padding:10px 8px;border-radius:12px;border:1px solid transparent;transition:background .15s,border-color .15s}
 .poi-row:hover{background:var(--card-2);border-color:var(--line)}
 .poi-row.active{background:#f3ece0;border-color:rgba(191,90,60,.25)}
@@ -583,6 +599,37 @@ svg{display:block}
 .sheet-body{padding:15px 18px 0;overflow-y:auto;flex:1;scrollbar-width:thin}
 .sheet-body::-webkit-scrollbar{width:4px}
 .sheet-body::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:4px}
+.loc-head{padding:6px 0 2px}
+.loc-head h2{font-family:var(--serif);font-size:24px;letter-spacing:.02em;font-weight:600;margin-top:4px}
+.loc-head p{font-size:11.5px;color:var(--muted);line-height:1.65;margin-top:3px}
+.loc-status{display:flex;align-items:center;gap:8px;margin-top:13px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card-2)}
+.loc-status .loc-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none}
+.loc-status b{font-size:12px;font-weight:650}
+.loc-status span:last-child{margin-left:auto;font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}
+.loc-status.ok{border-color:rgba(47,122,102,.28);background:rgba(47,122,102,.06)}
+.loc-status.ok .loc-dot{background:var(--jade-2);box-shadow:0 0 0 4px rgba(47,122,102,.1)}
+.loc-status.err{border-color:rgba(191,90,60,.28);background:rgba(191,90,60,.05)}
+.loc-status.err .loc-dot{background:var(--clay)}
+.loc-status.pending .loc-dot{background:var(--gold);animation:mePulse 1.6s infinite}
+.loc-coords{font-size:10.5px;color:var(--muted);margin-top:7px;font-variant-numeric:tabular-nums}
+.loc-actions{display:flex;gap:6px;margin-top:11px}
+.loc-actions .btn{flex:1;padding:9px 8px;font-size:11px;border-radius:10px}
+.loc-actions .btn.active{background:var(--ink);color:#fff8ee;border-color:var(--ink)}
+.loc-tabs{display:flex;gap:4px;margin-top:15px;border-bottom:1px solid var(--line);padding-bottom:7px;overflow-x:auto;scrollbar-width:none}
+.loc-tabs::-webkit-scrollbar{display:none}
+.loc-tabs button{flex:none;padding:5px 11px;border-radius:999px;font-size:11px;color:var(--muted);border:1px solid transparent}
+.loc-tabs button.active{background:var(--ink);color:#fff8ee}
+.loc-list{margin-top:8px;max-height:300px;overflow-y:auto;scrollbar-width:thin}
+.loc-row{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:9px 4px;border-bottom:1px dashed rgba(23,51,45,.09)}
+.loc-row:last-child{border-bottom:0}
+.loc-row:hover{background:var(--card-2)}
+.loc-ico{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--paper-2);font-family:var(--serif);font-size:13px;color:var(--ink-2);flex:none}
+.loc-main{min-width:0;flex:1}
+.loc-main b{display:block;font-size:12px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.loc-main small{display:block;font-size:10px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.loc-side{text-align:right;flex:none;font-size:10px;color:var(--clay);font-weight:600;line-height:1.5}
+.loc-side span{display:block;font-size:9px;color:var(--muted);font-weight:400}
+.loc-empty{padding:20px 8px;text-align:center;color:var(--muted);font-size:11.5px}
 .nav-head{padding:6px 0 2px}
 .nav-kicker{font-size:9px;letter-spacing:.18em;color:var(--clay);font-weight:700}
 .nav-head h2{font-family:var(--serif);font-size:23px;letter-spacing:.02em;font-weight:600;margin-top:4px}
@@ -660,6 +707,7 @@ svg{display:block}
 @media (max-width:1024px){
   .mainnav{display:none}
   .map-panel{display:none}
+  .panel-collapse,.panel-resize,.panel-expand{display:none!important}
   .map-top{display:block}
   .map-chips{display:flex}
   .view-map{height:calc(100dvh - var(--header) - var(--bottom))}
@@ -874,6 +922,7 @@ body.guiding .map-controls,body.guiding .map-chips{display:none}
 
       <!-- 桌面端信息面板 -->
       <aside class="map-panel" id="mapPanel" aria-label="景点列表">
+        <button class="panel-collapse" id="panelCollapse" type="button" aria-label="收起侧栏" title="收起侧栏"><svg class="icon"><use href="#i-chevron"/></svg></button>
         <div class="panel-head">
           <div class="panel-kicker"><span>东钱湖 · 人文坐标</span><span class="dot-live">AI 讲解在线</span></div>
           <h1>一湖十六景</h1>
@@ -898,7 +947,9 @@ body.guiding .map-controls,body.guiding .map-chips{display:none}
           <span>让小东按你的时间排一条线</span>
           <span class="mini-go">去问小东 <svg class="icon"><use href="#i-arrow"/></svg></span>
         </button>
+        <div class="panel-resize" id="panelResize" title="拖动调整侧栏宽度" aria-hidden="true"></div>
       </aside>
+      <button class="panel-expand" id="panelExpand" type="button" aria-label="展开侧栏"><svg class="icon"><use href="#i-chevron"/></svg></button>
 
       <!-- 模拟导览条 -->
       <div class="guide-bar" id="guideBar" role="status">
@@ -1141,6 +1192,38 @@ body.guiding .map-controls,body.guiding .map-chips{display:none}
     <button class="btn primary" type="button" id="geoRetry">再次请求</button>
   </div>
 </div>
+
+<!-- 定位 -->
+<aside class="sheet loc-sheet" id="locSheet" aria-hidden="true" aria-label="我的位置与附近推荐">
+  <div class="sheet-grab"></div>
+  <button class="sheet-close" type="button" id="locClose" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button>
+  <div class="sheet-body">
+    <div class="loc-head">
+      <div class="nav-kicker">LOCATION · 我的位置</div>
+      <h2>先定位，再出发</h2>
+      <p>开启定位后，距离、附近亲子玩乐与住宿都会按你的位置重算；位置只在本机使用。</p>
+    </div>
+    <div class="loc-status" id="locStatusBox">
+      <span class="loc-dot"></span>
+      <b id="locStatusText">定位未开启</b>
+      <span id="locAccuracy">—</span>
+    </div>
+    <div class="loc-coords" id="locCoords">当前起点：东钱湖游客中心</div>
+    <div class="loc-actions">
+      <button class="btn primary" type="button" id="locStart"><svg class="icon"><use href="#i-locate"/></svg>开启定位</button>
+      <button class="btn ghost" type="button" id="locFollow"><svg class="icon"><use href="#i-walk"/></svg>跟随</button>
+      <button class="btn ghost" type="button" id="locStop">停止</button>
+    </div>
+    <div class="loc-tabs" id="locTabs" role="tablist" aria-label="附近推荐分类">
+      <button type="button" data-loc-cat="all" class="active">全部</button>
+      <button type="button" data-loc-cat="attraction">人文</button>
+      <button type="button" data-loc-cat="fun">亲子</button>
+      <button type="button" data-loc-cat="hotel">住宿</button>
+    </div>
+    <div class="loc-list" id="locList"></div>
+    <div class="note-box"><b>隐私：</b>位置只在浏览器内用于计算距离与显示蓝点，不上传服务器。关闭页面或点“停止”即可结束。</div>
+  </div>
+</aside>
 
 <!-- 跳转高德确认 -->
 <div class="modal" id="amapModal" role="dialog" aria-modal="true" aria-label="打开高德地图确认">
@@ -2487,13 +2570,23 @@ window.DQH_DATA = (function () {
     });
   }
   function renderPoiList() {
-    $("#poiList").innerHTML = POIS.map(function (p, i) {
-      var num = p.cat === "attraction"
-        ? (POIS.filter(function (x) { return x.cat === "attraction"; }).indexOf(p) + 1)
-        : (p.icon || CATS[p.cat].short);
-      return '<button type="button" class="poi-row" data-poi="' + p.id + '"><span class="poi-num cat-' + p.cat + '">' + num + '</span>' +
-        '<span class="poi-info"><b>' + esc(p.name) + '</b><small>' + esc(p.tag) + '</small>' +
-        '<span class="poi-meta"><em>' + distWord() + " " + fmtDist(distTo(p.wgs)) + '</em><span>' + esc(p.ticket) + '</span><span>' + esc(p.stay) + '</span></span></span></button>';
+    var groups = [
+      { cat: "attraction", label: "人文古迹" },
+      { cat: "fun", label: "亲子玩乐" },
+      { cat: "hotel", label: "住宿" }
+    ];
+    $("#poiList").innerHTML = groups.map(function (g) {
+      var items = POIS.filter(function (p) { return p.cat === g.cat; });
+      if (!items.length) return "";
+      return '<div class="poi-group"><div class="poi-group-head">' + g.label + '<span>' + items.length + "</span></div>" +
+        items.map(function (p) {
+          var num = p.cat === "attraction"
+            ? (POIS.filter(function (x) { return x.cat === "attraction"; }).indexOf(p) + 1)
+            : (p.icon || CATS[p.cat].short);
+          return '<button type="button" class="poi-row" data-poi="' + p.id + '"><span class="poi-num cat-' + p.cat + '">' + num + '</span>' +
+            '<span class="poi-info"><b>' + esc(p.name) + '</b><small>' + esc(p.tag) + '</small>' +
+            '<span class="poi-meta"><em>' + distWord() + " " + fmtDist(distTo(p.wgs)) + '</em><span>' + esc(p.ticket) + '</span><span>' + esc(p.stay) + '</span></span></span></button>';
+        }).join("") + "</div>";
     }).join("");
     $$("#poiList .poi-row").forEach(function (row) {
       row.addEventListener("click", function () {
@@ -3043,7 +3136,7 @@ window.DQH_DATA = (function () {
 
   /* ---------- locate / amap ---------- */
   function locate() {
-    if (window.DQH_GEO) { window.DQH_GEO.start(); return; }
+    if (window.DQH_GEO) { window.DQH_GEO.openPanel(); return; }
     if (!navigator.geolocation) { toast("当前浏览器不支持定位，已使用游客中心作为起点"); return; }
     toast("正在获取定位…");
     navigator.geolocation.getCurrentPosition(function (pos) {
@@ -3150,7 +3243,69 @@ window.DQH_DATA = (function () {
   }
 
   /* ---------- boot ---------- */
+  function initPanelSize() {
+    var panel = $("#mapPanel"), handle = $("#panelResize"), collapse = $("#panelCollapse"), expand = $("#panelExpand");
+    if (!panel || !handle) return;
+    var KEY = "dqh_panel_width_v1", CKEY = "dqh_panel_collapsed_v1";
+    var saved = 0, collapsed = false;
+    try { saved = parseInt(localStorage.getItem(KEY) || "0", 10); } catch (e) {}
+    try { collapsed = localStorage.getItem(CKEY) === "1"; } catch (e) {}
+    function maxW() { return Math.min(480, Math.max(280, window.innerWidth * 0.46)); }
+    function applyWidth(w) {
+      w = Math.max(280, Math.min(maxW(), w));
+      panel.style.width = w + "px";
+      try { localStorage.setItem(KEY, String(Math.round(w))); } catch (e) {}
+    }
+    if (saved) applyWidth(saved);
+    function applyCollapsed(v) {
+      collapsed = !!v;
+      document.body.classList.toggle("panel-collapsed", collapsed);
+      try { localStorage.setItem(CKEY, collapsed ? "1" : "0"); } catch (e) {}
+      collapse.setAttribute("aria-expanded", collapsed ? "false" : "true");
+    }
+    applyCollapsed(collapsed);
+    collapse.addEventListener("click", function () { applyCollapsed(true); });
+    expand.addEventListener("click", function () { applyCollapsed(false); });
+    var resizing = false, startX = 0, startW = 0;
+    function beginResize(clientX) {
+      if (window.innerWidth <= 1024) return;
+      resizing = true;
+      startX = clientX;
+      startW = panel.getBoundingClientRect().width;
+      panel.classList.add("resizing");
+      document.body.style.cursor = "ew-resize";
+    }
+    handle.addEventListener("pointerdown", function (e) {
+      if (window.innerWidth <= 1024) return;
+      e.preventDefault();
+      beginResize(e.clientX);
+    });
+    handle.addEventListener("mousedown", function (e) {
+      if (window.innerWidth <= 1024 || resizing) return;
+      e.preventDefault();
+      beginResize(e.clientX);
+    });
+    window.addEventListener("pointermove", function (e) {
+      if (!resizing) return;
+      applyWidth(startW + e.clientX - startX);
+    });
+    window.addEventListener("mousemove", function (e) {
+      if (!resizing) return;
+      applyWidth(startW + e.clientX - startX);
+    });
+    function endResize() {
+      if (!resizing) return;
+      resizing = false;
+      panel.classList.remove("resizing");
+      document.body.style.cursor = "";
+    }
+    window.addEventListener("pointerup", endResize);
+    window.addEventListener("mouseup", endResize);
+    window.addEventListener("resize", function () { applyWidth(panel.getBoundingClientRect().width || 334); });
+  }
+
   function boot() {
+    initPanelSize();
     buildChips();
     buildMarkers();
     applyFilters();
@@ -3601,7 +3756,7 @@ window.DQH_DATA = (function () {
   };
 
   var nav = { target: null, mode: "foot", route: null, loading: false, token: 0 };
-  var geo = { watchId: null, following: false, first: true, last: null, announced: {} };
+  var geo = { watchId: null, following: false, first: true, last: null, announced: {}, error: "", locCat: "all" };
 
   function fmtDistance(m) {
     if (m == null) return "—";
@@ -3713,6 +3868,64 @@ window.DQH_DATA = (function () {
     APP.openModal($("#geoModal"));
   }
 
+  function renderLocList() {
+    var cat = geo.locCat;
+    var list = APP.POIS.filter(function (p) { return cat === "all" || p.cat === cat; })
+      .sort(function (a, b) { return APP.distTo(a.wgs) - APP.distTo(b.wgs); })
+      .slice(0, 10);
+    var box = $("#locList");
+    if (!list.length) {
+      box.innerHTML = '<div class="loc-empty">这一类暂时没有点位</div>';
+      return;
+    }
+    box.innerHTML = list.map(function (p) {
+      var mark = p.cat === "attraction" ? "文" : (p.icon || "宿");
+      var price = p.cat === "hotel" ? "参考 " + p.ticket : p.ticket;
+      return '<button type="button" class="loc-row" data-loc-poi="' + p.id + '">' +
+        '<span class="loc-ico">' + mark + '</span>' +
+        '<span class="loc-main"><b>' + APP.esc(p.name) + '</b><small>' + APP.esc(p.tag) + '</small></span>' +
+        '<span class="loc-side">' + APP.fmtDist(APP.distTo(p.wgs)) + '<span>' + APP.esc(price) + '</span></span></button>';
+    }).join("");
+    $$("#locList [data-loc-poi]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var p = APP.poiById(b.dataset.locPoi);
+        if (!p) return;
+        APP.closeSheets();
+        APP.go("map");
+        APP.focusOn(p, 15);
+        setTimeout(function () { APP.openPoi(p.id); }, 180);
+      });
+    });
+  }
+  function renderLocUI() {
+    var box = $("#locStatusBox");
+    if (!box) return;
+    var on = geo.watchId != null;
+    var last = geo.last && geo.last.coords;
+    var state = geo.error ? "err" : on ? "pending" : "idle";
+    var text = geo.error || (last ? "定位已开启" : on ? "正在请求定位…" : "定位未开启");
+    if (last && !geo.error) { state = "ok"; text = "已定位"; }
+    box.className = "loc-status " + state;
+    $("#locStatusText").textContent = text;
+    var acc = last && last.accuracy ? "±" + Math.round(last.accuracy) + " m" : "—";
+    $("#locAccuracy").textContent = acc;
+    $("#locCoords").textContent = last
+      ? "当前坐标：" + last.latitude.toFixed(5) + ", " + last.longitude.toFixed(5)
+      : "当前起点：东钱湖游客中心";
+    var startBtn = $("#locStart");
+    startBtn.disabled = on && !geo.error;
+    startBtn.textContent = on && !geo.error ? "定位中…" : "开启定位";
+    $("#locFollow").classList.toggle("active", geo.following);
+    $$("#locTabs button").forEach(function (b) {
+      b.classList.toggle("active", b.dataset.locCat === geo.locCat);
+    });
+    renderLocList();
+  }
+  function openLocPanel() {
+    APP.openSheet($("#locSheet"));
+    renderLocUI();
+  }
+
   function nearestPoi(lat, lon) {
     var best = null, bd = Infinity;
     APP.POIS.forEach(function (p) {
@@ -3728,8 +3941,10 @@ window.DQH_DATA = (function () {
   function onPosition(pos) {
     var lat = pos.coords.latitude, lon = pos.coords.longitude, acc = pos.coords.accuracy || 0;
     geo.last = pos;
+    geo.error = "";
     APP.setUser([lat, lon], "我的位置", "gps", acc);
     updateGeoPill(acc ? "已定位 ±" + Math.round(acc) + " m" : "已定位", "ok");
+    renderLocUI();
     if (geo.first) {
       geo.first = false;
       APP.focusOn({ gcj: APP.wgs2gcj([lat, lon]) }, 16);
@@ -3749,23 +3964,30 @@ window.DQH_DATA = (function () {
       try { navigator.geolocation.clearWatch(geo.watchId); } catch (e) {}
       geo.watchId = null;
     }
+    geo.error = msg;
     updateGeoPill(msg, "err");
+    renderLocUI();
     if (err.code === 1) openGeoHelp();
     else APP.toast(msg + "，可点右上角定位按钮重试");
   }
   function start(follow) {
     if (follow != null) geo.following = !!follow;
+    geo.error = "";
     if (!navigator.geolocation) {
+      geo.error = "浏览器不支持定位";
       updateGeoPill("浏览器不支持定位", "err");
+      renderLocUI();
       APP.toast("当前浏览器不支持定位，已使用游客中心作为起点");
       return;
     }
     if (geo.watchId != null) {
       updateGeoPill("定位已开启", "ok");
+      renderLocUI();
       if (geo.following && geo.last) APP.mapFollow(geo.last.coords.latitude, geo.last.coords.longitude, APP.getZoom());
       return;
     }
     updateGeoPill("正在请求定位…", "pending");
+    renderLocUI();
     geo.first = true;
     geo.watchId = navigator.geolocation.watchPosition(onPosition, onError, {
       enableHighAccuracy: true,
@@ -3784,13 +4006,30 @@ window.DQH_DATA = (function () {
     }
     geo.following = false;
     geo.last = null;
+    geo.error = "";
     updateGeoPill("定位已关闭", "");
     if (APP.clearLocation) APP.clearLocation();
-    APP.closeSheets();
+    renderLocUI();
   }
 
   function init() {
-    $("#geoPill").addEventListener("click", function () { start(true); });
+    $("#geoPill").addEventListener("click", openLocPanel);
+    $("#locClose").addEventListener("click", function () { APP.closeSheets(); });
+    $("#locStart").addEventListener("click", function () { start(true); });
+    $("#locStop").addEventListener("click", function () { stop(); });
+    $("#locFollow").addEventListener("click", function () {
+      geo.following = !geo.following;
+      if (geo.following && !geo.watchId) start(true);
+      else if (geo.following && geo.last) APP.mapFollow(geo.last.coords.latitude, geo.last.coords.longitude, APP.getZoom());
+      renderLocUI();
+      APP.toast(geo.following ? "已开启跟随" : "已关闭跟随");
+    });
+    $$("#locTabs button").forEach(function (b) {
+      b.addEventListener("click", function () {
+        geo.locCat = b.dataset.locCat;
+        renderLocUI();
+      });
+    });
     $("#navClose").addEventListener("click", function () { APP.closeSheets(); });
     $("#navAmap").addEventListener("click", function () { if (nav.target) APP.openAmap(nav.target); });
     $("#navStart").addEventListener("click", function () {
@@ -3810,14 +4049,14 @@ window.DQH_DATA = (function () {
     });
     $("#geoClose").addEventListener("click", function () { APP.closeSheets(); });
     $("#geoRetry").addEventListener("click", function () { APP.closeSheets(); start(true); });
-    $("#geoStop").addEventListener("click", stop);
+    $("#geoStop").addEventListener("click", function () { stop(); APP.closeSheets(); });
     }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 
   window.DQH_NAV = { open: open, calc: calc, recalc: calc, isActive: function () { return !!nav.route; } };
-  window.DQH_GEO = { start: start, stop: stop, setFollow: function (v) { geo.following = !!v; } };
+  window.DQH_GEO = { start: start, stop: stop, openPanel: openLocPanel, setFollow: function (v) { geo.following = !!v; } };
 })();
 </script>
 </body>
