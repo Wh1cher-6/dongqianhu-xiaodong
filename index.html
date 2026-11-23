@@ -1139,7 +1139,7 @@ body.guiding .map-controls,body.guiding .map-chips{display:none}
 <div class="modal" id="settingsModal" role="dialog" aria-modal="true" aria-label="DeepSeek 设置">
   <div class="modal-head"><h2>小东 · DeepSeek 接入</h2><button class="icon-btn" type="button" id="settingsClose" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div>
   <div class="modal-body">
-    <p>公共网站默认通过站点的 <code>/api/chat</code> 使用管理员配置的 DeepSeek，普通访客<strong>无需填写 Key</strong>。若站点未配置，小东会自动使用内置讲解库；高级用户也可以填自己的 Key 直连官方接口。</p>
+    <p>有服务端的公共站点可通过 <code>/api/chat</code> 使用管理员配置的 DeepSeek；GitHub Pages 等纯静态托管没有后端，小东会自动使用内置讲解库，高级用户也可以填自己的 Key 直连官方接口。</p>
     <div class="switch-row">
       <div><b>启用 DeepSeek 深度问答</b><small>关闭时使用本地讲解库</small></div>
       <button class="switch" type="button" id="dsSwitch" aria-label="启用 DeepSeek" aria-pressed="false"></button>
@@ -1147,7 +1147,7 @@ body.guiding .map-controls,body.guiding .map-chips{display:none}
     <div class="field"><label for="dsKey">API Key（可选）</label><input id="dsKey" type="password" placeholder="公共站点可留空" autocomplete="off"><div class="hint">公共站点由服务端环境变量配置；这里填的 Key 只保存在本机浏览器 localStorage。</div></div>
     <div class="field"><label for="dsModel">模型</label><input id="dsModel" type="text" placeholder="deepseek-chat" autocomplete="off"></div>
     <div class="field"><label for="dsEndpoint">接口地址</label><input id="dsEndpoint" type="text" placeholder="https://api.deepseek.com/chat/completions" autocomplete="off"><div class="hint">可直接填官方地址；若网络或跨域拦截，再改用本地代理 <code>/api/chat</code>（Key 放服务端环境变量，浏览器可留空）。</div></div>
-    <div class="field"><label>连接测试</label><button class="btn ghost" type="button" id="dsTest" style="width:100%;font-size:12px">测试 DeepSeek 连接</button><div class="hint" id="dsTestResult">公共站点可直接点这里测试管理员配置的通道；自填 Key 时也可测试。</div></div>
+    <div class="field"><label>连接测试</label><button class="btn ghost" type="button" id="dsTest" style="width:100%;font-size:12px">测试 DeepSeek 连接</button><div class="hint" id="dsTestResult">有服务端时可测试公共通道；纯静态托管请填自己的 Key 后测试。</div></div>
     <div class="note-box"><b>为什么不能直接嵌入网页版？</b> chat.deepseek.com 设置了 X-Frame-Options / CSP，禁止被第三方网站 iframe 内嵌。强行嵌入只会得到空白框，所以这里采用“同名助手 + API 接入”的方式。</div>
   </div>
   <div class="modal-foot">
