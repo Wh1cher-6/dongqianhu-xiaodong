@@ -522,6 +522,68 @@ body.panel-collapsed .map-scale{display:none}
 .link-btn{font-size:11.5px;color:var(--clay);display:inline-flex;align-items:center;gap:4px;margin-top:9px;font-weight:600}
 .link-btn .icon{width:12px;height:12px}
 
+.culture-hero{
+  position:relative;overflow:hidden;border-radius:26px;padding:34px 38px;color:#f8f2e6;
+  background:linear-gradient(135deg,#17332d,#1e5a4b 62%,#2a6b58);
+  display:grid;grid-template-columns:1.25fr .75fr;gap:26px;align-items:center;box-shadow:var(--shadow);
+}
+.culture-hero::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(60% 80% at 92% 120%,rgba(191,90,60,.35),transparent 60%),
+  repeating-linear-gradient(-18deg,rgba(255,255,255,.035) 0 1px,transparent 1px 10px)}
+.culture-hero-main{position:relative;z-index:1}
+.culture-hero .page-kicker{color:#e2b48f}
+.culture-hero .page-title{color:#f8f2e6;margin-top:7px}
+.culture-hero .page-title em{color:#f0b58e}
+.culture-hero .page-sub{color:rgba(248,242,230,.7);max-width:40em;margin-top:9px}
+.culture-stats{display:flex;gap:22px;flex-wrap:wrap;margin-top:17px}
+.culture-stats div b{display:block;font-family:var(--serif);font-size:22px;font-weight:600;color:#fff8ee}
+.culture-stats div span{font-size:9.5px;color:rgba(248,242,230,.55);letter-spacing:.06em}
+.culture-hero .btn{margin-top:19px;background:#f8f2e6;color:#17332d}
+.culture-hero .btn:hover{background:#fff}
+.culture-seal{position:relative;z-index:1;justify-self:center;width:150px;height:150px;border:1px solid rgba(248,242,230,.35);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
+.culture-seal span{font-family:var(--serif);font-size:50px;line-height:1.05;letter-spacing:.08em}
+.culture-seal small{font-family:var(--serif);font-size:24px;letter-spacing:.3em;margin-left:.3em}
+.culture-seal i{font-style:normal;font-size:8px;letter-spacing:.3em;color:rgba(248,242,230,.55);margin-top:5px}
+.culture-block{margin-top:36px}
+.culture-block-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+.culture-block-head h2{font-family:var(--serif);font-size:clamp(20px,2.6vw,26px);font-weight:600;letter-spacing:.03em}
+.culture-block-head span{font-size:10px;letter-spacing:.1em;color:var(--muted)}
+.culture-timeline{border-left:1px solid var(--line-strong);margin-left:7px}
+.ct-item{position:relative;display:grid;grid-template-columns:150px 1fr;gap:18px;padding:0 0 20px 20px}
+.ct-item::before{content:"";position:absolute;left:-4.5px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--clay);box-shadow:0 0 0 3px var(--paper)}
+.ct-year{font-family:var(--serif);font-size:12px;font-weight:600;color:var(--clay);line-height:1.7}
+.ct-body h3{font-size:13.5px;font-weight:650}
+.ct-body p{font-size:12px;color:var(--muted);line-height:1.8;margin-top:2px}
+.scene-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.scene-card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:12px 14px;text-align:left;cursor:pointer;transition:border-color .2s,background .2s}
+.scene-card:hover{border-color:var(--line-2);background:var(--card-2)}
+.scene-card .sc-top{display:flex;align-items:center;gap:8px}
+.scene-card .sc-num{font-family:var(--serif);font-size:10px;color:var(--clay);flex:none;width:18px}
+.scene-card h3{font-family:var(--serif);font-size:14px;font-weight:600;letter-spacing:.03em;flex:1}
+.scene-card .sc-arrow{font-size:10px;color:var(--muted);transition:transform .2s}
+.scene-card.open .sc-arrow{transform:rotate(90deg)}
+.scene-card .sc-line{font-size:10.5px;color:var(--muted);line-height:1.6;margin-top:3px;padding-left:26px}
+.scene-card .sc-more{display:none;font-size:11.5px;color:var(--ink-2);line-height:1.8;margin-top:8px;padding-left:26px}
+.scene-card.open .sc-more{display:block}
+.scene-card .sc-map{margin-top:7px;margin-left:26px;font-size:10px;color:var(--clay);font-weight:600;display:inline-flex;align-items:center;gap:3px}
+.people-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.person-mini{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:12px 13px}
+.person-mini .pm-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.person-mini .pm-top b{font-family:var(--serif);font-size:14.5px}
+.person-mini .pm-tag{font-size:8.5px;padding:1px 5px;border-radius:3px;border:1px solid var(--line);color:var(--muted);letter-spacing:.04em}
+.person-mini .pm-tag.legend{color:var(--clay);border-color:rgba(191,90,60,.3);background:rgba(191,90,60,.05)}
+.person-mini .pm-meta{display:block;font-size:9.5px;color:var(--muted);margin-top:2px}
+.person-mini p{font-size:10.5px;color:var(--ink-2);line-height:1.7;margin-top:6px}
+.person-mini .pm-map{font-size:9.5px;color:var(--clay);margin-top:6px;display:inline-flex;align-items:center;gap:3px}
+.relic-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.relic-card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:13px 14px;text-align:left}
+.relic-card .rc-tag{font-size:8.5px;color:var(--muted);letter-spacing:.05em}
+.relic-card h3{font-family:var(--serif);font-size:15px;font-weight:600;margin-top:2px}
+.relic-card p{font-size:11px;color:var(--muted);line-height:1.75;margin-top:4px}
+.relic-card .rc-map{font-size:9.5px;color:var(--clay);font-weight:600;margin-top:6px;display:inline-flex;align-items:center;gap:3px}
+.culture-note{font-size:10.5px;color:var(--muted);line-height:1.7;margin-top:9px}
+.culture-sources{margin-top:34px;padding:16px 18px;border:1px dashed var(--line-2);border-radius:12px;font-size:10.5px;color:var(--muted);line-height:1.8}
+.culture-sources b{color:var(--ink-2)}
 .transit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
 .transit-card{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow-sm);display:flex;flex-direction:column}
 .tc-top{position:relative;padding:15px 16px 14px;color:#fff8ee;overflow:hidden;min-height:92px}
@@ -727,6 +789,9 @@ body.panel-collapsed .map-scale{display:none}
   .page{padding-bottom:calc(80px + var(--bottom))}
   .route-grid{grid-template-columns:1fr 1fr}
   .transit-grid{grid-template-columns:1fr 1fr}
+  .culture-hero{grid-template-columns:1fr;padding:26px 24px}
+  .culture-seal{display:none}
+  .people-grid{grid-template-columns:1fr 1fr}
   .route-hero{grid-template-columns:1fr;padding:26px 24px}
   .rh-art{height:140px;order:-1}
   .page-title{font-size:clamp(27px,6vw,38px)}
@@ -755,6 +820,13 @@ body.panel-collapsed .map-scale{display:none}
   .route-grid{grid-template-columns:1fr}
   .transit-grid{grid-template-columns:1fr}
   .boat-grid{grid-template-columns:1fr}
+  .scene-grid,.relic-grid,.people-grid{grid-template-columns:1fr}
+  .culture-hero{padding:20px 18px}
+  .culture-block-head{display:block}
+  .culture-block-head span{display:block;margin-top:2px}
+  .ct-item{grid-template-columns:1fr;gap:2px;padding-left:17px}
+  .bottomnav button{font-size:8.4px}
+  .bottomnav button .icon{width:18px;height:18px}
   .route-hero{padding:20px 18px;border-radius:20px}
   .route-hero h1{font-size:29px}
   .rh-art{height:112px}
@@ -835,6 +907,7 @@ body.guiding .map-controls,body.guiding .map-chips{display:none}
     <nav class="mainnav" aria-label="主导航">
       <button type="button" data-view="map" class="active">地图</button>
       <button type="button" data-view="routes">路线</button>
+      <button type="button" data-view="culture">文化</button>
       <button type="button" data-view="chat">小东</button>
       <button type="button" data-view="transport">交通</button>
       <button type="button" data-view="services">服务</button>
@@ -925,7 +998,7 @@ body.guiding .map-controls,body.guiding .map-chips{display:none}
         <button class="panel-collapse" id="panelCollapse" type="button" aria-label="收起侧栏" title="收起侧栏"><svg class="icon"><use href="#i-chevron"/></svg></button>
         <div class="panel-head">
           <div class="panel-kicker"><span>东钱湖 · 人文坐标</span><span class="dot-live">AI 讲解在线</span></div>
-          <h1>一湖十六景</h1>
+          <h1>一湖十八景</h1>
           <p>点标点看讲解、票价与住宿；也可按路线慢慢走。</p>
         </div>
         <div class="panel-search">
@@ -1012,6 +1085,45 @@ body.guiding .map-controls,body.guiding .map-chips{display:none}
 
       <div class="route-grid" id="routeGrid"></div>
       <div class="route-note"><b>说明：</b>路线按景点相对位置与常见游线编排，距离为景点间直线估算，实际车程/步行请以导航为准。点击“开始模拟导览”，地图上的小人会沿路线移动，到站自动弹出讲解。</div>
+    </div>
+  </section>
+
+  <!-- ================= 文化 ================= -->
+  <section class="view" id="view-culture" aria-label="东钱湖文化长卷">
+    <div class="page">
+      <div class="culture-hero">
+        <div class="culture-hero-main">
+          <div class="page-kicker">CULTURE · 一湖千年</div>
+          <h1 class="page-title">一湖千年，<em>文脉在岸</em></h1>
+          <p class="page-sub" id="cultureIntro"></p>
+          <div class="culture-stats" id="cultureStats"></div>
+          <button class="btn primary" type="button" id="cultureMapBtn"><svg class="icon"><use href="#i-map"/></svg>在地图上读文化</button>
+        </div>
+        <div class="culture-seal" aria-hidden="true"><span>钱</span><small>湖</small><i>宋韵</i></div>
+      </div>
+
+      <section class="culture-block">
+        <div class="culture-block-head"><h2>一条时间线</h2><span>从西晋的记载到今天的湖</span></div>
+        <div class="culture-timeline" id="cultureTimeline"></div>
+      </section>
+
+      <section class="culture-block">
+        <div class="culture-block-head"><h2>钱湖十景</h2><span>传统说法 · 点开读一段</span></div>
+        <div class="scene-grid" id="sceneGrid"></div>
+        <p class="culture-note">十景名称与所指地点在不同资料中略有差异，页面以传统说法呈现；没有对应坐标的景观只作文本介绍，不强行标注。</p>
+      </section>
+
+      <section class="culture-block">
+        <div class="culture-block-head"><h2>与湖有关的人</h2><span>史实与传说分开看</span></div>
+        <div class="people-grid" id="peopleGrid"></div>
+      </section>
+
+      <section class="culture-block">
+        <div class="culture-block-head"><h2>留在岸上的遗存</h2><span>塔、坊、寺、庙、石刻</span></div>
+        <div class="relic-grid" id="relicGrid"></div>
+      </section>
+
+      <div class="culture-sources" id="cultureSources"></div>
     </div>
   </section>
 
@@ -1103,6 +1215,7 @@ body.guiding .map-controls,body.guiding .map-chips{display:none}
 <nav class="bottomnav" id="bottomnav" aria-label="底部导航">
   <button type="button" data-view="map" class="active"><svg class="icon"><use href="#i-map"/></svg><span>地图</span></button>
   <button type="button" data-view="routes"><svg class="icon"><use href="#i-route"/></svg><span>路线</span></button>
+  <button type="button" data-view="culture"><svg class="icon"><use href="#i-book"/></svg><span>文化</span></button>
   <button type="button" data-view="chat"><svg class="icon"><use href="#i-chat"/></svg><span>小东</span></button>
   <button type="button" data-view="transport"><svg class="icon"><use href="#i-route"/></svg><span>交通</span></button>
   <button type="button" data-view="services"><svg class="icon"><use href="#i-grid"/></svg><span>服务</span></button>
@@ -1757,6 +1870,62 @@ window.DQH_DATA = (function () {
         "距小普陀、忠应庙较近，适合东岸行程。"
       ],
       keywords: "钱湖国宾馆 国宾 酒店 住宿 园林 湖景 东岸"
+    },
+    {
+      id: "erling",
+      name: "二灵塔",
+      en: "ERLING PAGODA",
+      char: "塔",
+      cat: "attraction",
+      tag: "北宋 · 石塔国保",
+      wgs: [29.77481, 121.67703],
+      ticket: "免费（外部参观）",
+      ticketNote: "以现场为准",
+      hours: "全天（外部）",
+      stay: "20–30 分钟",
+      theme: "linear-gradient(135deg,#5f6258,#24251f 72%)",
+      one: "东钱湖东南二灵山上的北宋石塔，是浙江罕见的北宋石构建筑。",
+      intro:
+        "二灵塔位于东钱湖东南二灵山的蛇形半岛上，建于北宋政和年间（1111—1118），是浙江省内罕见的北宋石塔，也是北宋石构建筑的重要实例。1997年列为浙江省文物保护单位，2013年成为全国重点文物保护单位。塔身临湖，夕照时塔影入水，是传统“钱湖十景”中“二灵夕照”的主角。",
+      history: [
+        ["北宋政和年间", "建塔，为浙江罕见的北宋石塔。"],
+        ["1997", "列入浙江省文物保护单位。"],
+        ["2013", "成为全国重点文物保护单位。"]
+      ],
+      tips: [
+        "塔在二灵山，部分区域可能不对外开放，远观或按现场指引参观。",
+        "傍晚“二灵夕照”最有氛围，注意山路与返程时间。",
+        "文保点请勿攀爬、刻画或使用无人机干扰。"
+      ],
+      keywords: "二灵塔 二灵山 北宋 石塔 国保 夕照 钱湖十景"
+    },
+    {
+      id: "paifang",
+      name: "庙沟后石牌坊",
+      en: "MIAOGOUHOU STONE ARCHWAY",
+      char: "坊",
+      cat: "attraction",
+      tag: "南宋—元 · 石牌坊国保",
+      wgs: [29.7341111, 121.6701667],
+      ticket: "免费（外部参观）",
+      ticketNote: "以现场为准",
+      hours: "全天（外部）",
+      stay: "20 分钟",
+      theme: "linear-gradient(135deg,#6f6a5b,#2a2821 72%)",
+      one: "韩岭村庙沟后的仿木石牌坊，是中国现存最早的石牌坊之一。",
+      intro:
+        "庙沟后石牌坊又名韩岭石牌坊，位于东钱湖镇韩岭村庙沟后山南麓，是一座墓前神道牌坊。牌坊为仿木结构，其形制可与宋《营造法式》相互印证，推断建造于南宋至元代，与鄞州横省石牌坊同为中国现存最早的石牌坊之一。2001年列为第五批全国重点文物保护单位。",
+      history: [
+        ["南宋—元", "按仿木形制推断建造，具体年代仍有讨论。"],
+        ["2001", "列为第五批全国重点文物保护单位。"],
+        ["2016 起", "当地对牌坊开展变形监测。"]
+      ],
+      tips: [
+        "石牌坊在韩岭村庙沟后山，按现场标识步行前往。",
+        "文保点不攀爬、不拓印，雨天注意石阶湿滑。",
+        "可与韩岭老街安排在同一段时间。"
+      ],
+      keywords: "庙沟后 石牌坊 韩岭 南宋 元代 国保 营造法式"
     }
   ];
 
@@ -1943,7 +2112,133 @@ window.DQH_DATA = (function () {
     }
   ];
 
-  return { CATS, POIS, SERVICES, ROUTES, TRANSPORT, TRANSIT_LINES };
+  /* 文化长卷：时间线、钱湖十景、人物、遗存
+     以公开资料整理；传说与史实分开标注。 */
+  const CULTURE = {
+    kicker: "CULTURE · 一湖千年",
+    title: "一湖千年，文脉在岸",
+    intro:
+      "东钱湖不只是一个看水的地方。西晋的文献、唐代的堤、北宋的县令、南宋的宰相家族、元明的石牌坊与商埠，把它一层层写成了一部“湖边的地方史”。看懂这些层，才看得懂东钱湖。",
+    stats: [
+      { b: "1700+", s: "文献可追溯的年头" },
+      { b: "3", s: "史氏“一门三宰相”" },
+      { b: "10", s: "传统钱湖十景" },
+      { b: "18", s: "可点击文化坐标" }
+    ],
+    timeline: [
+      { year: "西晋", title: "最早的文献记载", text: "陆云《答车茂安书》写到东钱湖，湖名与水利价值第一次进入文人视野。这是东钱湖“有文字可考”的起点。" },
+      { year: "唐 · 天宝三年（744）", title: "陆南金筑堤扩湖", text: "鄮县令陆南金利用湖泊西北部低洼地带筑堤，扩大湖面，奠定东钱湖蓄水、灌溉与防洪的基本格局。" },
+      { year: "北宋 · 庆历七年（1047）", title: "王安石治湖", text: "王安石知鄞县，疏浚东钱湖、划定湖界，兴修水利。后世在东钱湖畔建忠应庙（王安石庙）纪念他。" },
+      { year: "北宋 · 政和年间", title: "二灵塔建成", text: "东钱湖东南二灵山建起石塔。它是浙江罕见的北宋石塔，2013年列为全国重点文物保护单位。" },
+      { year: "南宋", title: "史氏家族与石刻", text: "鄞县史氏崛起，史浩、史弥远、史嵩之“一门三宰相”。史浩为母建霞屿禅寺，史渐墓道等墓道石刻在后世汇聚为南宋石刻公园。" },
+      { year: "南宋—元", title: "庙沟后石牌坊", text: "韩岭村庙沟后建起仿木石牌坊，形制可与宋《营造法式》互证，是中国现存最早的石牌坊之一，2001年列为国保。" },
+      { year: "明", title: "余有丁与韩岭商埠", text: "鄞县人余有丁中嘉靖四十一年探花，官至建极殿大学士；地方留下“余相书楼”的记忆。韩岭作为水陆要冲，商埠日渐繁荣。" },
+      { year: "2001 / 2013", title: "从石刻到国保", text: "东钱湖石刻（后扩充为东钱湖墓葬群）于2001年列入第五批全国重点文保，2013年扩充更名；二灵塔于2013年列入国保。" },
+      { year: "今天", title: "湖还在，故事继续", text: "东钱湖成为旅游度假区。我们做的，不是再写一遍导游词，而是把这些层叠的时间放回地图，让游客走到哪里，就看见哪一层。" }
+    ],
+    scenes: [
+      {
+        id: "taogong", name: "陶公钓矶", poi: "taogong",
+        line: "范蠡与西施的传说，落在湖湾的一块钓矶上。",
+        text: "陶公岛西北湖湾的钓矶，相传为范蠡（陶朱公）隐居垂钓处。范蠡助越灭吴后泛舟五湖是史实轮廓，“携西施隐居东钱湖”则是地方传说；二者在陶公岛叠加成东钱湖最早的人文想象。"
+      },
+      {
+        id: "yuxiang", name: "余相书楼",
+        line: "明代大学士余有丁的读书旧事。",
+        text: "与明代鄞县人余有丁有关。余有丁为嘉靖四十一年探花，官至建极殿大学士；地方以“余相书楼”寄托对其读书旧事的记忆。书楼的具体建筑遗存以现场与地方资料为准。"
+      },
+      {
+        id: "baibu", name: "百步耸翠",
+        line: "山径短，景深长，登临可望湖。",
+        text: "湖东南百步山一带，山势陡起、林木苍翠。旧时以“百步”形容山径短而景深，登临可望湖面与远山。它代表的是东钱湖“湖山相嵌”的另一面。"
+      },
+      {
+        id: "xiayu", name: "霞屿锁岚", poi: "xiaoputuo",
+        line: "晨雾锁住小普陀，寺院若隐若现。",
+        text: "霞屿即小普陀所在。晨雾起时，长堤、寺院与湖面若隐若现，如被雾气锁住，故称“锁岚”。景名之外，这里还有史浩为母建寺的孝亲故事。"
+      },
+      {
+        id: "shuanghong", name: "双虹落彩",
+        line: "桥堤倒影如双虹，雨后尤盛。",
+        text: "旧时湖上桥堤倒影如双虹，雨后或夕照时尤盛。不同资料所指具体位置略有差异，页面以传统景观意象呈现，不强行标注坐标。"
+      },
+      {
+        id: "erling", name: "二灵夕照", poi: "erling",
+        line: "夕阳照塔，塔影入湖。",
+        text: "二灵山与二灵塔位于湖东南，夕阳西下时塔影入湖。塔建于北宋政和年间，是浙江罕见的北宋石塔，2013年列为全国重点文物保护单位。"
+      },
+      {
+        id: "shanglin", name: "上林晓钟",
+        line: "旧时上林寺的晨钟，声闻湖上。",
+        text: "旧时上林寺晨钟声闻湖上，钟声与湖雾构成湖畔的时间记忆。寺院遗存与具体位置以地方资料和现场为准。"
+      },
+      {
+        id: "luting", name: "芦汀宿雁",
+        line: "芦苇汀洲，秋日雁群栖宿。",
+        text: "芦苇汀洲，秋日雁群栖宿。它是东钱湖湿地与候鸟意象的旧景，也提醒人们：在东钱湖，湖泊首先是一片生态空间，然后才是风景。"
+      },
+      {
+        id: "yinwan", name: "殷湾渔火",
+        line: "渔舟夜泊，灯火映湖。",
+        text: "殷湾村一带旧时渔舟夜泊，灯火映湖。渔火不是宏大叙事，却是湖民日常生活留在水面上的光；今天的东钱湖仍然保留着渔业与湖鲜记忆。"
+      },
+      {
+        id: "baishi", name: "白石仙枰",
+        line: "白石山仙人弈棋的传说。",
+        text: "白石山有仙人弈棋的传说，石枰与湖山相映。它属于地方传说系统，和陶公钓矶一样，为自然山水添了一层想象，也提醒我们把“传说”与“史实”分开讲。"
+      }
+    ],
+    people: [
+      { name: "范蠡", meta: "春秋 · 越国大夫 / 陶朱公", tag: "传说", poi: "taogong", text: "助越王勾践灭吴后急流勇退，泛舟五湖、经商成陶朱公。东钱湖陶公岛因他得名；“携西施隐居”是地方传说。" },
+      { name: "陆云", meta: "西晋 · 文人", tag: "史实", text: "《答车茂安书》是东钱湖最早的文献记载之一。他没有在这里做官，却用文字为东钱湖留下了第一笔。" },
+      { name: "陆南金", meta: "唐 · 鄮县令", tag: "史实", text: "天宝三年（744）利用西北低洼地筑堤扩湖，奠定东钱湖蓄水灌溉格局。东钱湖的水利史，从他这里真正展开。" },
+      { name: "王安石", meta: "1021—1086 · 北宋政治家", tag: "史实", poi: "zhongying", text: "庆历七年（1047）知鄞县，疏浚东钱湖、划定湖界。后世建忠应庙纪念他，“王安石治湖”成为湖区最重要的水利记忆。" },
+      { name: "史浩", meta: "1106—1194 · 南宋宰相", tag: "史实", poi: "xiaoputuo", text: "明州鄞县人，官至右丞相，封魏国公，追封越王，谥忠定。相传为满足失明母亲礼佛心愿，在霞屿建“补陀洞天”，即小普陀。" },
+      { name: "史渐", meta: "1124—1195 · 史浩堂弟", tag: "史实", poi: "shike", text: "四十岁入太学，五子进士及第；孙史嵩之为南宋宰相。葬于东钱湖上水，墓道石刻是南宋石刻公园的核心，叶适为其撰墓志。" },
+      { name: "史弥远", meta: "1164—1233 · 南宋权相", tag: "史实", text: "史浩之子，南宋宁宗、理宗朝权相。与史浩、史嵩之并称史氏“一门三宰相”，是理解东钱湖南宋石刻家族背景的关键人物。" },
+      { name: "史嵩之", meta: "1189—1257 · 南宋宰相", tag: "史实", text: "史渐之孙、史弥远族侄，嘉定十三年进士，官至宰相。史氏“一门三宰相，四世两封王，五尚书，七十二进士”的地方记忆，在他身上达到高点。" },
+      { name: "余有丁", meta: "1527—1584 · 明建极殿大学士", tag: "史实", text: "鄞县人，嘉靖四十一年探花，官至建极殿大学士。地方以“余相书楼”记住他的读书旧事，是东钱湖明代文脉的代表。" },
+      { name: "岳飞", meta: "1103—1142 · 南宋抗金名将", tag: "史实", poi: "yuewang", text: "以“精忠报国”著称，后以“莫须有”罪名遇害，宋宁宗时追封鄂王。东钱湖畔的岳鄂王庙始建于南宋端平年间，现存清代至民国建筑。" }
+    ],
+    relics: [
+      {
+        name: "南宋石刻公园 · 东钱湖墓葬群", meta: "全国重点文保 · 2001/2013", poi: "shike",
+        text: "以东钱湖沿岸宋元明名臣墓道石刻为主体，史氏墓道是中国现存唯一的南宋墓道石刻群。2001年以“东钱湖石刻”列入第五批国保，2013年扩充更名。2009年，一对“文臣武将”石刻曾赴意大利佛罗伦萨展出。"
+      },
+      {
+        name: "二灵塔", meta: "北宋 · 全国重点文保 · 2013", poi: "erling",
+        text: "北宋政和年间建，浙江罕见的北宋石塔，北宋石构建筑的重要实例。1997年省保，2013年国保；夕阳塔影即“二灵夕照”。"
+      },
+      {
+        name: "庙沟后石牌坊", meta: "南宋—元 · 全国重点文保 · 2001", poi: "paifang",
+        text: "韩岭村庙沟后山南麓的墓前神道牌坊，仿木结构，形制与宋《营造法式》互证，是中国现存最早的石牌坊之一。"
+      },
+      {
+        name: "小普陀 · 霞屿禅寺", meta: "南宋 · 孝亲传说", poi: "xiaoputuo",
+        text: "史浩为母在霞屿凿“补陀洞天”、建霞屿禅寺，民间称“小普陀”。它把南宋宰相家族、佛教观音信仰与东钱湖的湖上空间连在一起。"
+      },
+      {
+        name: "忠应庙 · 王安石庙", meta: "清代建筑 · 区级文保", poi: "zhongying",
+        text: "东钱湖镇西村，现存清代建筑，供王安石塑像与在鄞史迹。它纪念的不是“变法”，而是一个县令对一座湖的水利责任。"
+      },
+      {
+        name: "韩岭老街", meta: "水陆商埠 · 传统街区", poi: "hanling",
+        text: "东钱湖南岸的千年聚落与水陆要冲，清末民初的店铺民居保存较好，有“浙东第一古街”之称。村内庙沟后石牌坊，是它宋代以来历史的实物证据。"
+      },
+      {
+        name: "岳鄂王庙", meta: "南宋端平始建 · 区级文保", poi: "yuewang",
+        text: "东钱湖镇莫枝村湖滨西路，旧称岳众行祠，俗称西瓜庙。纪念岳飞，现存清代至民国建筑，1991年列为鄞县（今鄞州区）文保。"
+      }
+    ],
+    sources: [
+      "维基百科：东钱湖、南宋石刻公园、东钱湖墓葬群、史渐、鄞县史氏、二灵塔、庙沟后石牌坊、忠应庙、岳鄂王庙、余有丁、史嵩之",
+      "OpenStreetMap：景点、酒店、码头等坐标",
+      "高德地图：底图瓦片",
+      "说明：部分年代与地名在不同资料中略有差异，本文以主流公开资料整理；传说已标注“相传/传说”，票价与开放时间以官方为准。"
+    ]
+  };
+
+  return { CATS, POIS, SERVICES, ROUTES, TRANSPORT, TRANSIT_LINES, CULTURE };
 })();
 </script>
 <script>
@@ -1956,7 +2251,7 @@ window.DQH_DATA = (function () {
 
   var DATA = window.DQH_DATA;
   var POIS = DATA.POIS, SERVICES = DATA.SERVICES, ROUTES = DATA.ROUTES, CATS = DATA.CATS;
-  var TRANSPORT = DATA.TRANSPORT || [], TRANSIT_LINES = DATA.TRANSIT_LINES || [];
+  var TRANSPORT = DATA.TRANSPORT || [], TRANSIT_LINES = DATA.TRANSIT_LINES || [], CULTURE = DATA.CULTURE || null;
   var BUS_STOPS = [{
     id: "bus-center", name: "游客中心站", type: "bus", line: "环湖观光公交",
     wgs: [29.7387506, 121.6606625], desc: "环湖线始发 · 游客中心",
@@ -2743,6 +3038,71 @@ window.DQH_DATA = (function () {
   });
   $("#amapPoi").addEventListener("click", function () { if (state.activePoi) openAmap(state.activePoi); });
 
+  /* ---------- culture ---------- */
+  function openCulturePoi(id) {
+    var p = poiById(id);
+    if (!p) return;
+    go("map");
+    focusOn(p, 15);
+    setTimeout(function () { openPoi(p.id); }, 220);
+  }
+  function renderCulture() {
+    if (!CULTURE) return;
+    $("#cultureIntro").textContent = CULTURE.intro;
+    $("#cultureStats").innerHTML = CULTURE.stats.map(function (x) {
+      return "<div><b>" + esc(x.b) + "</b><span>" + esc(x.s) + "</span></div>";
+    }).join("");
+    $("#cultureTimeline").innerHTML = CULTURE.timeline.map(function (x) {
+      return '<div class="ct-item"><div class="ct-year">' + esc(x.year) + '</div>' +
+        '<div class="ct-body"><h3>' + esc(x.title) + '</h3><p>' + esc(x.text) + '</p></div></div>';
+    }).join("");
+    $("#sceneGrid").innerHTML = CULTURE.scenes.map(function (x, i) {
+      return '<div class="scene-card" data-scene="' + x.id + '" role="button" tabindex="0" aria-expanded="false">' +
+        '<div class="sc-top"><span class="sc-num">' + ("0" + (i + 1)).slice(-2) + '</span><h3>' + esc(x.name) + '</h3><span class="sc-arrow">›</span></div>' +
+        '<p class="sc-line">' + esc(x.line) + '</p>' +
+        '<div class="sc-more">' + esc(x.text) + (x.poi ? '<br><button type="button" class="sc-map" data-culture-poi="' + x.poi + '">在地图查看 →</button>' : "") + '</div></div>';
+    }).join("");
+    $$("#sceneGrid .scene-card").forEach(function (card) {
+      function toggle() {
+        var open = card.classList.toggle("open");
+        card.setAttribute("aria-expanded", open ? "true" : "false");
+      }
+      card.addEventListener("click", function (e) {
+        if (e.target.closest("[data-culture-poi]")) return;
+        toggle();
+      });
+      card.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
+      });
+    });
+    $$("#sceneGrid [data-culture-poi]").forEach(function (b) {
+      b.addEventListener("click", function (e) {
+        e.stopPropagation();
+        openCulturePoi(b.dataset.culturePoi);
+      });
+    });
+    $("#peopleGrid").innerHTML = CULTURE.people.map(function (p) {
+      return '<article class="person-mini"><div class="pm-top"><b>' + esc(p.name) + '</b><span class="pm-tag ' + (p.tag === "传说" ? "legend" : "") + '">' + esc(p.tag) + '</span></div>' +
+        '<span class="pm-meta">' + esc(p.meta) + '</span><p>' + esc(p.text) + '</p>' +
+        (p.poi ? '<button type="button" class="pm-map" data-culture-poi="' + p.poi + '">地图上看 →</button>' : "") + '</article>';
+    }).join("");
+    $("#relicGrid").innerHTML = CULTURE.relics.map(function (r) {
+      return '<article class="relic-card"><div class="rc-tag">' + esc(r.meta) + '</div><h3>' + esc(r.name) + '</h3><p>' + esc(r.text) + '</p>' +
+        (r.poi ? '<button type="button" class="rc-map" data-culture-poi="' + r.poi + '">在地图查看 →</button>' : "") + '</article>';
+    }).join("");
+    $$("#peopleGrid [data-culture-poi], #relicGrid [data-culture-poi]").forEach(function (b) {
+      b.addEventListener("click", function () { openCulturePoi(b.dataset.culturePoi); });
+    });
+    $("#cultureSources").innerHTML = "<b>资料与边界</b><br>" + CULTURE.sources.map(esc).join("<br>");
+  }
+  $("#cultureMapBtn").addEventListener("click", function () {
+    go("map");
+    state.cat = "attraction";
+    applyFilters();
+    fitCat("attraction");
+    toast("已在地图筛出人文坐标");
+  });
+
   /* ---------- routes ---------- */
   function renderRoutes() {
     $("#routeGrid").innerHTML = ROUTES.map(function (r) {
@@ -3193,6 +3553,7 @@ window.DQH_DATA = (function () {
     if (view === "services") renderServices();
     if (view === "chat" && window.DQH_CHAT) window.DQH_CHAT.scroll();
     if (view === "transport") renderTransport();
+    if (view === "culture") renderCulture();
   }
   $$("[data-view]").forEach(function (b) {
     b.addEventListener("click", function (e) { e.preventDefault(); go(b.dataset.view); });
@@ -3311,6 +3672,7 @@ window.DQH_DATA = (function () {
     applyFilters();
     renderPoiList();
     renderRoutes();
+    renderCulture();
     renderTransport();
     syncHdBtn();
     buildServiceChips();
