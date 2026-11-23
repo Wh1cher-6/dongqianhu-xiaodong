@@ -1309,6 +1309,42 @@ body.tour-on{overflow:auto}
   .tour-acts button{padding:9px 10px;font-size:11.5px}
 }
 
+/* ---------- 功能性图标（国际通用地图符号） ---------- */
+.marker .pin .body.has-icon{background:linear-gradient(150deg,#6f6656,#3b372d)}
+.marker.cat-hotel .pin .body.has-icon{background:linear-gradient(150deg,#b58a4a,#6e5126)}
+.marker .pin .body .pin-ico{
+  width:17px;height:17px;fill:none;stroke:#fff8ee;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round;transform:rotate(45deg);
+}
+.marker.service .dot.has-icon{padding:0;background:var(--card);border-color:var(--line-2)}
+.marker.service .dot .dot-ico{
+  width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.marker.service.active .dot .dot-ico{stroke:#fff8ee}
+.service-ico.has-icon{background:var(--paper-2)}
+.service-item .service-ico .icon{width:22px;height:22px;stroke-width:1.8}
+.poi-thumb.is-icon{background:var(--paper-2);display:grid;place-items:center}
+.poi-thumb .poi-ico{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.loc-ico.is-icon{display:grid;place-items:center;background:var(--paper-2)}
+.loc-ico .loc-svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.si-ico.has-icon{display:grid;place-items:center}
+.si-ico .si-svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+/* 分类色 */
+.poi-thumb.is-icon.c-hotel{background:rgba(154,107,47,.12);color:#8a5f28}
+.poi-thumb.is-icon.c-attraction{background:rgba(191,90,60,.12);color:#a94f31}
+.poi-thumb.is-icon.c-fun{background:rgba(47,125,106,.12);color:#2a6d5c}
+.marker.service .dot.c-toilet{color:#3c6f8d}
+.marker.service .dot.c-parking{color:#4b5563}
+.marker.service .dot.c-bike{color:#2f7a66}
+.marker.service .dot.c-visitor{color:#ad8748}
+.marker.service .dot.c-food{color:#a2662f}
+.service-ico.c-toilet{background:rgba(60,111,141,.1);color:#3c6f8d}
+.service-ico.c-parking{background:rgba(75,85,99,.1);color:#4b5563}
+.service-ico.c-bike{background:rgba(47,122,102,.1);color:#2f7a66}
+.service-ico.c-visitor{background:rgba(173,135,72,.12);color:#ad8748}
+.service-ico.c-food{background:rgba(162,102,47,.1);color:#a2662f}
+
 /* ---------- 图层 / 地图显示面板 ---------- */
 .layers-pop{
   position:absolute;right:16px;top:100px;z-index:22;width:206px;display:none;
@@ -1706,16 +1742,48 @@ body.tour-on{overflow:auto}
   <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
   <symbol id="i-ticket" viewBox="0 0 24 24"><path d="M3 9a2 2 0 0 0 2-2V6h14v1a2 2 0 0 0 2 2v6a2 2 0 0 0-2 2v1H5v-1a2 2 0 0 0-2-2V9Z"/><path d="M13 6v2M13 11v2M13 16v2"/></symbol>
   <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v18H6a2 2 0 0 1-2-2V5Z"/><path d="M4 17h15M8 7h7"/></symbol>
-  <!-- 服务点图标 -->
-  <symbol id="i-svc-toilet" viewBox="0 0 24 24"><rect x="6" y="2" width="4" height="10" rx="1"/><rect x="14" y="2" width="4" height="10" rx="1"/><path d="M6 12h4v10H6zM14 12h4v10h-4z"/><circle cx="8" cy="17" r="1"/><circle cx="16" cy="17" r="1"/></symbol>
-  <symbol id="i-svc-parking" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><text x="12" y="17" text-anchor="middle" font-size="14" font-weight="700" fill="currentColor" font-family="sans-serif">P</text></symbol>
-  <symbol id="i-svc-bike" viewBox="0 0 24 24"><circle cx="6" cy="17" r="3.5"/><circle cx="18" cy="17" r="3.5"/><path d="M6 17h2l4-9h2l2 4.5"/><circle cx="12" cy="4" r="1.5"/><path d="M12 5.5v3"/></symbol>
-  <symbol id="i-svc-visitor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><text x="12" y="17" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor" font-family="sans-serif">i</text></symbol>
-  <symbol id="i-svc-food" viewBox="0 0 24 24"><path d="M7 2v20M17 2v8a4 4 0 0 1-4 4v10"/></symbol>
-  <symbol id="i-svc-transport" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="11" rx="1.5"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><rect x="2" y="10" width="2" height="3" rx="0.5"/><rect x="20" y="10" width="2" height="3" rx="0.5"/></symbol>
-  <symbol id="i-svc-boat" viewBox="0 0 24 24"><path d="M2 17c2 3 6 3 10 1s8-2 10 1"/><path d="M12 4v13"/><path d="M7 7l5-4 5 4-5 8z"/></symbol>
-  <symbol id="i-svc-fun" viewBox="0 0 24 24"><circle cx="12" cy="14" r="5"/><path d="M8 14c0-6 2-10 4-10s4 4 4 10"/></symbol>
-  <symbol id="i-svc-hotel" viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="14" rx="2"/><line x1="4" y1="12" x2="20" y2="12"/><rect x="7" y="18" width="4" height="2"/><rect x="13" y="18" width="4" height="2"/></symbol>
+  <!-- 服务点图标：参照国际通用地图符号（ISO/公共信息图形符号） -->
+  <symbol id="i-svc-toilet" viewBox="0 0 24 24">
+    <circle cx="7.6" cy="4.6" r="1.9"/><path d="M7.6 7.4v5.2M5.1 9.4h5M7.6 12.6 5.4 19.6M7.6 12.6l2.2 7"/>
+    <circle cx="16.4" cy="4.6" r="1.9"/><path d="M16.4 7.4v4.6M13.9 9.4h5"/>
+    <path d="M13.4 12h6l-1.7 7.6M17.7 12l-.9 7.6M16.4 12v7.6"/>
+  </symbol>
+  <symbol id="i-svc-parking" viewBox="0 0 24 24">
+    <rect x="3.2" y="3.2" width="17.6" height="17.6" rx="3.2"/>
+    <path d="M9.6 17V7.4h3.1a3.1 3.1 0 0 1 0 6.2H9.6"/>
+  </symbol>
+  <symbol id="i-svc-bike" viewBox="0 0 24 24">
+    <circle cx="5.6" cy="16.6" r="3.6"/><circle cx="18.4" cy="16.6" r="3.6"/>
+    <path d="M5.6 16.6h3.2L11 7.4h2.2l3.1 6.2h2.1"/>
+    <path d="M13.2 7.4h3.6M10 9.6h4.6"/>
+  </symbol>
+  <symbol id="i-svc-visitor" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8.6"/>
+    <path d="M12 10.6V17"/><circle cx="12" cy="7.6" r=".9" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="i-svc-food" viewBox="0 0 24 24">
+    <path d="M7.4 3.2v6.2a2.4 2.4 0 0 0 4.8 0V3.2"/>
+    <path d="M9.8 9.4V20.8"/>
+    <path d="M16.6 3.2c1.7 1.5 2.4 3.4 2.4 5.4 0 1.6-1 2.7-2.4 2.9v9.3"/>
+  </symbol>
+  <symbol id="i-svc-transport" viewBox="0 0 24 24">
+    <rect x="4.6" y="3.4" width="14.8" height="14.2" rx="2.6"/>
+    <path d="M4.6 11.6h14.8M8.4 7.2h7.2"/>
+    <circle cx="8.4" cy="20" r="1.5"/><circle cx="15.6" cy="20" r="1.5"/>
+  </symbol>
+  <symbol id="i-svc-boat" viewBox="0 0 24 24">
+    <path d="M3.4 14.6h17.2l-2.2 4.2a2.6 2.6 0 0 1-2.3 1.4H7.9a2.6 2.6 0 0 1-2.3-1.4Z"/>
+    <path d="M6.4 14.6V9.8h8.4l3 4.8"/>
+    <path d="M10.6 9.8V6.4h3.4"/>
+  </symbol>
+  <symbol id="i-svc-hotel" viewBox="0 0 24 24">
+    <path d="M3.4 19.4V7.2"/>
+    <path d="M3.4 19.4h17.2"/>
+    <path d="M3.4 15.6h17.2"/>
+    <path d="M7.4 15.6v-3.2h4.4v3.2"/>
+    <circle cx="15.4" cy="13" r="2.2"/>
+    <path d="M12.8 15.6c.6-1.4 1.5-2.1 2.6-2.1s2 .7 2.6 2.1"/>
+  </symbol>
   <symbol id="i-svc-generic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m12 7v5l3 3"/></symbol>
   <!-- 小东形象：戴渔夫帽的湖边小向导 -->
   <symbol id="mascot" viewBox="0 0 64 64">
@@ -2341,7 +2409,7 @@ body.tour-on{overflow:auto}
       <div class="service-count" id="serviceCount"></div>
       <div class="service-list" id="serviceList"></div>
       <div class="route-note"><b>数据说明：</b>服务点位为原型模拟，按景点周边合理布设，用于演示“检索—距离—地图定位”闭环；实际位置、收费与开放时间请以现场标识和景区公示为准。</div>
-      <p class="photo-credit">点位照片来自 Wikimedia Commons（CC BY-SA），按景点分类选取并裁切；韩岭、福泉山及部分服务设施为同类场景示意，非官方宣传图。</p>
+      <p class="photo-credit">厕所、停车、骑行、咨询、餐饮等使用国际通用功能图标；只有景点与玩乐队列使用实拍照片（Wikimedia Commons，CC BY-SA）。</p>
     </div>
   </section>
 </main>
@@ -3867,6 +3935,10 @@ window.DQH_DATA = (function () {
   function photoOf(key) { return PHOTOS[key] || ""; }
   function catPhoto(cat) { return photoOf(cat) || photoOf("attraction"); }
   function poiPhoto(p) { return photoOf(p.id) || catPhoto(p.cat); }
+  /* 只有真正的游玩点位用实拍图；住宿、服务、交通用国际通用功能图标 */
+  var PHOTO_CATS = { attraction: true, fun: true };
+  function usePhoto(cat) { return !!PHOTO_CATS[cat]; }
+  function poiThumb(p) { return usePhoto(p.cat) ? poiPhoto(p) : ""; }
   var BUS_STOPS = [{
     id: "bus-center", name: "游客中心站", type: "bus", line: "环湖观光公交",
     wgs: [29.7387506, 121.6606625], desc: "环湖线始发 · 游客中心",
@@ -4251,10 +4323,11 @@ window.DQH_DATA = (function () {
       var mark = p.cat === "attraction"
         ? (POIS.filter(function (x) { return x.cat === "attraction"; }).indexOf(p) + 1)
         : (p.icon || CATS[p.cat].short);
-      var ph = poiPhoto(p);
+      var ph = poiThumb(p);
       el.innerHTML = '<button class="hit" type="button" aria-label="' + esc(p.name) + '"><span class="pulse"></span>' +
-        '<span class="pin"><span class="body' + (ph ? " has-photo" : "") + '">' +
-        (ph ? '<img src="' + ph + '" alt="" loading="lazy" decoding="async">' : '<span>' + mark + '</span>') +
+        '<span class="pin"><span class="body' + (ph ? " has-photo" : " has-icon") + '">' +
+        (ph ? '<img src="' + ph + '" alt="" loading="lazy" decoding="async">'
+            : '<svg class="pin-ico"><use href="#' + (CATS[p.cat].icon || "i-svc-generic") + '"/></svg>') +
         '</span></span>' +
         (p.cat === "attraction" ? '<span class="pin-no">' + mark + '</span>' : '') +
         '<span class="tag">' + esc(p.name) + '</span></button>';
@@ -4269,10 +4342,10 @@ window.DQH_DATA = (function () {
       var el = document.createElement("div");
       el.className = "marker service";
       el._item = s;
-      var ph = catPhoto(s.cat);
+      var iconId = CATS[s.cat].icon || "i-svc-generic";
       el.innerHTML = '<button class="hit" type="button" aria-label="' + esc(s.name) + '">' +
-        '<span class="dot c-' + s.cat + (ph ? " has-photo" : "") + '">' +
-        (ph ? '<img src="' + ph + '" alt="" loading="lazy" decoding="async">' : CATS[s.cat].short) +
+        '<span class="dot c-' + s.cat + ' has-icon">' +
+        '<svg class="dot-ico"><use href="#' + iconId + '"/></svg>' +
         '</span><span class="label">' + esc(s.name) + '</span></button>';
       el.querySelector(".hit").addEventListener("click", function (e) {
         e.stopPropagation();
@@ -4537,9 +4610,10 @@ window.DQH_DATA = (function () {
           var num = p.cat === "attraction"
             ? (POIS.filter(function (x) { return x.cat === "attraction"; }).indexOf(p) + 1)
             : (p.icon || CATS[p.cat].short);
-          var ph = poiPhoto(p);
-          return '<button type="button" class="poi-row" data-poi="' + p.id + '"><span class="poi-thumb">' +
-            (ph ? '<img src="' + ph + '" alt="" loading="lazy" decoding="async">' : '<span class="poi-num cat-' + p.cat + '">' + num + '</span>') +
+          var ph = poiThumb(p);
+          return '<button type="button" class="poi-row" data-poi="' + p.id + '"><span class="poi-thumb' + (ph ? "" : " is-icon c-" + p.cat) + '">' +
+            (ph ? '<img src="' + ph + '" alt="" loading="lazy" decoding="async">'
+                : '<svg class="poi-ico"><use href="#' + (CATS[p.cat].icon || "i-svc-generic") + '"/></svg>') +
             (p.cat === "attraction" ? '<i class="thumb-no">' + num + '</i>' : '') + '</span>' +
             '<span class="poi-info"><b>' + esc(p.name) + '</b><small>' + esc(p.tag) + '</small>' +
             '<span class="poi-meta"><em>' + distWord() + " " + fmtDist(distTo(p.wgs)) + '</em><span>' + esc(p.ticket) + '</span><span>' + esc(p.stay) + '</span></span></span></button>';
@@ -4579,10 +4653,12 @@ window.DQH_DATA = (function () {
     else box.innerHTML = list.map(function (r) {
       var it = r.item, isPoi = r.type === "poi", isTrans = r.type === "transport";
       var color = isTrans ? (it.type === "metro" ? "#c6473a" : it.type === "bus" ? "#3f7d5b" : "#2e6f9e") : CATS[it.cat].color;
-      var ico = isPoi ? (POIS.indexOf(it) + 1) : isTrans ? (it.type === "metro" ? "M" : it.type === "bus" ? "B" : "船") : CATS[it.cat].short;
+      var iconId = isPoi ? (CATS[it.cat].icon || "i-svc-generic")
+        : isTrans ? (it.type === "boat" ? "i-svc-boat" : "i-svc-transport")
+        : (CATS[it.cat].icon || "i-svc-generic");
       var sub = isPoi ? esc(it.tag) : isTrans ? esc(it.line) + " · " + esc(it.desc) : CATS[it.cat].label + " · " + esc(it.desc);
       return '<button type="button" class="search-item" data-rtype="' + r.type + '" data-rid="' + it.id + '">' +
-        '<span class="si-ico" style="color:' + color + '">' + ico + '</span>' +
+        '<span class="si-ico has-icon" style="color:' + color + '"><svg class="si-svg"><use href="#' + iconId + '"/></svg></span>' +
         '<span class="si-main"><b>' + esc(it.name) + '</b><small>' + sub + '</small></span>' +
         '<span class="si-dist">' + fmtDist(distTo(it.wgs)) + '</span></button>';
     }).join("");
@@ -4629,7 +4705,7 @@ window.DQH_DATA = (function () {
     state.activePoi = p;
     state.poiTab = "intro";
     $("#poiGrad").style.background = (function () {
-      var ph = poiPhoto(p);
+      var ph = usePhoto(p.cat) ? poiPhoto(p) : "";
       return ph
         ? 'linear-gradient(180deg,rgba(12,20,16,.18),rgba(12,20,16,.72)),url("' + ph + '") center/cover no-repeat'
         : p.theme;
@@ -5208,9 +5284,9 @@ window.DQH_DATA = (function () {
     $("#serviceCount").textContent = "共 " + list.length + " 个服务点 · 按" + (state.user.source === "gps" ? "距你" : "距游客中心") + "由近到远排序";
     if (!list.length) { $("#serviceList").innerHTML = '<div class="empty">没有找到匹配的服务点，换个关键词试试。</div>'; return; }
     $("#serviceList").innerHTML = list.map(function (s) {
-      var ph = catPhoto(s.cat); var iconId = (CATS[s.cat].icon || "i-svc-generic");
-      return '<button type="button" class="service-item" data-service="' + s.id + '"><span class="service-ico c-' + s.cat + (ph ? " has-photo" : "") + '">' +
-        (ph ? '<img src="' + ph + '" alt="" loading="lazy" decoding="async">' : '<svg class="icon"><use href="#' + iconId + '"/></svg>') + '</span>' +
+      var iconId = (CATS[s.cat].icon || "i-svc-generic");
+      return '<button type="button" class="service-item" data-service="' + s.id + '"><span class="service-ico c-' + s.cat + ' has-icon">' +
+        '<svg class="icon"><use href="#' + iconId + '"/></svg></span>' +
         '<span class="service-main"><b>' + esc(s.name) + '</b><small>' + esc(s.desc) + ' · ' + esc(s.hours) + '</small></span>' +
         '<span class="service-side"><b>' + fmtDist(distTo(s.wgs)) + '</b><span>步行 ' + walkMin(distTo(s.wgs)) + ' 分钟</span></span></button>';
     }).join("");
@@ -6614,10 +6690,14 @@ window.DQH_DATA = (function () {
     box.innerHTML = list.map(function (p) {
       var mark = p.cat === "attraction" ? "文" : (p.icon || "宿");
       var price = p.cat === "hotel" ? "参考 " + p.ticket : p.ticket;
-      var ph = window.DQH_PHOTOS && (window.DQH_PHOTOS[p.id] || window.DQH_PHOTOS[p.cat] || window.DQH_PHOTOS.attraction);
+      var usePh = p.cat === "attraction" || p.cat === "fun";
+      var ph = usePh && window.DQH_PHOTOS && (window.DQH_PHOTOS[p.id] || window.DQH_PHOTOS[p.cat]);
+      var cat = window.DQH_DATA && DQH_DATA.CATS[p.cat];
+      var iconId = (cat && cat.icon) || "i-svc-generic";
       return '<button type="button" class="loc-row" data-loc-poi="' + p.id + '">' +
-        '<span class="loc-ico' + (ph ? " has-photo" : "") + '">' +
-        (ph ? '<img src="' + ph + '" alt="" loading="lazy" decoding="async">' : mark) + '</span>' +
+        '<span class="loc-ico' + (ph ? " has-photo" : " is-icon") + '">' +
+        (ph ? '<img src="' + ph + '" alt="" loading="lazy" decoding="async">'
+            : '<svg class="loc-svg"><use href="#' + iconId + '"/></svg>') + '</span>' +
         '<span class="loc-main"><b>' + APP.esc(p.name) + '</b><small>' + APP.esc(p.tag) + '</small></span>' +
         '<span class="loc-side">' + APP.fmtDist(APP.distTo(p.wgs)) + '<span>' + APP.esc(price) + '</span></span></button>';
     }).join("");
