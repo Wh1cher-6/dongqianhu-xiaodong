@@ -584,6 +584,67 @@ body.panel-collapsed .map-scale{display:none}
 .culture-note{font-size:10.5px;color:var(--muted);line-height:1.7;margin-top:9px}
 .culture-sources{margin-top:34px;padding:16px 18px;border:1px dashed var(--line-2);border-radius:12px;font-size:10.5px;color:var(--muted);line-height:1.8}
 .culture-sources b{color:var(--ink-2)}
+.stone-feature{display:flex;align-items:center;justify-content:space-between;gap:20px;width:100%;margin-top:14px;padding:20px 24px;border-radius:18px;border:1px solid #4e4a3d;text-align:left;color:#f4ecdc;background:linear-gradient(120deg,#1c201a,#2b2f26 60%,#3a392d);box-shadow:var(--shadow);overflow:hidden;position:relative}
+.stone-feature::before{content:"";position:absolute;right:12%;top:-60%;width:220px;height:220px;border:1px solid rgba(215,180,119,.25);border-radius:50%}
+.sf-copy{display:block;position:relative;z-index:1}
+.sf-kicker{display:block;font-size:9px;letter-spacing:.24em;color:#c8a878}
+.sf-copy b{display:block;font-family:var(--serif);font-size:24px;font-weight:600;letter-spacing:.04em;margin-top:5px}
+.sf-copy > span:not(.sf-kicker){display:block;font-size:11px;color:rgba(244,236,220,.62);margin-top:5px;line-height:1.6}
+.sf-copy em{display:inline-flex;margin-top:12px;font-style:normal;font-size:11px;color:#e8b98d;border-bottom:1px solid rgba(232,185,141,.45);padding-bottom:2px}
+.sf-art{position:relative;z-index:1;flex:none;width:108px;height:108px;border:1px solid rgba(215,180,119,.35);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-7deg)}
+.sf-art i{font-family:var(--serif);font-style:normal;font-size:42px;color:#d7b477;line-height:1}
+.sf-art small{font-size:7.5px;letter-spacing:.12em;color:rgba(244,236,220,.45);margin-top:4px;white-space:nowrap}
+.stone-page{max-width:1220px}
+.stone-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.stone-top > span{font-size:9px;letter-spacing:.18em;color:var(--muted)}
+.back-link{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);padding:5px 0}
+.back-link .icon{width:13px;height:13px;transform:rotate(180deg)}
+.back-link:hover{color:var(--ink)}
+.stone-hero{background:linear-gradient(120deg,#171b16,#283027);border-radius:22px;padding:28px 32px;color:#f4ecdc;position:relative;overflow:hidden}
+.stone-hero::after{content:"";position:absolute;right:-40px;bottom:-80px;width:260px;height:260px;border:1px solid rgba(215,180,119,.2);border-radius:50%}
+.stone-hero .page-kicker{color:#c8a878}
+.stone-hero .page-title{color:#f6efe1;margin-top:4px;font-size:clamp(28px,4vw,42px)}
+.stone-hero .page-title em{color:#e4b183}
+.stone-hero > p{max-width:52em;margin-top:8px;font-size:12px;line-height:1.8;color:rgba(244,236,220,.7)}
+.stone-stats{display:flex;gap:26px;flex-wrap:wrap;margin-top:16px}
+.stone-stats b{display:block;font-family:var(--serif);font-size:20px;color:#f4e7cf;font-weight:600}
+.stone-stats span{font-size:9px;color:rgba(244,236,220,.5);letter-spacing:.06em}
+.stone-layout{display:grid;grid-template-columns:1.45fr .75fr;gap:14px;margin-top:14px;align-items:start}
+.stone-stage{position:relative;background:#151713;border:1px solid #3e3b31;border-radius:20px;overflow:hidden;min-height:300px}
+.stone-stage svg{display:block;width:100%;height:auto}
+.stone-stage-head{position:absolute;left:14px;top:12px;right:14px;display:flex;justify-content:space-between;z-index:3;font-size:9px;letter-spacing:.12em;color:rgba(244,236,220,.55);pointer-events:none}
+.stone-stage-head span:last-child{font-variant-numeric:tabular-nums;color:#d7b477}
+.stone-hotspots{position:absolute;inset:0;z-index:4;pointer-events:none}
+.stone-hotspot{position:absolute;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:50%;border:1px solid rgba(232,185,141,.6);background:rgba(20,22,17,.62);color:#e8c89a;font-family:var(--serif);font-size:11px;display:grid;place-items:center;pointer-events:auto;backdrop-filter:blur(4px);transition:background .2s,color .2s,transform .2s}
+.stone-hotspot::after{content:"";position:absolute;inset:-5px;border:1px solid rgba(232,185,141,.25);border-radius:50%;animation:stonePulse 2.6s infinite}
+.stone-hotspot:hover{background:rgba(215,180,119,.18);transform:translate(-50%,-50%) scale(1.08)}
+.stone-hotspot.active{background:#d7b477;color:#171b16;border-color:#d7b477;box-shadow:0 0 0 5px rgba(215,180,119,.12)}
+.stone-hotspot.active::after{border-color:rgba(215,180,119,.6)}
+@keyframes stonePulse{0%,100%{transform:scale(.9);opacity:.55}50%{transform:scale(1.12);opacity:.1}}
+.stone-tools{position:absolute;left:12px;right:12px;bottom:11px;z-index:5;display:flex;justify-content:space-between;gap:6px;pointer-events:none}
+.stone-tools button{pointer-events:auto;display:inline-flex;align-items:center;gap:5px;font-size:9.5px;color:rgba(244,236,220,.75);background:rgba(18,20,16,.68);border:1px solid rgba(244,236,220,.16);border-radius:999px;padding:5px 9px;backdrop-filter:blur(5px)}
+.stone-tools button:hover{color:#fff;border-color:rgba(244,236,220,.35)}
+.stone-tools .icon{width:12px;height:12px}
+.stone-stage.rubbing{background:#f2e8d4;border-color:#c9b995}
+.stone-stage.rubbing svg{filter:grayscale(1) contrast(2.15) brightness(.42)}
+.stone-stage.rubbing .stone-stage-head{color:#5b5141}
+.stone-stage.rubbing .stone-stage-head span:last-child{color:#7b623b}
+.stone-stage.rubbing .stone-hotspot{background:rgba(242,232,212,.85);border-color:#6e5d3e;color:#4d3f2a;backdrop-filter:none}
+.stone-stage.rubbing .stone-hotspot.active{background:#4d3f2a;color:#f2e8d4;border-color:#4d3f2a}
+.stone-stage.rubbing .stone-tools button{background:rgba(242,232,212,.86);color:#4d3f2a;border-color:rgba(77,63,42,.25)}
+.stone-panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px 18px 16px;position:sticky;top:14px}
+.sp-top{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:9px;letter-spacing:.12em;color:var(--muted)}
+.sp-top span:last-child{color:var(--clay);border:1px solid rgba(191,90,60,.25);border-radius:999px;padding:2px 7px;letter-spacing:.04em}
+.stone-panel h2{font-family:var(--serif);font-size:34px;font-weight:600;letter-spacing:.1em;margin-top:7px;line-height:1.1}
+.sp-short{font-size:11.5px;color:var(--ink-2);line-height:1.7;margin-top:5px;font-weight:600}
+.sp-desc{font-size:11.5px;color:var(--muted);line-height:1.85;margin-top:7px}
+.sp-facts{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+.sp-facts li{font-size:10.5px;color:var(--ink-2);line-height:1.75;padding-left:11px;position:relative;margin-top:4px}
+.sp-facts li::before{content:"";position:absolute;left:0;top:7px;width:4px;height:4px;border-radius:50%;background:var(--clay)}
+.sp-actions{display:flex;gap:6px;margin-top:14px}
+.sp-actions .btn{flex:1;padding:8px 6px;font-size:10px;border-radius:9px}
+.stone-link{display:inline-flex;align-items:center;gap:4px;margin-top:11px;padding:7px 10px;border-radius:8px;background:var(--ink);color:#fff8ee;font-size:10.5px;border:1px solid var(--ink)}
+.stone-note{font-size:10.5px;color:var(--muted);line-height:1.75;margin-top:12px;padding:0 4px}
 .transit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
 .transit-card{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow-sm);display:flex;flex-direction:column}
 .tc-top{position:relative;padding:15px 16px 14px;color:#fff8ee;overflow:hidden;min-height:92px}
@@ -792,6 +853,9 @@ body.panel-collapsed .map-scale{display:none}
   .culture-hero{grid-template-columns:1fr;padding:26px 24px}
   .culture-seal{display:none}
   .people-grid{grid-template-columns:1fr 1fr}
+  .stone-layout{grid-template-columns:1fr}
+  .stone-panel{position:static}
+  .stone-hero{padding:24px}
   .route-hero{grid-template-columns:1fr;padding:26px 24px}
   .rh-art{height:140px;order:-1}
   .page-title{font-size:clamp(27px,6vw,38px)}
@@ -827,6 +891,17 @@ body.panel-collapsed .map-scale{display:none}
   .ct-item{grid-template-columns:1fr;gap:2px;padding-left:17px}
   .bottomnav button{font-size:8.4px}
   .bottomnav button .icon{width:18px;height:18px}
+  .stone-feature{padding:16px;gap:10px}
+  .sf-copy b{font-size:20px}
+  .sf-art{width:78px;height:78px}
+  .sf-art i{font-size:30px}
+  .sf-art small{font-size:6.5px}
+  .stone-hero{padding:20px 18px}
+  .stone-stats{gap:18px}
+  .stone-panel h2{font-size:28px}
+  .stone-hotspot{width:28px;height:28px;font-size:10px}
+  .stone-stage-head{font-size:8px}
+  .stone-tools button{font-size:8.5px;padding:4px 7px}
   .route-hero{padding:20px 18px;border-radius:20px}
   .route-hero h1{font-size:29px}
   .rh-art{height:112px}
@@ -1102,6 +1177,15 @@ body.guiding .map-controls,body.guiding .map-chips{display:none}
         <div class="culture-seal" aria-hidden="true"><span>钱</span><small>湖</small><i>宋韵</i></div>
       </div>
 
+      <button class="stone-feature" id="stoneEntry" type="button">
+        <span class="sf-copy"><span class="sf-kicker">INTERACTIVE · 南宋石刻解码</span>
+          <b>石像不说话，衣冠会</b>
+          <span>点开文臣、武将、石马、石虎、石羊，看南宋墓道的衣冠与秩序。</span>
+          <em>进入解码 →</em>
+        </span>
+        <span class="sf-art" aria-hidden="true"><i>石</i><small>南宋 · 史渐墓道</small></span>
+      </button>
+
       <section class="culture-block">
         <div class="culture-block-head"><h2>一条时间线</h2><span>从西晋的记载到今天的湖</span></div>
         <div class="culture-timeline" id="cultureTimeline"></div>
@@ -1124,6 +1208,173 @@ body.guiding .map-controls,body.guiding .map-chips{display:none}
       </section>
 
       <div class="culture-sources" id="cultureSources"></div>
+    </div>
+  </section>
+
+  <!-- ================= 南宋石刻解码 ================= -->
+  <section class="view" id="view-stone" aria-label="南宋石刻互动解码">
+    <div class="page stone-page">
+      <div class="stone-top">
+        <button class="back-link" type="button" data-view="culture"><svg class="icon"><use href="#i-arrow"/></svg>返回文化长卷</button>
+        <span>STONE · 南宋石刻 · 互动解码</span>
+      </div>
+
+      <header class="stone-hero">
+        <div class="page-kicker">INTERACTIVE · 石像生</div>
+        <h1 class="page-title">石像不说话，<em>衣冠会</em></h1>
+        <p id="stoneIntro"></p>
+        <div class="stone-stats" id="stoneStats"></div>
+      </header>
+
+      <div class="stone-layout">
+        <div class="stone-stage" id="stoneStage">
+          <div class="stone-stage-head"><span>点击石像 · 看细节</span><span id="stoneCount">01 / 05</span></div>
+          <svg id="stoneSvg" viewBox="0 0 1000 560" role="img" aria-label="南宋墓道石像生：文臣、武将、石马、石虎、石羊">
+            <defs>
+              <linearGradient id="stoneG" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#d8d0bf"/><stop offset=".6" stop-color="#b7ae9b"/><stop offset="1" stop-color="#8d8575"/>
+              </linearGradient>
+              <linearGradient id="stoneD" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#b1a794"/><stop offset="1" stop-color="#77705f"/>
+              </linearGradient>
+              <radialGradient id="stoneGlow" cx="50%" cy="38%" r="62%">
+                <stop offset="0" stop-color="#2e332d"/><stop offset="1" stop-color="#151713"/>
+              </radialGradient>
+            </defs>
+            <rect width="1000" height="560" fill="url(#stoneGlow)"/>
+            <g opacity=".16" fill="none" stroke="#d9cbaa" stroke-width="1">
+              <path d="M0 300 L110 210 L180 270 L290 170 L390 260 L520 185 L650 275 L760 200 L900 285 L1000 230"/>
+              <path d="M0 340 L130 255 L230 315 L340 225 L470 310 L600 250 L740 325 L870 260 L1000 315"/>
+            </g>
+            <circle cx="500" cy="240" r="205" fill="none" stroke="#7b6d51" stroke-width="1" opacity=".25"/>
+            <circle cx="500" cy="240" r="170" fill="none" stroke="#7b6d51" stroke-width="1" opacity=".15"/>
+            <g opacity=".4">
+              <rect x="700" y="125" width="74" height="112" rx="5" fill="#24271f" stroke="#6c6450"/>
+              <text x="737" y="190" text-anchor="middle" font-size="46" font-family="serif" fill="#8f8368">史</text>
+            </g>
+            <line x1="30" y1="472" x2="970" y2="472" stroke="#544f41" stroke-width="2"/>
+
+            <!-- 文臣 -->
+            <g transform="translate(60,95)">
+              <rect x="18" y="368" width="126" height="16" rx="3" fill="#11130f" stroke="#4c4738"/>
+              <path d="M80 118 C70 122 66 135 64 149 L47 338 Q46 355 62 361 L99 361 Q115 355 114 338 L96 149 C94 135 90 122 80 118Z" fill="url(#stoneG)" stroke="#655f50" stroke-width="2"/>
+              <path d="M64 150 Q50 190 63 226 L78 222" fill="none" stroke="#655f50" stroke-width="7" stroke-linecap="round"/>
+              <path d="M96 150 Q110 190 97 226 L82 222" fill="none" stroke="#655f50" stroke-width="7" stroke-linecap="round"/>
+              <rect x="76" y="196" width="8" height="70" rx="3" fill="#c9c0ad" stroke="#6d6757"/>
+              <circle cx="80" cy="222" r="7" fill="#c9c0ad"/>
+              <circle cx="80" cy="88" r="21" fill="url(#stoneG)" stroke="#655f50" stroke-width="2"/>
+              <path d="M52 80 Q80 58 108 80 L104 68 Q80 46 56 68Z" fill="#b9b09d" stroke="#655f50" stroke-width="1.5"/>
+              <path d="M56 68 Q80 52 104 68" fill="none" stroke="#655f50" stroke-width="2"/>
+              <path d="M68 88 L74 88 M86 88 L92 88" stroke="#4e493d" stroke-width="1.5"/>
+              <path d="M75 100 Q80 104 85 100" fill="none" stroke="#4e493d" stroke-width="1.2"/>
+              <path d="M72 110 Q80 118 88 110" fill="none" stroke="#6c6656" stroke-width="1"/>
+              <path d="M58 170 Q80 184 102 170 M54 205 Q80 220 106 205 M48 250 Q80 265 112 250 M46 300 Q80 314 114 300" fill="none" stroke="#7a7363" stroke-width="1.1" opacity=".8"/>
+              <path d="M58 330 L102 330" stroke="#6c6656" stroke-width="2"/>
+              <path d="M36 128 Q80 110 124 128" fill="none" stroke="#655f50" stroke-width="2" opacity=".7"/>
+            </g>
+
+            <!-- 武将 -->
+            <g transform="translate(228,100)">
+              <rect x="18" y="363" width="148" height="16" rx="3" fill="#11130f" stroke="#4c4738"/>
+              <path d="M54 252 L46 356 L72 356 L78 264Z" fill="url(#stoneD)" stroke="#5e5849" stroke-width="2"/>
+              <path d="M96 252 L110 356 L136 356 L122 264Z" fill="url(#stoneD)" stroke="#5e5849" stroke-width="2"/>
+              <path d="M52 145 Q90 118 130 145 L120 252 L60 252Z" fill="url(#stoneG)" stroke="#5e5849" stroke-width="2"/>
+              <path d="M54 155 Q28 168 35 204 L48 236" fill="none" stroke="#a79e8b" stroke-width="11" stroke-linecap="round"/>
+              <path d="M128 155 Q154 168 147 204 L134 236" fill="none" stroke="#a79e8b" stroke-width="11" stroke-linecap="round"/>
+              <path d="M54 145 Q40 150 40 170 Q40 186 54 190 L64 170Z" fill="url(#stoneD)" stroke="#5e5849"/>
+              <path d="M128 145 Q142 150 142 170 Q142 186 128 190 L118 170Z" fill="url(#stoneD)" stroke="#5e5849"/>
+              <circle cx="90" cy="98" r="20" fill="url(#stoneG)" stroke="#5e5849" stroke-width="2"/>
+              <path d="M62 98 Q90 58 118 98 L114 80 Q90 48 66 80Z" fill="#a9a08d" stroke="#5e5849" stroke-width="1.5"/>
+              <path d="M64 84 Q90 64 116 84" fill="none" stroke="#5e5849" stroke-width="2"/>
+              <path d="M90 50 Q96 36 103 28" fill="none" stroke="#b9b09d" stroke-width="3" stroke-linecap="round"/>
+              <path d="M76 96 L82 96 M98 96 L104 96" stroke="#4b4639" stroke-width="1.5"/>
+              <path d="M80 168 L100 168 M78 186 L102 186 M72 214 L108 214" stroke="#6c6656" stroke-width="1.4"/>
+              <path d="M64 250 L116 250" stroke="#4e493d" stroke-width="5"/>
+              <path d="M146 192 L154 340" stroke="#c9c0ad" stroke-width="5" stroke-linecap="round"/>
+              <path d="M138 210 L160 210" stroke="#c9c0ad" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="150" cy="236" r="7" fill="#c9c0ad"/>
+              <path d="M56 278 L44 300 M124 278 L136 300" stroke="#5e5849" stroke-width="2"/>
+            </g>
+
+            <!-- 石马 -->
+            <g transform="translate(392,175)">
+              <rect x="8" y="292" width="270" height="17" rx="3" fill="#11130f" stroke="#4c4738"/>
+              <path d="M56 166 Q78 136 145 138 Q214 140 238 178 L232 226 Q190 248 120 244 Q66 238 54 206Z" fill="url(#stoneG)" stroke="#5f594a" stroke-width="2"/>
+              <path d="M56 170 Q38 154 31 124 Q28 104 43 96 Q59 91 68 110 L72 145 Q65 160 60 180Z" fill="url(#stoneG)" stroke="#5f594a" stroke-width="2"/>
+              <path d="M43 96 Q35 82 45 76 Q54 72 58 86" fill="url(#stoneD)" stroke="#5f594a"/>
+              <path d="M45 92 Q37 82 44 74" fill="none" stroke="#5f594a" stroke-width="2"/>
+              <path d="M35 118 Q55 108 67 118" fill="none" stroke="#5f594a" stroke-width="2"/>
+              <path d="M40 126 Q50 132 62 126" fill="none" stroke="#5f594a" stroke-width="1.5"/>
+              <circle cx="49" cy="116" r="2.2" fill="#3f3b31"/>
+              <path d="M72 145 Q92 118 128 122 Q150 126 156 146" fill="none" stroke="#7d7563" stroke-width="2" opacity=".7"/>
+              <path d="M66 112 Q72 94 86 92 Q98 92 104 102" fill="none" stroke="#5f594a" stroke-width="7" stroke-linecap="round"/>
+              <path d="M232 196 Q256 188 264 208 Q268 224 250 232" fill="none" stroke="#7d7563" stroke-width="8" stroke-linecap="round"/>
+              <path d="M88 236 L84 292 M120 240 L118 292 M180 240 L182 292 M214 232 L216 292" stroke="#5f594a" stroke-width="13" stroke-linecap="round"/>
+              <path d="M76 292 L94 292 M110 292 L128 292 M172 292 L190 292 M206 292 L224 292" stroke="#8d8575" stroke-width="7" stroke-linecap="round"/>
+              <path d="M132 148 Q158 138 190 144 L196 196 Q166 208 136 198Z" fill="url(#stoneD)" stroke="#5f594a" stroke-width="2"/>
+              <path d="M138 154 Q162 148 188 152 M136 176 Q164 186 194 178" fill="none" stroke="#c3b9a5" stroke-width="1.2" opacity=".8"/>
+              <path d="M142 198 L142 226 M186 198 L186 226" stroke="#5f594a" stroke-width="3"/>
+              <path d="M68 148 Q72 168 64 186" fill="none" stroke="#5f594a" stroke-width="2" opacity=".6"/>
+              <path d="M78 214 Q120 226 176 218" fill="none" stroke="#7d7563" stroke-width="1.2" opacity=".7"/>
+            </g>
+
+            <!-- 石虎 -->
+            <g transform="translate(678,288)">
+              <rect x="7" y="180" width="150" height="15" rx="3" fill="#11130f" stroke="#4c4738"/>
+              <path d="M42 138 Q55 96 100 94 Q142 94 150 132 L146 162 Q112 178 72 168 L44 154Z" fill="url(#stoneG)" stroke="#5f594a" stroke-width="2"/>
+              <path d="M44 140 Q28 128 27 106 Q26 88 43 82 Q60 78 68 94 L70 122 Q60 136 50 148Z" fill="url(#stoneG)" stroke="#5f594a" stroke-width="2"/>
+              <path d="M38 84 Q34 70 45 68 Q54 68 55 80" fill="url(#stoneD)" stroke="#5f594a"/>
+              <path d="M58 82 Q62 68 73 72 Q80 76 76 88" fill="url(#stoneD)" stroke="#5f594a"/>
+              <path d="M35 110 Q48 104 58 112" fill="none" stroke="#5f594a" stroke-width="1.5"/>
+              <path d="M36 122 Q48 128 58 120" fill="none" stroke="#5f594a" stroke-width="1.5"/>
+              <circle cx="45" cy="105" r="2.1" fill="#3f3b31"/>
+              <path d="M50 128 L62 126" stroke="#c3b9a5" stroke-width="2"/>
+              <path d="M56 160 L54 180 M96 166 L98 180 M128 158 L132 180" stroke="#5f594a" stroke-width="11" stroke-linecap="round"/>
+              <path d="M142 138 Q164 132 168 150 Q170 164 154 168" fill="none" stroke="#7d7563" stroke-width="7" stroke-linecap="round"/>
+              <path d="M76 108 L82 122 M102 104 L106 120 M126 110 L128 124 M72 140 L78 150 M112 142 L118 152" stroke="#6c6656" stroke-width="2" opacity=".8"/>
+            </g>
+
+            <!-- 石羊 -->
+            <g transform="translate(832,312)">
+              <rect x="5" y="158" width="126" height="14" rx="3" fill="#11130f" stroke="#4c4738"/>
+              <path d="M42 96 Q56 60 94 58 Q132 60 142 98 L138 132 Q100 148 54 134Z" fill="url(#stoneG)" stroke="#5f594a" stroke-width="2"/>
+              <path d="M48 100 Q32 90 30 72 Q30 58 44 56 Q58 56 62 72 L64 92 Q58 100 54 110Z" fill="url(#stoneG)" stroke="#5f594a" stroke-width="2"/>
+              <path d="M42 64 Q36 52 46 46 Q58 42 64 52 Q68 60 60 66" fill="none" stroke="#b9b09d" stroke-width="5" stroke-linecap="round"/>
+              <path d="M58 58 Q64 46 76 50 Q84 54 80 64" fill="none" stroke="#b9b09d" stroke-width="5" stroke-linecap="round"/>
+              <path d="M34 80 Q46 76 54 82" fill="none" stroke="#5f594a" stroke-width="1.5"/>
+              <circle cx="44" cy="76" r="2" fill="#3f3b31"/>
+              <path d="M38 94 Q44 98 50 94" fill="none" stroke="#5f594a" stroke-width="1.3"/>
+              <path d="M56 134 L52 158 M92 138 L94 158 M118 130 L122 158" stroke="#5f594a" stroke-width="10" stroke-linecap="round"/>
+              <path d="M64 86 Q86 74 112 82" fill="none" stroke="#7d7563" stroke-width="1.2" opacity=".8"/>
+              <path d="M68 112 Q94 122 126 112" fill="none" stroke="#7d7563" stroke-width="1.2" opacity=".7"/>
+            </g>
+
+            <g opacity=".55">
+              <path d="M120 500 L880 500" stroke="#5b5445" stroke-width="1"/>
+              <text x="500" y="526" text-anchor="middle" font-size="13" letter-spacing="6" fill="#8d8168">南 宋 · 石 像 生</text>
+            </g>
+          </svg>
+          <div class="stone-hotspots" id="stoneHotspots"></div>
+          <div class="stone-tools">
+            <button type="button" id="stoneRubbing"><svg class="icon"><use href="#i-layers"/></svg>拓片模式</button>
+            <button type="button" id="stoneTour"><svg class="icon"><use href="#i-play"/></svg>逐尊查看</button>
+          </div>
+        </div>
+
+        <aside class="stone-panel" aria-live="polite">
+          <div class="sp-top"><span id="stoneNum">01 / 05</span><span id="stoneTag">执笏 · 冠服</span></div>
+          <h2 id="stoneName">文臣</h2>
+          <p class="sp-short" id="stoneShort"></p>
+          <p class="sp-desc" id="stoneDesc"></p>
+          <div class="sp-facts" id="stoneFacts"></div>
+          <div class="sp-actions">
+            <button class="btn primary" type="button" id="stoneAsk"><svg class="icon"><use href="#i-chat"/></svg>问小东</button>
+            <button class="btn ghost" type="button" id="stoneMap"><svg class="icon"><use href="#i-map"/></svg>去石刻公园</button>
+          </div>
+        </aside>
+      </div>
+
+      <p class="stone-note" id="stoneNote"></p>
     </div>
   </section>
 
@@ -2238,7 +2489,85 @@ window.DQH_DATA = (function () {
     ]
   };
 
-  return { CATS, POIS, SERVICES, ROUTES, TRANSPORT, TRANSIT_LINES, CULTURE };
+  /* 南宋石刻解码：以史渐墓道与东钱湖石刻常见石像生为例 */
+  const STONE = {
+    kicker: "INTERACTIVE · 南宋石刻解码",
+    title: "石像不说话，衣冠会",
+    intro:
+      "南宋人把朝仪、军功、出行与镇墓愿望，刻成一排石像，替自己站在墓道两侧。点开文臣、武将、石马、石虎、石羊，看衣冠、甲胄、鞍具和姿态里藏着什么。",
+    meta: "以史渐墓道与东钱湖石刻为例 · 南宋绍熙五年（1195）始建",
+    stats: [
+      { b: "1195", s: "史渐墓道始建" },
+      { b: "5", s: "类石像生" },
+      { b: "2001", s: "东钱湖石刻列入国保" }
+    ],
+    figures: [
+      {
+        id: "wenchen", name: "文臣", tag: "执笏 · 冠服", x: 12, y: 52,
+        short: "头戴冠、双手执笏，衣纹垂顺。",
+        desc:
+          "石人文臣头戴冠、身穿长袍，双手在胸前执笏。笏是官员朝见时的手板，石像用这个动作把“朝仪”固定下来，让墓道在无人时也保持一套秩序。",
+        facts: [
+          "衣纹以简洁的垂线处理，是南宋石雕常见的克制风格。",
+          "文臣与武将成对出现，构成墓道仪仗的“文武”秩序。",
+          "史渐墓道石刻是东钱湖石刻中最集中的南宋墓道实例之一。"
+        ],
+        ask: "请解释南宋墓道石刻里的文臣为什么执笏，以及它在仪仗中的位置。"
+      },
+      {
+        id: "wujiang", name: "武将", tag: "甲胄 · 按剑", x: 31, y: 50,
+        short: "戴盔、着甲、按剑，甲片与护肩可辨。",
+        desc:
+          "武将头戴盔、身着甲，双手按剑。甲片、护肩和绑腿的细节，让石像在静止中仍有护卫感；它既表军功，也承担守墓的象征职责。",
+        facts: [
+          "盔、甲、护肩是识别武将身份最直接的三处细节。",
+          "按剑而立，强调“守卫”姿态，而不是战斗动作。",
+          "东钱湖石刻中的“文臣武将”曾于2009年赴意大利佛罗伦萨展出。"
+        ],
+        ask: "请解释南宋墓道石刻里的武将甲胄和按剑姿态代表什么。"
+      },
+      {
+        id: "horse", name: "石马", tag: "鞍具 · 出行仪仗", x: 53, y: 62,
+        short: "配鞍、鞯、缰绳，是墓道中最有体量的石像之一。",
+        desc:
+          "石马四腿立于底座，马身配鞍、鞯和缰绳。马是宋代官员出行仪仗的一部分，放在墓前，既延续生前的出行排场，也让整条墓道有了横向的体量节奏。",
+        facts: [
+          "鞍、鞯、缰绳是判断石马年代与工艺的重要细节。",
+          "石马通常位于文臣武将之后，构成仪仗队列。",
+          "石像生不是“陪葬品”，而是墓道地面上的礼仪装置。"
+        ],
+        ask: "请解释南宋墓道石刻里的石马、鞍具和出行仪仗。"
+      },
+      {
+        id: "tiger", name: "石虎", tag: "镇墓 · 辟邪", x: 72, y: 68,
+        short: "蹲伏、昂首、露齿，承担镇墓辟邪的象征功能。",
+        desc:
+          "石虎多作蹲伏、昂首状，张口露齿。虎在墓前承担镇墓辟邪的象征功能，和温顺的石羊形成一刚一柔的对照，让石像队列不只是“排排站”。",
+        facts: [
+          "虎的威猛与羊的温顺，是墓道石刻常见的成对修辞。",
+          "石虎的蹲伏姿态比站立更常见，强调“守”而不是“扑”。",
+          "不同墓道石像组合略有差异，应以具体墓道遗存为准。"
+        ],
+        ask: "请解释南宋墓道石刻里的石虎为什么蹲伏，它镇墓辟邪的含义是什么。"
+      },
+      {
+        id: "sheep", name: "石羊", tag: "跪卧 · 孝义", x: 88, y: 72,
+        short: "跪卧、双角向后，羊通“祥”，跪乳又被附会为孝义。",
+        desc:
+          "石羊多作跪卧状，双角向后。羊通“祥”，跪乳又被附会为孝义，因此在墓道仪仗中常与虎、马同列；它让肃穆的墓道多了一层温和的伦理表达。",
+        facts: [
+          "“羊”与“祥”同音，是常见的吉祥符号。",
+          "跪乳的伦理附会，使石羊在墓道中不只是动物形象。",
+          "石羊体量较小，常排在石虎之后，形成节奏收束。"
+        ],
+        ask: "请解释南宋墓道石刻里的石羊为什么跪卧，它和孝义有什么关系。"
+      }
+    ],
+    note:
+      "本页以史渐墓道及东钱湖石刻常见配置为例，不同墓道的石像组合、数量与排列略有差异；具体以现场展陈与文保资料为准。"
+  };
+
+  return { CATS, POIS, SERVICES, ROUTES, TRANSPORT, TRANSIT_LINES, CULTURE, STONE };
 })();
 </script>
 <script>
@@ -2251,7 +2580,7 @@ window.DQH_DATA = (function () {
 
   var DATA = window.DQH_DATA;
   var POIS = DATA.POIS, SERVICES = DATA.SERVICES, ROUTES = DATA.ROUTES, CATS = DATA.CATS;
-  var TRANSPORT = DATA.TRANSPORT || [], TRANSIT_LINES = DATA.TRANSIT_LINES || [], CULTURE = DATA.CULTURE || null;
+  var TRANSPORT = DATA.TRANSPORT || [], TRANSIT_LINES = DATA.TRANSIT_LINES || [], CULTURE = DATA.CULTURE || null, STONE = DATA.STONE || null;
   var BUS_STOPS = [{
     id: "bus-center", name: "游客中心站", type: "bus", line: "环湖观光公交",
     wgs: [29.7387506, 121.6606625], desc: "环湖线始发 · 游客中心",
@@ -2994,7 +3323,8 @@ window.DQH_DATA = (function () {
     var el = $("#poiPanel");
     if (tab === "intro") {
       el.innerHTML = '<div class="quote">“' + esc(p.one) + '”</div><p>' + esc(p.intro) + '</p>' +
-        '<p style="color:var(--muted);font-size:11.5px;margin-top:8px">' + (p.cat === "hotel" ? "房价为参考起步价，以酒店官方渠道为准。" : "票价为参考价，以景区当日公示为准。") + '</p>';
+        '<p style="color:var(--muted);font-size:11.5px;margin-top:8px">' + (p.cat === "hotel" ? "房价为参考起步价，以酒店官方渠道为准。" : "票价为参考价，以景区当日公示为准。") + '</p>' +
+        (p.id === "shike" ? '<button class="stone-link" type="button" id="stoneFromPoi">进入「石刻解码」互动 →</button>' : "");
     } else if (tab === "history" && p.history) {
       el.innerHTML = p.history.map(function (h) {
         return '<div class="hist-item"><span class="hy">' + esc(h[0]) + '</span><p>' + esc(h[1]) + '</p></div>';
@@ -3006,6 +3336,11 @@ window.DQH_DATA = (function () {
       el.innerHTML = '<ul class="tips-list">' + (p.tips || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + '</ul>' +
         '<p style="color:var(--muted);font-size:11px;margin-top:8px">开放时间与价格可能随季节调整，出发前建议再确认。</p>';
     }
+    var fromPoi = $("#stoneFromPoi");
+    if (fromPoi) fromPoi.addEventListener("click", function () {
+      closeSheets();
+      go("stone");
+    });
   }
   $$("#poiTabs button").forEach(function (b) {
     b.addEventListener("click", function () {
@@ -3102,6 +3437,74 @@ window.DQH_DATA = (function () {
     fitCat("attraction");
     toast("已在地图筛出人文坐标");
   });
+  $("#stoneEntry").addEventListener("click", function () { go("stone"); });
+
+  /* ---------- stone decoding ---------- */
+  var stoneIndex = 0, stoneTimer = null;
+  function stopStoneTour() {
+    if (stoneTimer) { clearInterval(stoneTimer); stoneTimer = null; }
+    var b = $("#stoneTour");
+    if (b) { b.classList.remove("active"); b.lastChild.textContent = "逐尊查看"; }
+  }
+  function selectStone(id, keepTour) {
+    if (!STONE) return;
+    var idx = STONE.figures.map(function (f) { return f.id; }).indexOf(id);
+    if (idx < 0) idx = 0;
+    stoneIndex = idx;
+    var f = STONE.figures[idx];
+    $("#stoneNum").textContent = ("0" + (idx + 1)).slice(-2) + " / 0" + STONE.figures.length;
+    $("#stoneTag").textContent = f.tag;
+    $("#stoneName").textContent = f.name;
+    $("#stoneShort").textContent = f.short;
+    $("#stoneDesc").textContent = f.desc;
+    $("#stoneFacts").innerHTML = f.facts.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("");
+    $("#stoneCount").textContent = ("0" + (idx + 1)).slice(-2) + " / 0" + STONE.figures.length;
+    $$("#stoneHotspots .stone-hotspot").forEach(function (b) {
+      b.classList.toggle("active", b.dataset.stone === f.id);
+      b.setAttribute("aria-pressed", b.dataset.stone === f.id ? "true" : "false");
+    });
+    if (!keepTour) stopStoneTour();
+  }
+  function renderStone() {
+    if (!STONE) return;
+    $("#stoneIntro").textContent = STONE.intro;
+    $("#stoneStats").innerHTML = STONE.stats.map(function (x) {
+      return "<div><b>" + esc(x.b) + "</b><span>" + esc(x.s) + "</span></div>";
+    }).join("");
+    $("#stoneHotspots").innerHTML = STONE.figures.map(function (f, i) {
+      return '<button type="button" class="stone-hotspot" data-stone="' + f.id + '" style="left:' + f.x + '%;top:' + f.y + '%" aria-label="' + esc(f.name) + '" aria-pressed="false">' + ("0" + (i + 1)).slice(-2) + "</button>";
+    }).join("");
+    $$("#stoneHotspots .stone-hotspot").forEach(function (b) {
+      b.addEventListener("click", function () { selectStone(b.dataset.stone); });
+    });
+    $("#stoneNote").textContent = STONE.note;
+    selectStone(STONE.figures[0].id, true);
+  }
+  $("#stoneRubbing").addEventListener("click", function () {
+    var stage = $("#stoneStage");
+    var on = stage.classList.toggle("rubbing");
+    this.classList.toggle("active", on);
+    this.lastChild.textContent = on ? "回到石色" : "拓片模式";
+    toast(on ? "拓片模式：像从纸上拓下来的南宋" : "已回到石色");
+  });
+  $("#stoneTour").addEventListener("click", function () {
+    if (stoneTimer) { stopStoneTour(); return; }
+    this.classList.add("active");
+    this.lastChild.textContent = "停止轮播";
+    stoneTimer = setInterval(function () {
+      var next = (stoneIndex + 1) % STONE.figures.length;
+      selectStone(STONE.figures[next].id, true);
+    }, 3800);
+    toast("逐尊查看中，点击任意石像可停下");
+  });
+  $("#stoneAsk").addEventListener("click", function () {
+    var f = STONE.figures[stoneIndex];
+    go("chat");
+    setTimeout(function () {
+      if (window.DQH_CHAT) window.DQH_CHAT.ask(f.ask);
+    }, 280);
+  });
+  $("#stoneMap").addEventListener("click", function () { openCulturePoi("shike"); });
 
   /* ---------- routes ---------- */
   function renderRoutes() {
@@ -3554,6 +3957,7 @@ window.DQH_DATA = (function () {
     if (view === "chat" && window.DQH_CHAT) window.DQH_CHAT.scroll();
     if (view === "transport") renderTransport();
     if (view === "culture") renderCulture();
+    if (view === "stone") renderStone();
   }
   $$("[data-view]").forEach(function (b) {
     b.addEventListener("click", function (e) { e.preventDefault(); go(b.dataset.view); });
@@ -3673,6 +4077,7 @@ window.DQH_DATA = (function () {
     renderPoiList();
     renderRoutes();
     renderCulture();
+    renderStone();
     renderTransport();
     syncHdBtn();
     buildServiceChips();
