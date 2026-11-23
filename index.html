@@ -1269,7 +1269,32 @@ h1,h2,h3,h4{font-weight:500;letter-spacing:.01em}
 .m-avatar.is-mascot .m-ava{width:100%;height:100%}
 .lang-btn{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.02em;width:auto;padding:0 9px;border-radius:3px}
 
+/* 顶栏「回看引导」 */
+.tour-btn{
+  width:auto;height:34px;padding:0 11px 0 9px;border-radius:3px;gap:5px;
+  display:inline-flex;align-items:center;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.02em;white-space:nowrap;
+}
+.tour-btn .icon{width:14px;height:14px}
+.tour-btn:hover{background:var(--card)}
+@media (max-width:420px){
+  .tour-btn{width:34px;padding:0;justify-content:center}
+  .tour-btn span{display:none}
+}
+
 /* ---------- 新手引导 ---------- */
+.tour-dots{display:flex;gap:3px;margin-top:8px;flex-wrap:wrap}
+.tour-dots .tdot{
+  width:13px;height:4px;border-radius:2px;background:var(--line-2);
+  padding:0;border:0;cursor:pointer;transition:background .18s,width .18s;
+}
+.tour-dots .tdot.past{background:rgba(154,90,52,.45)}
+.tour-dots .tdot.on{background:var(--clay);width:22px}
+.tour-dots .tdot:hover{background:var(--clay)}
+.tour-acts .tour-prev{flex:.8;background:var(--card);color:var(--ink-2);border-color:var(--line)}
+.tour-acts .tour-prev:disabled{opacity:.4;pointer-events:none}
+.tour-acts .tour-skip{flex:.9}
+.tour-acts .tour-next{flex:1.2}
 .tour-root{position:fixed;inset:0;z-index:300;display:none;pointer-events:none}
 .tour-root.show{display:block}
 .tour-hole{
@@ -1824,7 +1849,7 @@ body.tour-on{overflow:auto}
     <div class="top-actions">
       <button class="round-btn lang-btn" type="button" data-lang-btn title="EN / 中文" aria-label="切换语言">EN</button>
       <button class="round-btn" id="locBtn" type="button" title="定位我的位置" aria-label="定位我的位置"><svg class="icon"><use href="#i-locate"/></svg></button>
-      <button class="round-btn" id="tourBtn" type="button" title="重新播放引导" aria-label="重新播放引导"><svg class="icon"><use href="#i-help"/></svg></button>
+      <button class="round-btn tour-btn" id="tourBtn" type="button" title="回看新手引导" aria-label="回看新手引导"><svg class="icon"><use href="#i-help"/></svg><span data-i18n="top.guide">回看引导</span></button>
       <button class="round-btn" id="aboutBtn" type="button" title="关于本项目" aria-label="关于本项目"><svg class="icon"><use href="#i-info"/></svg></button>
       <button class="round-btn ai" id="topChatBtn" type="button" title="问小东" aria-label="问小东"><svg class="icon"><use href="#i-spark"/></svg></button>
     </div>
@@ -2691,8 +2716,10 @@ window.DQH_PHOTOS = {"taogong": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQAB
     "common.loading": ["加载中…", "Loading…"],
     "tour.skip": ["跳过引导", "Skip tour"],
     "tour.next": ["下一步", "Next"],
+    "tour.prev": ["上一步", "Back"],
     "tour.done": ["开始使用", "Start exploring"],
-    "tour.step": ["第 {n} / {total} 步", "Step {n} of {total}"]
+    "tour.step": ["第 {n} / {total} 步", "Step {n} of {total}"],
+    "top.guide": ["回看引导", "Replay guide"],
   };
 
   var EN_POI = {
@@ -7246,8 +7273,10 @@ window.DQH_DATA = (function () {
       '<div class="tour-hole"></div>' +
       '<div class="tour-tip" role="dialog" aria-modal="true">' +
       '  <div class="tour-step"><i></i><span></span></div>' +
+      '  <div class="tour-dots"></div>' +
       '  <h3></h3><p></p>' +
       '  <div class="tour-acts">' +
+      '    <button type="button" class="tour-prev"></button>' +
       '    <button type="button" class="tour-skip"></button>' +
       '    <button type="button" class="tour-next"></button>' +
       '  </div>' +
@@ -7259,6 +7288,7 @@ window.DQH_DATA = (function () {
     hole.addEventListener("click", function (e) { e.stopPropagation(); });
     root.querySelector(".tour-skip").addEventListener("click", finish);
     root.querySelector(".tour-next").addEventListener("click", next);
+    root.querySelector(".tour-prev").addEventListener("click", prev);
     tip.addEventListener("touchstart", function (e) { e.stopPropagation(); }, { passive: true });
     tip.addEventListener("click", function (e) { e.stopPropagation(); });
     window.addEventListener("resize", function () { if (active) place(); });
@@ -7361,9 +7391,27 @@ window.DQH_DATA = (function () {
       (window.DQH_I18N ? DQH_I18N.t("tour.step", { n: idx + 1, total: STEPS.length }) : (idx + 1) + " / " + STEPS.length);
     tip.querySelector(".tour-step i").style.width = ((idx + 1) / STEPS.length * 100) + "%";
     tip.querySelector(".tour-skip").textContent = window.DQH_I18N ? DQH_I18N.t("tour.skip") : "跳过引导";
+    tip.querySelector(".tour-prev").textContent = window.DQH_I18N ? DQH_I18N.t("tour.prev") : "上一步";
+    tip.querySelector(".tour-prev").disabled = idx === 0;
     tip.querySelector(".tour-next").textContent = idx === STEPS.length - 1
       ? (window.DQH_I18N ? DQH_I18N.t("tour.done") : "开始使用")
       : (window.DQH_I18N ? DQH_I18N.t("tour.next") : "下一步");
+    /* 顶部进度点：可直接回看任意一步 */
+    var dots = tip.querySelector(".tour-dots");
+    dots.innerHTML = STEPS.map(function (s, i) {
+      return '<button type="button" class="tdot' + (i === idx ? " on" : "") + (i < idx ? " past" : "") +
+        '" data-idx="' + i + '" aria-label="' + ((window.DQH_I18N ? DQH_I18N.isEN() : false) ? "Step " : "第 ") + (i + 1) +
+        ((window.DQH_I18N ? DQH_I18N.isEN() : false) ? "" : " 步") + '"></button>';
+    }).join("");
+    Array.prototype.forEach.call(dots.querySelectorAll(".tdot"), function (b) {
+      b.addEventListener("click", function (e) {
+        e.stopPropagation();
+        var target = +b.dataset.idx;
+        if (target === idx) return;
+        idx = target;
+        render();
+      });
+    });
     goView(step.view);
     var el = null;
     String(step.sel).split(",").some(function (s) {
