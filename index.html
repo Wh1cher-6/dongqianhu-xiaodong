@@ -1,0 +1,3539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6f1e7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
+<meta name="description" content="东钱湖 AI 智慧导览原型：可缩放电子地图、景点讲解、历史名人、路线导览与小东 AI 助手。">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="东钱湖 · 小东智游">
+<meta property="og:description" content="地图、历史讲解、交通与观光船、在线导航和 AI 助手小东。">
+<meta property="og:type" content="website">
+<title>东钱湖 · 小东智游 · 公共测试版</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+:root{
+  --paper:#f6f1e7;
+  --paper-2:#ede4d3;
+  --card:#fffdf7;
+  --card-2:#fbf7ee;
+  --ink:#17332d;
+  --ink-2:#3c514a;
+  --muted:#7c8a82;
+  --line:rgba(23,51,45,.12);
+  --line-2:rgba(23,51,45,.22);
+  --jade:#1e5a4b;
+  --jade-2:#2f7a66;
+  --lake:#2b6b7a;
+  --clay:#bf5a3c;
+  --clay-2:#a8482e;
+  --gold:#ad8748;
+  --blue:#3c6f8d;
+  --shadow:0 22px 55px -28px rgba(23,51,45,.4);
+  --shadow-sm:0 8px 24px -14px rgba(23,51,45,.35);
+  --r:18px;
+  --header:64px;
+  --bottom:70px;
+  --serif:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong","SimSun",serif;
+  --sans:system-ui,-apple-system,"Segoe UI","PingFang SC","HarmonyOS Sans SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(900px 500px at 100% -8%,rgba(191,90,60,.07),transparent 60%),
+    radial-gradient(700px 500px at -10% 30%,rgba(43,107,122,.07),transparent 60%),
+    repeating-linear-gradient(0deg,rgba(23,51,45,.012) 0 1px,transparent 1px 4px);
+}
+body.locked{overflow:hidden}
+h1,h2,h3,h4,p,dl,dd,figure{margin:0}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+input,textarea{font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+ul,ol{margin:0;padding:0;list-style:none}
+img{display:block;max-width:100%}
+svg{display:block}
+::selection{background:rgba(191,90,60,.2)}
+:focus-visible{outline:2px solid var(--clay);outline-offset:3px;border-radius:8px}
+.icon{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.serif{font-family:var(--serif)}
+.wrap{width:min(1180px,100%);margin:0 auto;padding:0 24px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.topbar{
+  position:sticky;top:0;z-index:80;height:var(--header);
+  background:rgba(246,241,231,.86);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);backdrop-filter:blur(18px) saturate(160%);
+  border-bottom:1px solid transparent;transition:border-color .2s,background .2s;
+}
+.topbar.scrolled{border-bottom-color:var(--line)}
+.topbar-in{height:100%;display:flex;align-items:center;gap:26px;width:min(1320px,100%);margin:0 auto;padding:0 22px}
+.brand{display:flex;align-items:center;gap:11px;flex:none}
+.brand-seal{
+  width:36px;height:36px;border-radius:9px;display:grid;place-items:center;flex:none;
+  background:linear-gradient(145deg,var(--clay),#a4472c);color:#fff8ee;
+  font-family:var(--serif);font-size:20px;font-weight:700;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.25),0 6px 14px -8px rgba(164,71,44,.8);
+  transform:rotate(-2deg);
+}
+.brand b{display:block;font-family:var(--serif);font-size:16px;letter-spacing:.05em;line-height:1.25}
+.beta-tag{display:inline-block;vertical-align:2px;margin-left:3px;padding:0 5px;border:1px solid rgba(191,90,60,.35);border-radius:3px;color:var(--clay);font-family:var(--sans);font-size:8px;font-weight:600;letter-spacing:.04em;line-height:1.5}
+.brand small{display:block;font-size:10px;letter-spacing:.22em;color:var(--muted);line-height:1.4;margin-top:1px}
+.mainnav{display:flex;align-items:center;gap:3px;margin-left:auto;background:rgba(255,253,247,.55);border:1px solid var(--line);padding:4px;border-radius:999px}
+.mainnav button{
+  padding:7px 16px;border-radius:999px;font-size:13.5px;color:var(--muted);
+  transition:background .18s,color .18s,box-shadow .18s;white-space:nowrap;
+}
+.mainnav button:hover{color:var(--ink)}
+.mainnav button.active{background:var(--ink);color:#f8f2e6;box-shadow:0 4px 12px -6px rgba(23,51,45,.6)}
+.top-actions{display:flex;align-items:center;gap:8px;flex:none}
+.round-btn{
+  width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
+  border:1px solid var(--line);background:rgba(255,253,247,.72);color:var(--ink-2);
+  transition:transform .16s,border-color .2s,background .2s;
+}
+.round-btn:hover{transform:translateY(-1px);border-color:var(--line-2);background:var(--card)}
+.round-btn .icon{width:17px;height:17px}
+.round-btn.ai{background:var(--ink);color:#f8f2e6;border-color:var(--ink)}
+.round-btn.ai:hover{background:var(--jade)}
+
+.view{display:none;animation:viewIn .38s cubic-bezier(.2,.8,.2,1)}
+.view.active{display:block}
+@keyframes viewIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.view-map{height:calc(100dvh - var(--header));overflow:hidden}
+.map-wrap{position:relative;height:100%;width:100%;overflow:hidden;background:#dfe6df}
+#map{position:absolute;inset:0;overflow:hidden;cursor:grab;touch-action:none;background:#dfe6df}
+#map.dragging{cursor:grabbing}
+.map-fallback{position:absolute;inset:0;overflow:hidden;background:
+  radial-gradient(60% 60% at 65% 35%,#e8eee6,#d7e2da 60%,#cfdcd5);
+}
+.map-fallback svg{position:absolute;inset:0;width:100%;height:100%}
+.map-fallback .fb-note{
+  position:absolute;left:50%;bottom:18px;transform:translateX(-50%);
+  font-size:11px;color:rgba(23,51,45,.55);background:rgba(255,253,247,.7);
+  border:1px solid var(--line);padding:6px 12px;border-radius:999px;white-space:nowrap;
+}
+.tile-layer,.marker-layer,.route-layer,.guide-layer{position:absolute;inset:0}
+.tile-layer{z-index:1}
+.tile-layer img{position:absolute;left:0;top:0;width:256px;height:256px;max-width:none;user-select:none;-webkit-user-drag:none;opacity:0;transition:opacity .25s}
+.tile-layer img.on{opacity:1}
+.route-layer{z-index:3;pointer-events:none}
+.route-layer svg{width:100%;height:100%;overflow:visible}
+.transit-layer{z-index:3;pointer-events:none}
+.transit-layer svg{width:100%;height:100%;overflow:visible}
+.nav-layer{z-index:4;pointer-events:none}
+.nav-layer svg{width:100%;height:100%;overflow:visible}
+.nav-casing{fill:none;stroke:#fffdf7;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;opacity:.8}
+.nav-line{fill:none;stroke:#2b6b9a;stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 2px 3px rgba(43,107,154,.25))}
+.accuracy-circle{position:absolute;z-index:6;border-radius:50%;background:rgba(43,107,122,.12);border:1px solid rgba(43,107,122,.32);transform:translate(-50%,-50%);pointer-events:none;display:none}
+.transit-casing{fill:none;stroke:#fffdf7;stroke-width:7;stroke-linecap:round;stroke-linejoin:round;opacity:.72}
+.transit-line{fill:none;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.transit-line.metro{stroke-width:4}
+.transit-line.bus{stroke-dasharray:8 7}
+.transit-line.boat{stroke-dasharray:2 8}
+.route-line{fill:none;stroke:var(--clay);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:9 8;filter:drop-shadow(0 2px 3px rgba(164,71,44,.25));animation:dash 1.4s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-34}}
+.lake-label{
+  position:absolute;z-index:2;transform:translate(-50%,-50%);text-align:center;pointer-events:none;
+  color:rgba(23,51,45,.36);text-shadow:0 1px 0 rgba(255,255,255,.55);
+}
+.lake-label b{font-family:var(--serif);font-size:clamp(22px,3vw,34px);letter-spacing:.25em;font-weight:600}
+.lake-label span{display:block;font-size:9px;letter-spacing:.34em;margin-top:2px}
+.marker-layer{z-index:5;pointer-events:none}
+.marker{position:absolute;left:0;top:0;will-change:transform;pointer-events:none}
+.marker .hit{pointer-events:auto;cursor:pointer;display:block;width:0;height:0;padding:0;border:0;background:none;overflow:visible}
+.marker.attraction{z-index:6}
+.marker.attraction .pulse{top:-16px;display:none}
+.marker.active .pulse{display:block}
+.marker .pin{position:relative;transform:translate(-50%,-100%);filter:drop-shadow(0 6px 8px rgba(23,51,45,.28))}
+.marker .pin .body{
+  width:31px;height:31px;border-radius:50% 50% 50% 4px;transform:rotate(-45deg);
+  background:linear-gradient(150deg,var(--clay),#a3452b);display:grid;place-items:center;
+  border:2px solid #fff8ee;transition:transform .18s;
+}
+.marker .pin .body span{transform:rotate(45deg);font-family:var(--serif);font-size:14px;font-weight:700;color:#fff8ee;line-height:1}
+.marker .pin::after{content:"";position:absolute;left:50%;bottom:-3px;width:8px;height:4px;border-radius:50%;background:rgba(23,51,45,.22);transform:translateX(-50%)}
+.marker .tag{
+  position:absolute;left:50%;top:4px;transform:translateX(-50%);
+  white-space:nowrap;font-size:11px;font-weight:600;color:var(--ink);
+  background:rgba(255,253,247,.9);border:1px solid rgba(23,51,45,.1);
+  padding:1px 7px;border-radius:999px;box-shadow:0 2px 6px rgba(23,51,45,.12);
+}
+.marker.active .pin .body{transform:rotate(-45deg) scale(1.14);background:linear-gradient(150deg,#d36a49,var(--clay-2))}
+.marker.active .tag{background:var(--ink);color:#fff8ee;border-color:var(--ink)}
+.marker.active .pulse{
+  position:absolute;left:0;top:0;width:31px;height:31px;border-radius:50%;
+  transform:translate(-50%,-50%);border:2px solid rgba(191,90,60,.5);
+  animation:pulse 1.8s ease-out infinite;pointer-events:none;
+}
+@keyframes pulse{0%{transform:translate(-50%,-50%) scale(.5);opacity:.9}100%{transform:translate(-50%,-50%) scale(2.1);opacity:0}}
+.marker.service{z-index:5}
+.marker.service .dot{
+  width:25px;height:25px;border-radius:50%;transform:translate(-50%,-50%);
+  display:grid;place-items:center;background:var(--card);border:1.5px solid var(--line-2);
+  color:var(--ink-2);font-size:9.5px;font-weight:700;box-shadow:0 4px 10px -5px rgba(23,51,45,.4);
+}
+.marker.service .tag{display:none}
+.marker.service.active .dot{background:var(--ink);color:#fff8ee;border-color:var(--ink);transform:translate(-50%,-50%) scale(1.1)}
+.marker.service .dot.c-toilet{color:var(--blue)}
+.marker.service .dot.c-parking{color:#4b5563}
+.marker.service .dot.c-bike{color:var(--jade-2)}
+.marker.service .dot.c-visitor{color:var(--gold)}
+.marker.service .dot.c-food{color:#a2662f}
+.marker.transport{z-index:5}
+.marker.transport .dot{
+  width:26px;height:26px;border-radius:50%;transform:translate(-50%,-50%);
+  display:grid;place-items:center;background:var(--card);border:1.5px solid var(--line-2);
+  color:var(--ink-2);font-size:9px;font-weight:750;box-shadow:0 4px 10px -5px rgba(23,51,45,.4);
+}
+.marker.transport.t-metro .dot{color:#c6473a;border-color:rgba(198,71,58,.45)}
+.marker.transport.t-bus .dot{color:#3f7d5b;border-color:rgba(63,125,91,.45)}
+.marker.transport.t-boat .dot{color:#2e6f9e;border-color:rgba(46,111,158,.45)}
+.marker.transport.active .dot{background:var(--ink);color:#fff8ee;border-color:var(--ink);transform:translate(-50%,-50%) scale(1.1)}
+.marker.transport .tag{display:none}
+.marker .label{
+  position:absolute;left:50%;top:6px;transform:translateX(-50%);
+  white-space:nowrap;font-size:10.5px;color:var(--ink-2);background:rgba(255,253,247,.78);
+  padding:1px 5px;border-radius:4px;opacity:0;transition:opacity .2s;pointer-events:none;
+}
+.marker:hover .label{opacity:1}
+
+.me-marker{position:absolute;z-index:7;transform:translate(-50%,-50%);pointer-events:none;display:none}
+.me-marker.show{display:block}
+.me-marker .ring{width:34px;height:34px;border-radius:50%;background:rgba(43,107,122,.16);display:grid;place-items:center;animation:mePulse 2.4s ease-out infinite}
+.guide-tag{position:absolute;left:50%;top:15px;transform:translateX(-50%);white-space:nowrap;font-size:9px;color:var(--clay);background:rgba(255,253,247,.82);padding:1px 5px;border-radius:4px}
+.me-marker .core{width:12px;height:12px;border-radius:50%;background:var(--lake);border:2px solid #fff;box-shadow:0 2px 6px rgba(23,51,45,.35)}
+@keyframes mePulse{0%{box-shadow:0 0 0 0 rgba(43,107,122,.28)}70%{box-shadow:0 0 0 14px rgba(43,107,122,0)}100%{box-shadow:0 0 0 0 rgba(43,107,122,0)}}
+
+.map-top{position:absolute;left:50%;top:18px;transform:translateX(-50%);z-index:20;width:min(460px,calc(100% - 32px));display:none}
+.map-search{position:relative;display:flex;align-items:center;gap:8px;background:rgba(255,253,247,.94);border:1px solid rgba(23,51,45,.12);box-shadow:var(--shadow-sm);border-radius:999px;padding:6px 7px 6px 14px}
+.map-search .icon{width:17px;height:17px;color:var(--muted)}
+.map-search input{flex:1;min-width:0;border:0;background:none;outline:none;font-size:13.5px;padding:5px 0}
+.map-search input::placeholder{color:#9aa79f}
+.map-search .search-go{width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff8ee;display:grid;place-items:center;flex:none}
+.map-search .search-go .icon{width:14px;height:14px}
+.search-drop{
+  position:absolute;left:0;right:0;top:calc(100% + 8px);background:var(--card);border:1px solid var(--line);
+  border-radius:16px;box-shadow:var(--shadow);overflow:hidden;max-height:320px;overflow-y:auto;display:none;z-index:20;
+}
+.search-drop.show{display:block}
+.search-item{display:flex;align-items:center;gap:10px;padding:10px 13px;border-bottom:1px solid rgba(23,51,45,.06);cursor:pointer;text-align:left;width:100%}
+.search-item:last-child{border-bottom:0}
+.search-item:hover{background:var(--card-2)}
+.search-item .si-ico{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--paper-2);font-size:9px;font-weight:700;flex:none}
+.search-item .si-main{min-width:0;flex:1}
+.search-item b{display:block;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.search-item .si-dist{font-size:9.5px;color:var(--clay);flex:none;font-variant-numeric:tabular-nums}
+.search-item small{display:block;font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.search-empty{padding:16px;font-size:12px;color:var(--muted);text-align:center}
+
+.map-chips{position:absolute;left:50%;top:74px;transform:translateX(-50%);z-index:19;display:none;gap:6px;width:min(560px,calc(100% - 24px));overflow-x:auto;padding:2px;scrollbar-width:none}
+.map-chips::-webkit-scrollbar{display:none}
+.chip{
+  flex:none;border:1px solid var(--line);background:rgba(255,253,247,.92);color:var(--ink-2);
+  padding:6px 12px;border-radius:999px;font-size:12px;white-space:nowrap;
+  transition:background .18s,color .18s,border-color .18s;box-shadow:0 3px 10px -8px rgba(23,51,45,.4);
+}
+.chip:hover{border-color:var(--line-2)}
+.chip.active{background:var(--ink);border-color:var(--ink);color:#fff8ee}
+
+.map-controls{position:absolute;right:16px;top:100px;z-index:19;display:flex;flex-direction:column;gap:7px}
+.map-controls button{
+  width:38px;height:38px;border-radius:11px;background:rgba(255,253,247,.95);border:1px solid var(--line);
+  display:grid;place-items:center;box-shadow:var(--shadow-sm);color:var(--ink-2);transition:background .18s,transform .15s;
+}
+.map-controls button:hover{background:#fff;transform:translateY(-1px)}
+.map-controls .icon{width:17px;height:17px}
+.map-controls .hd-btn span{font-size:8.5px;font-weight:800;letter-spacing:.02em;line-height:1}
+.map-controls .hd-btn.hd-on{background:var(--ink);color:#fff8ee;border-color:var(--ink)}
+.map-controls .divider{height:1px;background:var(--line);margin:1px 4px}
+.geo-pill{
+  position:absolute;right:16px;bottom:40px;z-index:21;display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,253,247,.94);border:1px solid var(--line);border-radius:999px;padding:5px 10px;
+  font-size:10px;color:var(--muted);box-shadow:var(--shadow-sm);white-space:nowrap;
+}
+.geo-pill .gp-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);flex:none}
+.geo-pill.ok{color:var(--jade);border-color:rgba(47,122,102,.3)}
+.geo-pill.ok .gp-dot{background:var(--jade-2);box-shadow:0 0 0 3px rgba(47,122,102,.12)}
+.geo-pill.err{color:var(--clay);border-color:rgba(191,90,60,.3)}
+.geo-pill.err .gp-dot{background:var(--clay)}
+.geo-pill.pending .gp-dot{background:var(--gold);animation:mePulse 1.6s infinite}
+.map-scale{position:absolute;left:18px;bottom:18px;z-index:18;font-size:10px;color:var(--ink-2);background:rgba(255,253,247,.8);padding:2px 7px;border-radius:4px;border:1px solid rgba(23,51,45,.1)}
+.map-attrib{position:absolute;right:14px;bottom:16px;z-index:18;font-size:9.5px;color:rgba(23,51,45,.55);background:rgba(255,253,247,.7);padding:2px 6px;border-radius:4px}
+.map-attrib a{text-decoration:underline;text-underline-offset:2px}
+
+.map-panel{
+  position:absolute;left:18px;top:18px;bottom:18px;z-index:17;width:334px;
+  display:flex;flex-direction:column;background:rgba(255,253,247,.96);
+  border:1px solid rgba(23,51,45,.12);border-radius:22px;box-shadow:var(--shadow);
+  overflow:hidden;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+}
+.panel-head{padding:18px 18px 10px;border-bottom:1px solid rgba(23,51,45,.07)}
+.panel-kicker{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:10px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+.panel-kicker .dot-live{display:inline-flex;align-items:center;gap:5px;color:var(--jade-2);letter-spacing:.05em;font-size:9.5px}
+.panel-kicker .dot-live::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--jade-2);box-shadow:0 0 0 3px rgba(47,122,102,.12)}
+.panel-head h1{font-family:var(--serif);font-size:22px;letter-spacing:.03em;margin-top:5px;font-weight:600}
+.panel-head p{font-size:11.5px;color:var(--muted);margin-top:2px}
+.panel-search{position:relative;margin:12px 14px 8px}
+.panel-search .ps-box{display:flex;align-items:center;gap:8px;background:var(--card-2);border:1px solid var(--line);border-radius:11px;padding:7px 10px}
+.panel-search .icon{width:15px;height:15px;color:var(--muted)}
+.panel-search input{flex:1;min-width:0;border:0;background:none;outline:none;font-size:12.5px}
+.panel-chips{display:flex;gap:5px;overflow-x:auto;padding:2px 14px 10px;scrollbar-width:none}
+.panel-chips::-webkit-scrollbar{display:none}
+.panel-chips .chip{padding:4px 9px;font-size:10.5px}
+.poi-list{flex:1;overflow-y:auto;padding:4px 10px 10px;scrollbar-width:thin}
+.poi-list::-webkit-scrollbar{width:4px}
+.poi-list::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:4px}
+.poi-row{display:flex;gap:10px;width:100%;text-align:left;padding:10px 8px;border-radius:12px;border:1px solid transparent;transition:background .15s,border-color .15s}
+.poi-row:hover{background:var(--card-2);border-color:var(--line)}
+.poi-row.active{background:#f3ece0;border-color:rgba(191,90,60,.25)}
+.poi-num{width:25px;height:25px;border-radius:50%;background:var(--clay);color:#fff8ee;display:grid;place-items:center;font-family:var(--serif);font-size:12px;flex:none;margin-top:2px}
+.poi-info{min-width:0;flex:1}
+.poi-info b{display:block;font-size:13px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.poi-info small{display:block;font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.poi-meta{display:flex;gap:6px;align-items:center;margin-top:3px;font-size:10px;color:var(--muted)}
+.poi-meta em{font-style:normal;color:var(--clay);font-weight:600}
+.panel-transit{display:flex;align-items:center;gap:9px;margin:0 12px 8px;padding:9px 10px;border:1px solid var(--line);border-radius:12px;background:var(--card-2);text-align:left}
+.panel-transit:hover{border-color:var(--line-2);background:#fff}
+.pt-icon{width:29px;height:29px;border-radius:8px;background:rgba(198,71,58,.1);color:#c6473a;display:grid;place-items:center;flex:none}
+.pt-icon .icon{width:15px;height:15px}
+.pt-main{min-width:0;flex:1}
+.pt-main b{display:block;font-size:11.5px;font-weight:650}
+.pt-main small{display:block;font-size:9.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.pt-arrow{width:12px;height:12px;color:var(--muted);flex:none}
+.panel-promo{margin:0 12px 12px;padding:13px 14px;border-radius:14px;background:linear-gradient(135deg,#1e5a4b,#17332d);color:#f8f2e6;text-align:left;position:relative;overflow:hidden}
+.panel-promo::after{content:"东";position:absolute;right:-6px;bottom:-24px;font-family:var(--serif);font-size:74px;color:rgba(255,255,255,.07);line-height:1}
+.panel-promo b{display:block;font-family:var(--serif);font-size:14px;letter-spacing:.02em}
+.panel-promo span{display:block;font-size:10.5px;color:rgba(248,242,230,.65);margin-top:2px}
+.panel-promo .mini-go{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:10.5px;border-bottom:1px solid rgba(248,242,230,.4);padding-bottom:1px}
+.panel-promo .mini-go .icon{width:11px;height:11px}
+
+.poi-popup{
+  position:absolute;z-index:30;width:268px;background:var(--card);border:1px solid rgba(23,51,45,.14);
+  border-radius:15px;box-shadow:0 20px 45px -18px rgba(23,51,45,.55);padding:12px 13px 11px;
+  opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .18s,transform .18s;
+}
+.poi-popup.show{opacity:1;transform:none;pointer-events:auto}
+.poi-popup::after{content:"";position:absolute;left:var(--arrow-x,50%);bottom:-6px;width:11px;height:11px;background:var(--card);border-right:1px solid rgba(23,51,45,.14);border-bottom:1px solid rgba(23,51,45,.14);transform:translateX(-50%) rotate(45deg)}
+.poi-popup.below::after{top:-6px;bottom:auto;border:0;border-left:1px solid rgba(23,51,45,.14);border-top:1px solid rgba(23,51,45,.14)}
+.pp-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.pp-top b{font-family:var(--serif);font-size:15px;letter-spacing:.02em}
+.pp-top span{font-size:9px;color:var(--muted);border:1px solid var(--line);padding:0 5px;border-radius:3px;flex:none}
+.pp-line{font-size:11px;color:var(--ink-2);line-height:1.55;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pp-line em{font-style:normal;color:var(--clay);font-weight:650}
+.pp-actions{display:flex;align-items:center;justify-content:space-between;margin-top:7px}
+.pp-actions button{font-size:10.5px;color:var(--jade);display:inline-flex;align-items:center;gap:3px;font-weight:600}
+.pp-actions .icon{width:11px;height:11px}
+.pp-actions .pp-dist{font-size:9.5px;color:var(--muted);font-weight:400}
+
+.guide-bar{
+  position:absolute;left:50%;top:16px;transform:translateX(-50%);z-index:35;width:min(560px,calc(100% - 28px));
+  background:rgba(23,51,45,.94);color:#f8f2e6;border-radius:16px;padding:11px 13px;
+  box-shadow:0 18px 40px -18px rgba(23,51,45,.7);display:none;
+}
+.guide-bar.show{display:block}
+.gb-top{display:flex;align-items:center;gap:9px}
+.gb-dot{width:8px;height:8px;border-radius:50%;background:var(--clay);box-shadow:0 0 0 4px rgba(191,90,60,.2);flex:none;animation:mePulse 2s infinite}
+.gb-text{flex:1;min-width:0}
+.gb-text b{display:block;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gb-text small{display:block;font-size:10px;color:rgba(248,242,230,.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gb-actions{display:flex;gap:4px;flex:none}
+.gb-actions button{width:27px;height:27px;border-radius:50%;background:rgba(255,255,255,.12);display:grid;place-items:center;color:#fff8ee}
+.gb-actions .icon{width:13px;height:13px}
+.gb-progress{height:3px;border-radius:3px;background:rgba(255,255,255,.15);margin-top:9px;overflow:hidden}
+.gb-progress i{display:block;height:100%;background:var(--clay);width:0;transition:width .2s linear}
+
+.arrival-card{
+  position:absolute;left:50%;bottom:26px;transform:translate(-50%,14px);z-index:36;width:min(380px,calc(100% - 24px));
+  background:var(--card);border:1px solid rgba(23,51,45,.12);border-radius:18px;box-shadow:var(--shadow);
+  padding:15px 16px 14px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;
+}
+.arrival-card.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.ac-kicker{display:flex;align-items:center;gap:6px;font-size:9.5px;letter-spacing:.15em;color:var(--clay);font-weight:700}
+.ac-kicker::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--clay)}
+.arrival-card h3{font-family:var(--serif);font-size:20px;letter-spacing:.03em;margin-top:3px}
+.arrival-card p{font-size:12px;color:var(--muted);line-height:1.65;margin-top:3px}
+.ac-actions{display:flex;gap:8px;margin-top:11px}
+.ac-actions .btn{flex:1;padding:9px 10px;font-size:12px;border-radius:10px}
+.ac-actions .btn.primary{background:var(--ink);color:#fff8ee}
+
+.page{width:min(1180px,100%);margin:0 auto;padding:38px 24px 80px}
+.page-kicker{display:flex;align-items:center;gap:9px;font-size:10.5px;letter-spacing:.2em;color:var(--clay);font-weight:700}
+.page-kicker::after{content:"";height:1px;width:50px;background:linear-gradient(90deg,rgba(191,90,60,.5),transparent)}
+.page-title{font-family:var(--serif);font-size:clamp(30px,4.4vw,46px);line-height:1.2;letter-spacing:.02em;margin-top:8px;font-weight:600}
+.page-title em{font-style:normal;color:var(--clay)}
+.page-sub{font-size:13.5px;color:var(--muted);margin-top:9px;max-width:42em;line-height:1.8}
+
+.route-hero{
+  display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:center;
+  background:linear-gradient(135deg,#17332d,#1e5a4b 60%,#25695a);border-radius:26px;
+  color:#f8f2e6;padding:34px 36px;position:relative;overflow:hidden;box-shadow:var(--shadow);
+}
+.route-hero::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(70% 80% at 88% 120%,rgba(191,90,60,.38),transparent 60%),
+  repeating-linear-gradient(-18deg,rgba(255,255,255,.035) 0 1px,transparent 1px 9px)}
+.route-hero .rh-kicker{font-size:10px;letter-spacing:.22em;color:rgba(248,242,230,.55)}
+.route-hero h1{font-family:var(--serif);font-size:clamp(30px,4vw,44px);line-height:1.18;letter-spacing:.03em;margin-top:8px;font-weight:600;position:relative}
+.route-hero p{font-size:13px;color:rgba(248,242,230,.68);line-height:1.8;margin-top:10px;max-width:28em;position:relative}
+.rh-stats{display:flex;gap:22px;margin-top:20px;position:relative}
+.rh-stats div b{display:block;font-family:var(--serif);font-size:22px;font-weight:600}
+.rh-stats div span{font-size:10px;color:rgba(248,242,230,.55);letter-spacing:.08em}
+.rh-art{position:relative;height:190px;border-radius:18px;overflow:hidden;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
+.rh-art svg{width:100%;height:100%}
+.rh-art .rh-seal{position:absolute;right:14px;top:14px;width:42px;height:42px;border:1px solid rgba(255,255,255,.4);border-radius:6px;display:grid;place-items:center;font-family:var(--serif);font-size:20px;color:#f8f2e6}
+.rh-art .rh-cap{position:absolute;left:16px;bottom:13px;font-size:9.5px;letter-spacing:.2em;color:rgba(248,242,230,.6)}
+.route-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}
+.route-card{
+  text-align:left;background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;
+  box-shadow:var(--shadow-sm);transition:transform .2s,box-shadow .2s,border-color .2s;display:flex;flex-direction:column;
+}
+.route-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--line-2)}
+.rc-art{height:118px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:14px 16px;color:#fff8ee}
+.rc-art::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 20%,rgba(10,20,17,.55))}
+.rc-art .rc-char{position:absolute;right:8px;top:-18px;font-family:var(--serif);font-size:100px;line-height:1;color:rgba(255,255,255,.14)}
+.rc-art b{position:relative;z-index:1;font-family:var(--serif);font-size:19px;letter-spacing:.05em;font-weight:600}
+.rc-art span{position:absolute;left:16px;top:14px;z-index:1;font-size:9px;letter-spacing:.18em;color:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.28);padding:2px 7px;border-radius:999px}
+.rc-body{padding:14px 16px 16px;display:flex;flex-direction:column;flex:1}
+.rc-body p{font-size:11.5px;color:var(--muted);line-height:1.7;min-height:3.4em}
+.rc-stops{display:flex;flex-wrap:wrap;gap:4px;margin-top:9px}
+.rc-stops span{font-size:10px;color:var(--ink-2);background:var(--card-2);border:1px solid var(--line);padding:2px 6px;border-radius:4px}
+.rc-foot{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid rgba(23,51,45,.08)}
+.rc-foot .rc-stat{font-size:10px;color:var(--muted)}
+.rc-foot .rc-stat b{color:var(--ink);font-weight:650}
+.rc-go{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--clay);font-weight:600}
+.rc-go .icon{width:12px;height:12px}
+.route-note{margin-top:26px;padding:16px 18px;border:1px dashed var(--line-2);border-radius:14px;font-size:12px;color:var(--muted);line-height:1.7}
+.route-note b{color:var(--ink-2);font-weight:600}
+
+.route-detail-head{display:flex;align-items:flex-start;gap:14px}
+.route-detail-head .rd-char{width:54px;height:54px;border-radius:14px;background:linear-gradient(145deg,var(--jade),var(--ink));color:#f8f2e6;display:grid;place-items:center;font-family:var(--serif);font-size:27px;flex:none}
+.rd-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.rd-meta span{font-size:10px;color:var(--muted);border:1px solid var(--line);padding:1px 6px;border-radius:4px}
+.rd-stops{margin-top:16px;position:relative}
+.rd-stop{display:flex;gap:12px;position:relative;padding-bottom:16px;text-align:left;width:100%}
+.rd-stop::before{content:"";position:absolute;left:13px;top:27px;bottom:0;width:1px;background:var(--line-2)}
+.rd-stop:last-child::before{display:none}
+.rd-stop .rd-num{width:27px;height:27px;border-radius:50%;background:var(--clay);color:#fff8ee;display:grid;place-items:center;font-family:var(--serif);font-size:12px;flex:none;z-index:1}
+.rd-stop .rd-main{flex:1;min-width:0;padding-top:2px}
+.rd-stop b{display:block;font-size:13px;font-weight:650}
+.rd-stop small{display:block;font-size:10.5px;color:var(--muted);margin-top:1px;line-height:1.55}
+.rd-stop .rd-side{font-size:10px;color:var(--clay);flex:none;padding-top:3px}
+.rd-actions{display:flex;gap:8px;margin-top:6px}
+.rd-actions .btn{flex:1}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 16px;border-radius:12px;
+  font-size:13px;font-weight:600;border:1px solid transparent;transition:transform .15s,background .18s,border-color .18s;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn:disabled{opacity:.45;pointer-events:none}
+.btn.primary{background:var(--ink);color:#fff8ee}
+.btn.primary:hover{background:var(--jade)}
+.btn.clay{background:var(--clay);color:#fff8ee}
+.btn.ghost{background:var(--card);border-color:var(--line);color:var(--ink-2)}
+.btn.ghost:hover{border-color:var(--line-2)}
+.btn .icon{width:15px;height:15px}
+
+.chat-layout{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start;margin-top:24px}
+.chat-shell{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow-sm);overflow:hidden;display:flex;flex-direction:column;height:min(680px,calc(100dvh - 190px))}
+.chat-head{display:flex;align-items:center;gap:11px;padding:14px 16px;border-bottom:1px solid rgba(23,51,45,.08);background:linear-gradient(180deg,#fffdf7,#fbf7ee)}
+.chat-avatar{width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,var(--jade),var(--ink));color:#f8f2e6;display:grid;place-items:center;font-family:var(--serif);font-size:19px;flex:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+.chat-id{flex:1;min-width:0}
+.chat-id b{display:block;font-size:14px;font-weight:700}
+.chat-id small{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);margin-top:1px}
+.chat-id small::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--jade-2)}
+.chat-head-actions{display:flex;gap:4px}
+.icon-btn{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;color:var(--muted);border:1px solid transparent}
+.icon-btn:hover{background:var(--paper);color:var(--ink);border-color:var(--line)}
+.icon-btn .icon{width:16px;height:16px}
+.chat-log{flex:1;overflow-y:auto;padding:18px 16px 8px;display:flex;flex-direction:column;gap:14px;scrollbar-width:thin}
+.chat-log::-webkit-scrollbar{width:5px}
+.chat-log::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:4px}
+.msg{display:flex;gap:9px;max-width:92%}
+.msg.user{align-self:flex-end;flex-direction:row-reverse}
+.msg .m-avatar{width:28px;height:28px;border-radius:9px;background:var(--paper-2);color:var(--ink-2);display:grid;place-items:center;font-family:var(--serif);font-size:13px;flex:none;margin-top:1px}
+.msg.assistant .m-avatar{background:linear-gradient(145deg,var(--jade),var(--ink));color:#f8f2e6}
+.msg .bubble{padding:10px 13px;border-radius:14px;font-size:12.8px;line-height:1.78;background:var(--card-2);border:1px solid rgba(23,51,45,.08);color:var(--ink-2)}
+.msg.user .bubble{background:var(--ink);color:#f8f2e6;border-color:var(--ink);border-top-right-radius:4px}
+.msg.assistant .bubble{border-top-left-radius:4px}
+.msg .bubble b{color:var(--ink);font-weight:700}
+.msg.user .bubble b{color:#fff8ee}
+.msg .bubble .m-line+.m-line{margin-top:4px}
+.msg .m-tools{display:flex;align-items:center;gap:6px;margin-top:5px}
+.msg .m-tools button{font-size:9.5px;color:var(--muted);display:inline-flex;align-items:center;gap:3px}
+.msg .m-tools .icon{width:11px;height:11px}
+.msg .m-tools button:hover{color:var(--clay)}
+.typing{display:inline-flex;gap:3px;align-items:center;padding:4px 2px}
+.typing i{width:5px;height:5px;border-radius:50%;background:var(--muted);animation:blink 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.15s}
+.typing i:nth-child(3){animation-delay:.3s}
+@keyframes blink{0%,60%,100%{opacity:.25;transform:translateY(0)}30%{opacity:1;transform:translateY(-2px)}}
+.chat-suggest{padding:6px 14px 2px;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}
+.chat-suggest::-webkit-scrollbar{display:none}
+.chat-suggest button{flex:none;font-size:10.5px;color:var(--ink-2);background:var(--paper);border:1px solid var(--line);padding:4px 9px;border-radius:999px}
+.chat-suggest button:hover{border-color:var(--clay);color:var(--clay)}
+.chat-input{display:flex;align-items:flex-end;gap:6px;padding:10px 12px 12px;border-top:1px solid rgba(23,51,45,.07);background:var(--card)}
+.chat-input textarea{flex:1;resize:none;border:1px solid var(--line);background:var(--card-2);border-radius:13px;padding:9px 12px;font-size:12.8px;line-height:1.5;min-height:40px;max-height:100px;outline:none}
+.chat-input textarea:focus{border-color:rgba(191,90,60,.45);background:#fff}
+.chat-input .send{width:40px;height:40px;border-radius:50%;background:var(--clay);color:#fff8ee;display:grid;place-items:center;flex:none}
+.chat-input .send:hover{background:var(--clay-2)}
+.chat-input .send .icon{width:17px;height:17px}
+.chat-side{display:flex;flex-direction:column;gap:12px}
+.side-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px 16px;box-shadow:var(--shadow-sm)}
+.side-card h3{font-size:12px;font-weight:700;letter-spacing:.04em;display:flex;align-items:center;gap:6px}
+.side-card h3 .icon{width:14px;height:14px;color:var(--clay)}
+.side-card p{font-size:11.5px;color:var(--muted);line-height:1.7;margin-top:6px}
+.side-card .kv{display:flex;justify-content:space-between;gap:10px;font-size:11.5px;padding:5px 0;border-bottom:1px dashed rgba(23,51,45,.09)}
+.side-card .kv:last-child{border-bottom:0}
+.side-card .kv span{color:var(--muted)}
+.side-card .kv b{font-weight:600;color:var(--ink-2)}
+.ds-badge{display:inline-flex;align-items:center;gap:4px;font-size:9.5px;color:var(--jade);border:1px solid rgba(47,122,102,.3);background:rgba(47,122,102,.07);padding:2px 7px;border-radius:999px;margin-top:8px}
+.ds-badge.off{color:var(--muted);border-color:var(--line);background:var(--paper)}
+.link-btn{font-size:11.5px;color:var(--clay);display:inline-flex;align-items:center;gap:4px;margin-top:9px;font-weight:600}
+.link-btn .icon{width:12px;height:12px}
+
+.transit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+.transit-card{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow-sm);display:flex;flex-direction:column}
+.tc-top{position:relative;padding:15px 16px 14px;color:#fff8ee;overflow:hidden;min-height:92px}
+.tc-top::after{content:"";position:absolute;right:-18px;bottom:-36px;width:120px;height:120px;border-radius:50%;border:1px solid rgba(255,255,255,.18)}
+.tc-top .tc-badge{display:inline-flex;align-items:center;gap:5px;font-size:9px;letter-spacing:.1em;padding:2px 7px;border:1px solid rgba(255,255,255,.32);border-radius:999px;color:rgba(255,255,255,.85)}
+.tc-top h2{font-family:var(--serif);font-size:21px;font-weight:600;letter-spacing:.03em;margin-top:8px}
+.tc-top p{font-size:10.5px;color:rgba(255,255,255,.66);margin-top:3px}
+.tc-body{padding:13px 15px 15px;display:flex;flex-direction:column;flex:1}
+.tc-desc{font-size:11.5px;color:var(--muted);line-height:1.7;min-height:3.4em}
+.tc-stops{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.tc-stops span{font-size:9.5px;color:var(--ink-2);border:1px solid var(--line);background:var(--card-2);border-radius:4px;padding:2px 6px}
+.tc-stats{display:grid;grid-template-columns:1fr 1fr;gap:5px 8px;margin-top:11px;padding-top:10px;border-top:1px solid rgba(23,51,45,.08)}
+.tc-stats div{font-size:9.5px;color:var(--muted)}
+.tc-stats b{display:block;font-size:11.5px;color:var(--ink-2);font-weight:650;margin-top:1px}
+.tc-actions{display:flex;gap:6px;margin-top:11px}
+.tc-actions .btn{flex:1;padding:8px 6px;font-size:10.5px;border-radius:9px}
+.tc-note{font-size:9.5px;color:var(--muted);line-height:1.55;margin-top:8px;padding-top:8px;border-top:1px dashed rgba(23,51,45,.1)}
+.transport-section{margin-top:28px}
+.ts-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px}
+.ts-head h2{font-family:var(--serif);font-size:19px;font-weight:600;letter-spacing:.03em}
+.ts-head span{font-size:10.5px;color:var(--muted)}
+.boat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.boat-card{display:flex;align-items:center;gap:11px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 13px;transition:transform .18s,border-color .18s}
+.boat-card:hover{transform:translateY(-2px);border-color:var(--line-2)}
+.boat-ico{width:34px;height:34px;border-radius:10px;background:rgba(46,111,158,.1);color:#2e6f9e;display:grid;place-items:center;font-family:var(--serif);font-size:17px;flex:none}
+.boat-main{min-width:0;flex:1}
+.boat-main b{display:block;font-size:12.5px;font-weight:650}
+.boat-main small{display:block;font-size:10px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.boat-side{font-size:9.5px;color:var(--clay);text-align:right;flex:none;line-height:1.5}
+.service-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:22px}
+.service-search{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:9px 12px;min-width:260px;flex:1;max-width:380px}
+.service-search .icon{width:16px;height:16px;color:var(--muted)}
+.service-search input{border:0;background:none;outline:none;flex:1;font-size:12.5px}
+.service-chips{display:flex;gap:5px;overflow-x:auto;padding:2px;scrollbar-width:none}
+.service-chips::-webkit-scrollbar{display:none}
+.service-count{font-size:11px;color:var(--muted);margin-top:14px}
+.service-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.service-item{display:flex;gap:11px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 14px;transition:transform .18s,border-color .18s,box-shadow .18s}
+.service-item:hover{transform:translateY(-2px);border-color:var(--line-2);box-shadow:var(--shadow-sm)}
+.service-ico{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:10px;font-weight:750;flex:none;background:var(--paper-2);color:var(--ink-2)}
+.service-ico.c-toilet{background:rgba(60,111,141,.1);color:var(--blue)}
+.service-ico.c-parking{background:rgba(75,85,99,.1);color:#4b5563}
+.service-ico.c-bike{background:rgba(47,122,102,.1);color:var(--jade-2)}
+.service-ico.c-visitor{background:rgba(173,135,72,.12);color:var(--gold)}
+.service-ico.c-food{background:rgba(162,102,47,.1);color:#a2662f}
+.service-main{min-width:0;flex:1}
+.service-main b{display:block;font-size:12.5px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.service-main small{display:block;font-size:10.5px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.service-side{text-align:right;flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.service-side b{font-size:10.5px;color:var(--clay);font-weight:650;white-space:nowrap}
+.service-side span{font-size:9px;color:var(--muted)}
+.empty{grid-column:1/-1;padding:40px 20px;text-align:center;color:var(--muted);font-size:12.5px;border:1px dashed var(--line-2);border-radius:14px}
+
+.bottomnav{display:none}
+
+.sheet-backdrop{position:fixed;inset:0;z-index:90;background:rgba(16,29,25,.42);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .25s}
+.sheet-backdrop.show{opacity:1;pointer-events:auto}
+.sheet{
+  position:fixed;z-index:95;left:50%;bottom:0;transform:translate(-50%,102%);
+  width:min(600px,100%);max-height:88dvh;background:var(--card);border:1px solid rgba(23,51,45,.12);
+  border-radius:24px 24px 0 0;box-shadow:0 -20px 60px -20px rgba(23,51,45,.55);
+  display:flex;flex-direction:column;transition:transform .36s cubic-bezier(.2,.85,.25,1);overflow:hidden;
+}
+.sheet.open{transform:translate(-50%,0)}
+.sheet-grab{width:38px;height:4px;border-radius:4px;background:var(--line-2);margin:9px auto 0;flex:none}
+.sheet-close{position:absolute;right:12px;top:12px;z-index:3;width:30px;height:30px;border-radius:50%;background:rgba(255,253,247,.86);color:var(--ink);display:grid;place-items:center;box-shadow:0 3px 10px rgba(23,51,45,.18)}
+.sheet-close .icon{width:15px;height:15px}
+.sheet-hero{position:relative;height:142px;flex:none;overflow:hidden;margin-top:6px}
+.sheet-hero .hero-grad{position:absolute;inset:0}
+.sheet-hero .hero-char{position:absolute;right:8px;top:-30px;font-family:var(--serif);font-size:170px;line-height:1;color:rgba(255,255,255,.13);pointer-events:none}
+.sheet-hero .hero-title{position:absolute;left:20px;right:16px;bottom:14px;color:#fff8ee;z-index:2}
+.sheet-hero .hero-title span{display:inline-block;font-size:9px;letter-spacing:.15em;border:1px solid rgba(255,255,255,.35);padding:1px 6px;border-radius:3px;margin-bottom:5px}
+.sheet-hero .hero-title h2{font-family:var(--serif);font-size:27px;letter-spacing:.04em;font-weight:600;line-height:1.2;text-shadow:0 2px 10px rgba(0,0,0,.2)}
+.sheet-hero .hero-title p{font-size:10.5px;color:rgba(255,248,238,.78);margin-top:2px}
+.sheet-body{padding:15px 18px 0;overflow-y:auto;flex:1;scrollbar-width:thin}
+.sheet-body::-webkit-scrollbar{width:4px}
+.sheet-body::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:4px}
+.nav-head{padding:6px 0 2px}
+.nav-kicker{font-size:9px;letter-spacing:.18em;color:var(--clay);font-weight:700}
+.nav-head h2{font-family:var(--serif);font-size:23px;letter-spacing:.02em;font-weight:600;margin-top:4px}
+.nav-head p{font-size:11.5px;color:var(--muted);line-height:1.65;margin-top:3px}
+.nav-modes{display:flex;gap:4px;margin-top:12px;background:var(--card-2);border:1px solid var(--line);padding:3px;border-radius:999px;width:fit-content}
+.nav-modes button{padding:6px 18px;border-radius:999px;font-size:11px;color:var(--muted);font-weight:600}
+.nav-modes button.active{background:var(--ink);color:#fff8ee}
+.nav-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:12px}
+.nav-stat{background:var(--card-2);border:1px solid rgba(23,51,45,.07);border-radius:10px;padding:8px 9px}
+.nav-stat span{display:block;font-size:9px;color:var(--muted)}
+.nav-stat b{display:block;font-size:13px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
+.nav-steps{margin-top:14px}
+.nav-step{display:flex;gap:10px;padding:8px 0;border-bottom:1px dashed rgba(23,51,45,.1);font-size:11.5px;color:var(--ink-2);line-height:1.55}
+.nav-step:last-child{border-bottom:0}
+.nav-step .ns-i{width:21px;height:21px;border-radius:50%;background:rgba(43,107,154,.1);color:#2b6b9a;display:grid;place-items:center;font-size:9px;font-weight:700;flex:none;margin-top:1px}
+.nav-step .ns-d{margin-left:auto;color:var(--muted);font-size:10px;white-space:nowrap;flex:none;padding-top:1px}
+.nav-loading{display:flex;align-items:center;gap:8px;padding:24px 0;color:var(--muted);font-size:12px}
+.spinner{width:16px;height:16px;border-radius:50%;border:2px solid var(--line-2);border-top-color:var(--clay);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.meta-cell{background:var(--card-2);border:1px solid rgba(23,51,45,.07);border-radius:10px;padding:7px 8px;min-width:0}
+.meta-cell span{display:block;font-size:9px;color:var(--muted);letter-spacing:.04em}
+.meta-cell b{display:block;font-size:11.5px;font-weight:650;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta-cell b.ticket{color:var(--clay)}
+.one-line{font-size:12.5px;color:var(--ink-2);line-height:1.75;margin-top:10px;padding-left:10px;border-left:2px solid var(--clay)}
+.sheet-tabs{display:flex;gap:2px;margin-top:14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--card);z-index:2}
+.sheet-tabs button{padding:8px 12px;font-size:12px;color:var(--muted);position:relative;font-weight:600}
+.sheet-tabs button.active{color:var(--ink)}
+.sheet-tabs button.active::after{content:"";position:absolute;left:12px;right:12px;bottom:-1px;height:2px;background:var(--clay);border-radius:2px}
+.tab-panel{padding:12px 0 16px;font-size:12.5px;color:var(--ink-2);line-height:1.85}
+.tab-panel p+p{margin-top:7px}
+.tab-panel .quote{font-family:var(--serif);font-size:13.5px;color:var(--ink);background:var(--card-2);border-left:2px solid var(--gold);padding:9px 11px;border-radius:0 8px 8px 0;margin:4px 0 9px}
+.hist-item{display:flex;gap:10px;padding:6px 0}
+.hist-item .hy{font-family:var(--serif);font-size:11.5px;color:var(--clay);flex:none;width:66px;font-weight:600;padding-top:1px}
+.hist-item p{flex:1;font-size:12px;color:var(--ink-2);line-height:1.7}
+.person-card{display:flex;gap:11px;margin-top:4px;padding:11px;background:var(--card-2);border:1px solid var(--line);border-radius:12px}
+.person-char{width:42px;height:42px;border-radius:11px;background:linear-gradient(145deg,var(--jade),var(--ink));color:#f8f2e6;display:grid;place-items:center;font-family:var(--serif);font-size:21px;flex:none}
+.person-info b{display:block;font-family:var(--serif);font-size:14.5px}
+.person-info span{display:block;font-size:9.5px;color:var(--muted);margin-top:1px}
+.person-info p{font-size:11.5px;color:var(--ink-2);line-height:1.7;margin-top:5px}
+.tips-list li{position:relative;padding-left:15px;font-size:12px;color:var(--ink-2);line-height:1.75;margin-bottom:5px}
+.tips-list li::before{content:"";position:absolute;left:0;top:.62em;width:5px;height:5px;border-radius:50%;background:var(--clay);opacity:.6}
+.sheet-actions{display:flex;gap:7px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--card);flex:none}
+.sheet-actions .btn{flex:1;padding:10px 8px;font-size:12px;border-radius:10px}
+.sheet-actions .btn.icon-only{flex:0 0 42px;padding:0}
+
+.modal{position:fixed;z-index:96;left:50%;top:50%;transform:translate(-50%,-46%) scale(.97);width:min(520px,calc(100% - 28px));max-height:86dvh;background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s}
+.modal.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line);flex:none}
+.modal-head h2{font-family:var(--serif);font-size:17px;letter-spacing:.03em}
+.modal-body{padding:16px 18px;overflow-y:auto;font-size:12.5px;color:var(--ink-2);line-height:1.8}
+.modal-body h3{font-size:12px;font-weight:700;color:var(--ink);margin:14px 0 5px}
+.modal-body h3:first-child{margin-top:0}
+.modal-body p{color:var(--muted);font-size:11.5px;line-height:1.75;margin:4px 0}
+.field{margin-top:11px}
+.field label{display:block;font-size:10.5px;font-weight:600;color:var(--ink-2);margin-bottom:4px}
+.field input,.field select{width:100%;border:1px solid var(--line);background:var(--card-2);border-radius:9px;padding:8px 10px;font-size:12px;outline:none}
+.field input:focus,.field select:focus{border-color:rgba(191,90,60,.45);background:#fff}
+.field .hint{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.5}
+.switch-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding:9px 10px;background:var(--card-2);border:1px solid var(--line);border-radius:10px}
+.switch-row b{font-size:11.5px}
+.switch-row small{display:block;font-size:9.5px;color:var(--muted)}
+.switch{width:38px;height:22px;border-radius:99px;background:var(--line-2);position:relative;flex:none;transition:background .2s}
+.switch::after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.switch.on{background:var(--jade)}
+.switch.on::after{transform:translateX(16px)}
+.modal-foot{display:flex;gap:7px;padding:12px 18px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);flex:none}
+.modal-foot .btn{flex:1;font-size:12px}
+.note-box{background:rgba(191,90,60,.06);border:1px solid rgba(191,90,60,.18);border-radius:10px;padding:9px 11px;font-size:10.5px;color:var(--ink-2);line-height:1.65;margin-top:10px}
+.note-box b{color:var(--clay)}
+
+.toast{position:fixed;left:50%;bottom:calc(var(--bottom) + 18px);transform:translate(-50%,12px);z-index:120;background:rgba(23,51,45,.95);color:#f8f2e6;font-size:12px;padding:9px 15px;border-radius:999px;box-shadow:0 12px 30px -10px rgba(23,51,45,.6);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:calc(100% - 32px);text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:1024px){
+  .mainnav{display:none}
+  .map-panel{display:none}
+  .map-top{display:block}
+  .map-chips{display:flex}
+  .view-map{height:calc(100dvh - var(--header) - var(--bottom))}
+  .bottomnav{
+    display:flex;position:fixed;left:0;right:0;bottom:0;z-index:70;height:var(--bottom);
+    background:rgba(255,253,247,.94);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+    border-top:1px solid var(--line);padding:5px 6px calc(5px + env(safe-area-inset-bottom));
+  }
+  .bottomnav button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--muted);font-size:9.5px;border-radius:10px}
+  .bottomnav button .icon{width:20px;height:20px}
+  .bottomnav button.active{color:var(--ink)}
+  .bottomnav button.active .icon{stroke:var(--clay)}
+  .bottomnav button.active span{font-weight:650}
+  .chat-layout{grid-template-columns:1fr}
+  .chat-side{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .chat-shell{height:calc(100dvh - var(--header) - var(--bottom) - 36px);min-height:420px}
+  .page{padding-bottom:calc(80px + var(--bottom))}
+  .route-grid{grid-template-columns:1fr 1fr}
+  .transit-grid{grid-template-columns:1fr 1fr}
+  .route-hero{grid-template-columns:1fr;padding:26px 24px}
+  .rh-art{height:140px;order:-1}
+  .page-title{font-size:clamp(27px,6vw,38px)}
+}
+@media (max-width:640px){
+  :root{--header:58px}
+  body{font-size:14px}
+  .topbar-in{padding:0 14px;gap:10px}
+  .brand-seal{width:32px;height:32px;font-size:18px}
+  .brand b{font-size:14px}
+  .brand small{font-size:8.5px;letter-spacing:.16em}
+  .top-actions #locBtn{display:none}
+  .map-top{top:12px;width:calc(100% - 24px)}
+  .map-chips{top:64px;width:calc(100% - 20px);left:50%}
+  .map-controls{top:112px;right:10px}
+  .map-controls button{width:36px;height:36px}
+  .map-scale{bottom:12px;left:12px}
+  .map-attrib{bottom:12px;right:10px}
+  .geo-pill{right:10px;bottom:38px;font-size:9.5px}
+  .nav-stats{grid-template-columns:1fr 1fr 1fr}
+  .guide-bar{top:118px;width:calc(100% - 20px)}
+  .arrival-card{bottom:14px}
+  .poi-popup{width:238px}
+  .page{padding:26px 16px calc(84px + var(--bottom))}
+  .page-sub{font-size:12.5px}
+  .route-grid{grid-template-columns:1fr}
+  .transit-grid{grid-template-columns:1fr}
+  .boat-grid{grid-template-columns:1fr}
+  .route-hero{padding:20px 18px;border-radius:20px}
+  .route-hero h1{font-size:29px}
+  .rh-art{height:112px}
+  .rh-stats{gap:16px}
+  .route-card .rc-art{height:104px}
+  .chat-layout{margin-top:10px}
+  .chat-shell{height:calc(100dvh - var(--header) - var(--bottom) - 46px);border-radius:18px;min-height:380px}
+  .chat-side{display:none}
+  #view-chat .page{padding-bottom:14px}
+  .chat-log{padding:14px 12px 6px}
+  .msg{max-width:96%}
+  .chat-suggest{padding-left:10px;padding-right:10px}
+  .service-list{grid-template-columns:1fr}
+  .service-search{min-width:0;max-width:none}
+  .service-tools{gap:8px}
+  .sheet{width:100%;max-height:90dvh;border-radius:20px 20px 0 0}
+  .sheet-hero{height:126px}
+  .sheet-hero .hero-char{font-size:145px}
+  .sheet-hero .hero-title h2{font-size:23px}
+  .sheet-body{padding:13px 14px 0}
+  .meta-grid{grid-template-columns:1fr 1fr}
+  .modal{width:calc(100% - 20px)}
+  .toast{bottom:calc(var(--bottom) + 12px);font-size:11.5px}
+}
+body.guiding .map-controls,body.guiding .map-chips{display:none}
+@media (max-width:1024px){
+  body.guiding .map-top{display:none}
+  body.guiding .guide-bar{top:12px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<!-- ========== 图标库 ========== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></symbol>
+  <symbol id="i-locate" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 13 9 5 9-5"/></symbol>
+  <symbol id="i-fit" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H7l-4 2 1.4-4A8 8 0 1 1 21 12Z"/><path d="M8 11h.01M12 11h.01M16 11h.01"/></symbol>
+  <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="5" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.5 5H14a3 3 0 0 1 0 6h-4a3 3 0 0 0 0 6h5.5"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="m9 4-6 2v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14M15 6v14"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M14 7l5 5-5 5"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="m21 3-7 18-4-7-7-4 18-7Z"/><path d="m10 14 4-4"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6"/></symbol>
+  <symbol id="i-volume" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15 9a4 4 0 0 1 0 6M18 6a8 8 0 0 1 0 12"/></symbol>
+  <symbol id="i-nav" viewBox="0 0 24 24"><path d="m21 3-8.5 18-2.2-7.3L3 11.5 21 3Z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-walk" viewBox="0 0 24 24"><circle cx="13" cy="4" r="2"/><path d="m9 21 2-5-2-4 3-3 3 4 3 1M8 12l-2 4M13 12l3 4 3 5"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 3 1.8 5.4L19 10.2l-5.2 1.8L12 17.4l-1.8-5.4L5 10.2l5.2-1.8L12 3Z"/><path d="M19 16v3M17.5 17.5h3"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.6v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 15H6L5 6M10 11v6M14 11v6"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="m7 4 13 8-13 8V4Z"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12 5 5L20 6"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+  <symbol id="i-ticket" viewBox="0 0 24 24"><path d="M3 9a2 2 0 0 0 2-2V6h14v1a2 2 0 0 0 2 2v6a2 2 0 0 0-2 2v1H5v-1a2 2 0 0 0-2-2V9Z"/><path d="M13 6v2M13 11v2M13 16v2"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v18H6a2 2 0 0 1-2-2V5Z"/><path d="M4 17h15M8 7h7"/></symbol>
+</svg>
+
+<!-- ========== 顶栏 ========== -->
+<header class="topbar" id="topbar">
+  <div class="topbar-in">
+    <a href="#map" class="brand" data-view="map" aria-label="回到地图">
+      <span class="brand-seal">东</span>
+      <span><b>小东智游 <span class="beta-tag">公共测试版</span></b><small>DONGQIAN LAKE · AI GUIDE</small></span>
+    </a>
+    <nav class="mainnav" aria-label="主导航">
+      <button type="button" data-view="map" class="active">地图</button>
+      <button type="button" data-view="routes">路线</button>
+      <button type="button" data-view="chat">小东</button>
+      <button type="button" data-view="transport">交通</button>
+      <button type="button" data-view="services">服务</button>
+    </nav>
+    <div class="top-actions">
+      <button class="round-btn" id="locBtn" type="button" title="定位我的位置" aria-label="定位我的位置"><svg class="icon"><use href="#i-locate"/></svg></button>
+      <button class="round-btn" id="aboutBtn" type="button" title="关于本项目" aria-label="关于本项目"><svg class="icon"><use href="#i-info"/></svg></button>
+      <button class="round-btn ai" id="topChatBtn" type="button" title="问小东" aria-label="问小东"><svg class="icon"><use href="#i-spark"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- ================= 地图 ================= -->
+  <section class="view view-map active" id="view-map" aria-label="东钱湖导览地图">
+    <div class="map-wrap">
+      <div id="map">
+        <div class="map-fallback" id="mapFallback" aria-hidden="true">
+          <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="fbLake" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#b9d3d0"/><stop offset="1" stop-color="#9fc2c2"/>
+              </linearGradient>
+              <linearGradient id="fbHill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#c9d8c2"/><stop offset="1" stop-color="#a9c1ae"/>
+              </linearGradient>
+            </defs>
+            <path d="M0 0h1200v800H0z" fill="#e6ede4"/>
+            <path d="M0 560c130-60 220-40 320-90s160-130 280-120 210 90 330 70 190-40 270-10v390H0Z" fill="url(#fbHill)" opacity=".8"/>
+            <path d="M0 650c160-50 250-20 360-70s200-80 330-50 250 60 510 10v260H0Z" fill="#d5e1d2"/>
+            <path d="M210 300c70-70 150-110 250-90s100 80 180 85 120-60 210-40 110 80 130 140-30 110-100 135-120 5-190 35-90 75-190 60-130-80-200-125-160-110-90-200Z" fill="url(#fbLake)" stroke="#7ea6a8" stroke-width="3"/>
+            <g fill="none" stroke="#6f9a9c" stroke-width="1.4" opacity=".45">
+              <path d="M300 330c90-40 180-30 260 10s160 30 250-5"/>
+              <path d="M280 390c110-30 190 0 270 30s170 20 260-15"/>
+              <path d="M310 450c80-20 160-5 240 25s150 15 230-10"/>
+            </g>
+            <g fill="#8fb49c" opacity=".9">
+              <path d="M0 180 120 60l90 100 80-120 110 150-70 90H0Z"/>
+              <path d="M1000 160l80-90 70 100 50-60v130h-200Z"/>
+            </g>
+            <g transform="translate(770 520)" fill="#7c6b50">
+              <path d="M0 20c30-10 60-10 90 0l-8 10H8Z"/><path d="M42 20V0l22 12Z" fill="#a4492f"/>
+            </g>
+            <circle cx="920" cy="170" r="28" fill="#d9a05b" opacity=".45"/>
+          </svg>
+          <div class="fb-note" id="fbNote">正在加载高德底图…</div>
+        </div>
+        <div class="tile-layer" id="tileLayer"></div>
+        <div class="lake-label" id="lakeLabel" aria-hidden="true"><b>东钱湖</b><span>DONGQIAN LAKE</span></div>
+        <div class="route-layer" aria-hidden="true"><svg id="routeSvg"></svg></div>
+        <div class="transit-layer" aria-hidden="true"><svg id="transitSvg"></svg></div>
+        <div class="nav-layer" aria-hidden="true"><svg id="navSvg"></svg></div>
+        <div class="accuracy-circle" id="accuracyCircle"></div>
+        <div class="marker-layer" id="markerLayer"></div>
+        <div class="me-marker" id="meMarker" aria-label="我的位置"><div class="ring"><div class="core"></div></div></div>
+        <div class="guide-layer" id="guideLayer"></div>
+        <div class="poi-popup" id="poiPopup" role="dialog" aria-label="景点信息"></div>
+      </div>
+
+      <!-- 移动端搜索 -->
+      <div class="map-top">
+        <div class="map-search">
+          <svg class="icon"><use href="#i-search"/></svg>
+          <input id="mapSearch" type="search" placeholder="搜景点、厕所、停车场…" autocomplete="off" aria-label="搜索景点与服务">
+          <button class="search-go" id="mapSearchGo" type="button" aria-label="搜索"><svg class="icon"><use href="#i-arrow"/></svg></button>
+          <div class="search-drop" id="searchDrop"></div>
+        </div>
+      </div>
+      <div class="map-chips" id="mapChips" aria-label="分类筛选"></div>
+
+      <div class="map-controls" aria-label="地图控制">
+        <button type="button" id="zoomIn" aria-label="放大"><svg class="icon"><use href="#i-plus"/></svg></button>
+        <button type="button" id="zoomOut" aria-label="缩小"><svg class="icon"><use href="#i-minus"/></svg></button>
+        <div class="divider"></div>
+        <button type="button" id="transitBtn" aria-label="显示或隐藏交通线" title="交通线"><svg class="icon"><use href="#i-route"/></svg></button>
+        <button type="button" id="hdBtn" class="hd-btn" aria-label="切换高清底图" title="高清底图（流量增加）"><span>HD</span></button>
+        <button type="button" id="layerBtn" aria-label="切换卫星底图" title="切换街道 / 卫星"><svg class="icon"><use href="#i-layers"/></svg></button>
+        <button type="button" id="fitBtn" aria-label="查看全域"><svg class="icon"><use href="#i-fit"/></svg></button>
+        <button type="button" id="locateMapBtn" aria-label="定位"><svg class="icon"><use href="#i-locate"/></svg></button>
+      </div>
+
+      <button class="geo-pill" id="geoPill" type="button"><span class="gp-dot"></span><span id="geoText">定位未开启</span></button>
+      <div class="map-scale" id="scaleBar">500 m</div>
+      <div class="map-attrib">© <a href="https://www.amap.com/" target="_blank" rel="noopener">高德地图</a> · 原型演示</div>
+
+      <!-- 桌面端信息面板 -->
+      <aside class="map-panel" id="mapPanel" aria-label="景点列表">
+        <div class="panel-head">
+          <div class="panel-kicker"><span>东钱湖 · 人文坐标</span><span class="dot-live">AI 讲解在线</span></div>
+          <h1>一湖七景</h1>
+          <p>点标点，听小东讲古；也可按路线慢慢走。</p>
+        </div>
+        <div class="panel-search">
+          <div class="ps-box">
+            <svg class="icon"><use href="#i-search"/></svg>
+            <input id="panelSearch" type="search" placeholder="搜景点、厕所、停车场…" autocomplete="off" aria-label="搜索景点与服务">
+          </div>
+          <div class="search-drop" id="panelResults"></div>
+        </div>
+        <div class="panel-chips" id="panelChips"></div>
+        <div class="poi-list" id="poiList"></div>
+        <button class="panel-transit" id="panelTransitBtn" type="button" data-view="transport">
+          <span class="pt-icon"><svg class="icon"><use href="#i-route"/></svg></span>
+          <span class="pt-main"><b>交通与观光船</b><small>地铁 4 号线 · 环湖公交 · 4 个码头</small></span>
+          <svg class="icon pt-arrow"><use href="#i-arrow"/></svg>
+        </button>
+        <button class="panel-promo" id="panelPromo" type="button">
+          <b>不知道怎么走？</b>
+          <span>让小东按你的时间排一条线</span>
+          <span class="mini-go">去问小东 <svg class="icon"><use href="#i-arrow"/></svg></span>
+        </button>
+      </aside>
+
+      <!-- 模拟导览条 -->
+      <div class="guide-bar" id="guideBar" role="status">
+        <div class="gb-top">
+          <span class="gb-dot"></span>
+          <div class="gb-text"><b id="gbTitle">正在前往下一站</b><small id="gbSub">约 1.2 km · 步行 16 分钟</small></div>
+          <div class="gb-actions">
+            <button type="button" id="gbPause" aria-label="暂停导览"><svg class="icon"><use href="#i-pause"/></svg></button>
+            <button type="button" id="gbStop" aria-label="结束导览"><svg class="icon"><use href="#i-stop"/></svg></button>
+          </div>
+        </div>
+        <div class="gb-progress"><i id="gbProgress"></i></div>
+      </div>
+
+      <!-- 到达卡 -->
+      <div class="arrival-card" id="arrivalCard" role="status">
+        <div class="ac-kicker" id="acKicker">已到达</div>
+        <h3 id="acName">小普陀</h3>
+        <p id="acText"></p>
+        <div class="ac-actions">
+          <button class="btn ghost" type="button" id="acDetail">展开讲解</button>
+          <button class="btn primary" type="button" id="acNext">继续前往</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 路线 ================= -->
+  <section class="view" id="view-routes" aria-label="主题路线">
+    <div class="page">
+      <div class="route-hero">
+        <div>
+          <div class="rh-kicker">CURATED ROUTES · 东钱湖</div>
+          <h1>把湖走成<br>一条有故事的线</h1>
+          <p>三条路线，三种走法。点开任意一条，小东会带你从一站走到下一站，到站自动讲古。</p>
+          <div class="rh-stats">
+            <div><b>3</b><span>主题路线</span></div>
+            <div><b>7</b><span>人文坐标</span></div>
+            <div><b>5</b><span>湖区服务</span></div>
+          </div>
+        </div>
+        <div class="rh-art" aria-hidden="true">
+          <svg viewBox="0 0 520 240" preserveAspectRatio="xMidYMid slice">
+            <defs><linearGradient id="rhSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f6f61"/><stop offset="1" stop-color="#17332d"/></linearGradient></defs>
+            <rect width="520" height="240" fill="url(#rhSky)"/>
+            <circle cx="410" cy="62" r="26" fill="#d9a05b" opacity=".65"/>
+            <path d="M0 150c80-26 140-20 210 2s130 26 210 4 80-26 100-20v104H0Z" fill="#0f2621" opacity=".55"/>
+            <path d="M0 172c90-18 160-10 240 8s170 16 280-8v68H0Z" fill="#0a1d19" opacity=".65"/>
+            <g fill="none" stroke="#d8c8a6" stroke-width="1.2" opacity=".4">
+              <path d="M40 185c70-9 120-4 180 7s120 10 200-8"/>
+              <path d="M80 201c60-6 110-2 160 5s100 7 170-5"/>
+            </g>
+            <path d="M60 120c40-35 85-48 130-35s55 48 25 62-95 2-135-8-60-5-20-19Z" fill="#2b6b7a" opacity=".55"/>
+            <text x="36" y="46" fill="#f4ead8" font-family="serif" font-size="16" letter-spacing="4">东钱湖 · 湖山行</text>
+          </svg>
+          <div class="rh-seal">游</div>
+          <div class="rh-cap">NINGBO · YINZHOU · ZHEJIANG</div>
+        </div>
+      </div>
+
+      <div class="route-grid" id="routeGrid"></div>
+      <div class="route-note"><b>说明：</b>路线按景点相对位置与常见游线编排，距离为景点间直线估算，实际车程/步行请以导航为准。点击“开始模拟导览”，地图上的小人会沿路线移动，到站自动弹出讲解。</div>
+    </div>
+  </section>
+
+  <!-- ================= 小东 ================= -->
+  <section class="view" id="view-chat" aria-label="小东 AI 助手">
+    <div class="page" style="padding-top:28px">
+      <div class="chat-layout">
+        <div class="chat-shell" id="chatShell">
+          <div class="chat-head">
+            <div class="chat-avatar">东</div>
+            <div class="chat-id">
+              <b>小东</b>
+              <small id="chatStatus">东钱湖 AI 讲解员 · 本地讲解库</small>
+            </div>
+            <div class="chat-head-actions">
+              <button class="icon-btn" type="button" id="clearChat" title="清空对话" aria-label="清空对话"><svg class="icon"><use href="#i-trash"/></svg></button>
+              <button class="icon-btn" type="button" id="settingsBtn" title="DeepSeek 设置" aria-label="DeepSeek 设置"><svg class="icon"><use href="#i-settings"/></svg></button>
+            </div>
+          </div>
+          <div class="chat-log" id="chatLog" aria-live="polite"></div>
+          <div class="chat-suggest" id="chatSuggest"></div>
+          <form class="chat-input" id="chatForm">
+            <button class="icon-btn" type="button" id="micBtn" title="语音输入" aria-label="语音输入"><svg class="icon"><use href="#i-mic"/></svg></button>
+            <textarea id="chatText" rows="1" placeholder="问小东：小普陀有什么故事？" aria-label="输入问题"></textarea>
+            <button class="send" type="submit" aria-label="发送"><svg class="icon"><use href="#i-send"/></svg></button>
+          </form>
+        </div>
+        <aside class="chat-side">
+          <div class="side-card">
+            <h3><svg class="icon"><use href="#i-spark"/></svg>小东能做什么</h3>
+            <p>讲七处古迹的历史与名人，算你到景点的距离，查厕所、停车和骑行点，按时间排路线。</p>
+            <div class="kv"><span>讲解范围</span><b>东钱湖 7 处坐标</b></div>
+            <div class="kv"><span>服务检索</span><b>厕所 / 停车 / 骑行</b></div>
+            <div class="kv"><span>回答方式</span><b>本地库 + 可选 DeepSeek</b></div>
+            <div id="dsBadge" class="ds-badge off">DeepSeek 深度问答未启用</div>
+          </div>
+          <div class="side-card">
+            <h3><svg class="icon"><use href="#i-book"/></svg>试试这样问</h3>
+            <p>“带爸妈半天怎么走？”<br>“小普陀为什么叫小普陀？”<br>“最近的厕所在哪？”<br>“南宋石刻门票多少？”</p>
+          </div>
+          <div class="side-card">
+            <h3><svg class="icon"><use href="#i-info"/></svg>关于 DeepSeek</h3>
+            <p>网页版 DeepSeek 不允许被第三方页面内嵌，所以小东不是套壳 iframe。填入 API Key 后，回答由 DeepSeek 生成，人格与界面仍是小东。</p>
+            <button class="link-btn" type="button" id="openDsSettings">配置 DeepSeek <svg class="icon"><use href="#i-arrow"/></svg></button>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 交通 ================= -->
+  <section class="view" id="view-transport" aria-label="交通与观光船">
+    <div class="page">
+      <div class="page-kicker">GETTING AROUND · 交通</div>
+      <h1 class="page-title">怎么来，<em>怎么走</em></h1>
+      <p class="page-sub">地铁 4 号线到东钱湖站，环湖公交串起主要景点，观光船从水面把湖串成一条线。点任意线路可回到地图查看走向。</p>
+      <div class="transit-grid" id="transitGrid"></div>
+
+      <div class="transport-section">
+        <div class="ts-head"><h2>观光船码头</h2><span>湖上视角 · 4 个停靠点</span></div>
+        <div class="boat-grid" id="boatGrid"></div>
+      </div>
+
+      <div class="route-note"><b>交通说明：</b>地铁东钱湖站为公开坐标；环湖公交与观光船航线为原型示意，班次、票价、码头位置以运营方现场公告为准。地图上的交通线穿过湖面，仅用于表达线路关系，不代表实际道路。</div>
+    </div>
+  </section>
+
+  <!-- ================= 服务 ================= -->
+  <section class="view" id="view-services" aria-label="湖区服务检索">
+    <div class="page">
+      <div class="page-kicker">LAKESIDE SERVICES</div>
+      <h1 class="page-title">湖边服务，<em>一搜就到</em></h1>
+      <p class="page-sub">厕所、停车场、自行车租赁、游客中心与餐饮。按距离排序，点一下直接回到地图上的位置。</p>
+      <div class="service-tools">
+        <div class="service-search">
+          <svg class="icon"><use href="#i-search"/></svg>
+          <input id="serviceSearch" type="search" placeholder="搜服务点名称，如“韩岭 停车”" autocomplete="off" aria-label="搜索服务点">
+        </div>
+        <div class="service-chips" id="serviceChips"></div>
+      </div>
+      <div class="service-count" id="serviceCount"></div>
+      <div class="service-list" id="serviceList"></div>
+      <div class="route-note"><b>数据说明：</b>服务点位为原型模拟，按景点周边合理布设，用于演示“检索—距离—地图定位”闭环；实际位置、收费与开放时间请以现场标识和景区公示为准。</div>
+    </div>
+  </section>
+</main>
+
+<!-- ========== 移动端底部导航 ========== -->
+<nav class="bottomnav" id="bottomnav" aria-label="底部导航">
+  <button type="button" data-view="map" class="active"><svg class="icon"><use href="#i-map"/></svg><span>地图</span></button>
+  <button type="button" data-view="routes"><svg class="icon"><use href="#i-route"/></svg><span>路线</span></button>
+  <button type="button" data-view="chat"><svg class="icon"><use href="#i-chat"/></svg><span>小东</span></button>
+  <button type="button" data-view="transport"><svg class="icon"><use href="#i-route"/></svg><span>交通</span></button>
+  <button type="button" data-view="services"><svg class="icon"><use href="#i-grid"/></svg><span>服务</span></button>
+</nav>
+
+<!-- ========== 弹层 ========== -->
+<div class="sheet-backdrop" id="backdrop"></div>
+
+<!-- 景点详情 -->
+<aside class="sheet" id="poiSheet" aria-hidden="true" aria-label="景点详情">
+  <div class="sheet-grab"></div>
+  <button class="sheet-close" type="button" id="poiClose" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button>
+  <div class="sheet-hero" id="poiHero">
+    <div class="hero-grad" id="poiGrad"></div>
+    <span class="hero-char" id="poiChar" aria-hidden="true">禅</span>
+    <div class="hero-title"><span id="poiCat">景点</span><h2 id="poiName">小普陀</h2><p id="poiEn">XIAOPUTUO</p></div>
+  </div>
+  <div class="sheet-body">
+    <div class="meta-grid" id="poiMeta"></div>
+    <p class="one-line" id="poiOne"></p>
+    <div class="sheet-tabs" id="poiTabs" role="tablist">
+      <button type="button" data-tab="intro" class="active" role="tab" aria-selected="true">小东讲解</button>
+      <button type="button" data-tab="history" role="tab" aria-selected="false">历史</button>
+      <button type="button" data-tab="person" role="tab" aria-selected="false">名人</button>
+      <button type="button" data-tab="tips" role="tab" aria-selected="false">实用</button>
+    </div>
+    <div class="tab-panel" id="poiPanel"></div>
+  </div>
+  <div class="sheet-actions">
+    <button class="btn primary" type="button" id="navPoi"><svg class="icon"><use href="#i-nav"/></svg>在线导航</button>
+    <button class="btn ghost" type="button" id="askAboutPoi"><svg class="icon"><use href="#i-chat"/></svg>问小东</button>
+    <button class="btn ghost" type="button" id="speakPoi"><svg class="icon"><use href="#i-volume"/></svg>语音</button>
+    <button class="btn ghost icon-only" type="button" id="amapPoi" aria-label="在高德地图中打开"><svg class="icon"><use href="#i-arrow"/></svg></button>
+  </div>
+</aside>
+
+<!-- 路线详情 -->
+<aside class="sheet" id="routeSheet" aria-hidden="true" aria-label="路线详情">
+  <div class="sheet-grab"></div>
+  <button class="sheet-close" type="button" id="routeClose" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button>
+  <div class="sheet-body" id="routeBody" style="padding-top:18px"></div>
+  <div class="sheet-actions">
+    <button class="btn primary" type="button" id="startGuide"><svg class="icon"><use href="#i-play"/></svg>开始模拟导览</button>
+    <button class="btn ghost" type="button" id="routeMapBtn"><svg class="icon"><use href="#i-map"/></svg>地图查看</button>
+  </div>
+</aside>
+
+<!-- 在线导航 -->
+<aside class="sheet" id="navSheet" aria-hidden="true" aria-label="在线导航">
+  <div class="sheet-grab"></div>
+  <button class="sheet-close" type="button" id="navClose" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button>
+  <div class="sheet-body">
+    <div class="nav-head">
+      <div class="nav-kicker">ONLINE ROUTE · OSRM</div>
+      <h2 id="navTitle">在线导航</h2>
+      <p id="navSub">正在计算路线…</p>
+    </div>
+    <div class="nav-modes" id="navModes">
+      <button type="button" data-mode="foot" class="active">步行</button>
+      <button type="button" data-mode="car">驾车</button>
+    </div>
+    <div class="nav-stats" id="navStats"></div>
+    <div class="nav-steps" id="navSteps"></div>
+    <div class="note-box">路线由 OpenStreetMap OSRM 在线计算，仅供原型演示；实际请以高德地图与现场路牌为准。</div>
+  </div>
+  <div class="sheet-actions">
+    <button class="btn primary" type="button" id="navStart"><svg class="icon"><use href="#i-locate"/></svg>开始跟随</button>
+    <button class="btn ghost" type="button" id="navAmap"><svg class="icon"><use href="#i-nav"/></svg>高德打开</button>
+  </div>
+</aside>
+
+<!-- 定位帮助 -->
+<div class="modal" id="geoModal" role="dialog" aria-modal="true" aria-label="定位帮助">
+  <div class="modal-head"><h2>开启手机定位</h2><button class="icon-btn" type="button" id="geoClose" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div>
+  <div class="modal-body">
+    <p>东钱湖导览会读取你的位置，用于计算到景点的距离、显示蓝色定位点，并在导航时跟随移动。</p>
+    <h3>如果浏览器没有弹出授权</h3>
+    <p>1. 手机浏览器需要 HTTPS 或 localhost；直接双击本地 HTML 时，部分浏览器会禁用定位。<br>
+       2. 在浏览器地址栏左侧的站点设置里，把“位置”改为“允许”。<br>
+       3. iPhone 需在 设置 → 隐私与安全性 → 定位服务 → 浏览器 中开启。</p>
+    <h3>本地演示</h3>
+    <p>在项目目录运行 <code>python server.py</code>，用手机访问电脑局域网地址（或 localhost），定位权限更容易触发。</p>
+    <div class="note-box"><b>隐私：</b>位置只在你的浏览器内使用，不会上传到服务器；关闭页面或点“停止定位”即可结束。</div>
+  </div>
+  <div class="modal-foot">
+    <button class="btn ghost" type="button" id="geoStop">停止定位</button>
+    <button class="btn primary" type="button" id="geoRetry">再次请求</button>
+  </div>
+</div>
+
+<!-- DeepSeek 设置 -->
+<div class="modal" id="settingsModal" role="dialog" aria-modal="true" aria-label="DeepSeek 设置">
+  <div class="modal-head"><h2>小东 · DeepSeek 接入</h2><button class="icon-btn" type="button" id="settingsClose" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div>
+  <div class="modal-body">
+    <p>公共网站默认通过站点的 <code>/api/chat</code> 使用管理员配置的 DeepSeek，普通访客<strong>无需填写 Key</strong>。若站点未配置，小东会自动使用内置讲解库；高级用户也可以填自己的 Key 直连官方接口。</p>
+    <div class="switch-row">
+      <div><b>启用 DeepSeek 深度问答</b><small>关闭时使用本地讲解库</small></div>
+      <button class="switch" type="button" id="dsSwitch" aria-label="启用 DeepSeek" aria-pressed="false"></button>
+    </div>
+    <div class="field"><label for="dsKey">API Key（可选）</label><input id="dsKey" type="password" placeholder="公共站点可留空" autocomplete="off"><div class="hint">公共站点由服务端环境变量配置；这里填的 Key 只保存在本机浏览器 localStorage。</div></div>
+    <div class="field"><label for="dsModel">模型</label><input id="dsModel" type="text" placeholder="deepseek-chat" autocomplete="off"></div>
+    <div class="field"><label for="dsEndpoint">接口地址</label><input id="dsEndpoint" type="text" placeholder="https://api.deepseek.com/chat/completions" autocomplete="off"><div class="hint">可直接填官方地址；若网络或跨域拦截，再改用本地代理 <code>/api/chat</code>（Key 放服务端环境变量，浏览器可留空）。</div></div>
+    <div class="field"><label>连接测试</label><button class="btn ghost" type="button" id="dsTest" style="width:100%;font-size:12px">测试 DeepSeek 连接</button><div class="hint" id="dsTestResult">公共站点可直接点这里测试管理员配置的通道；自填 Key 时也可测试。</div></div>
+    <div class="note-box"><b>为什么不能直接嵌入网页版？</b> chat.deepseek.com 设置了 X-Frame-Options / CSP，禁止被第三方网站 iframe 内嵌。强行嵌入只会得到空白框，所以这里采用“同名助手 + API 接入”的方式。</div>
+  </div>
+  <div class="modal-foot">
+    <button class="btn ghost" type="button" id="dsCancel">取消</button>
+    <button class="btn primary" type="button" id="dsSave">保存设置</button>
+  </div>
+</div>
+
+<!-- 关于 -->
+<div class="modal" id="aboutModal" role="dialog" aria-modal="true" aria-label="关于本项目">
+  <div class="modal-head"><h2>关于「小东智游」</h2><button class="icon-btn" type="button" id="aboutClose" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div>
+  <div class="modal-body">
+    <h3>这是什么</h3>
+    <p>杭州电子科技大学第二届 AIGC 应用创新大赛「AI 辅助开发 · 创意产品原型」参赛作品，公共测试版。选题：东钱湖旅游区可交互导览。</p>
+    <h3>核心功能</h3>
+    <p>① 可缩放电子地图：高德街道/卫星底图，标出 7 处景点、交通线、观光船码头与服务点；点标点即出距离、票价、简介。<br>② 小东 AI 助手：本地讲解库 + 可选 DeepSeek API，回答历史、名人、路线、服务问题。<br>③ 到站讲解：选择主题路线后模拟行进，到达景点自动弹出历史与名人讲解。<br>④ 交通与观光船：地铁 4 号线、环湖公交、湖上观光航线。<br>⑤ 联网导航与定位：OSRM 在线路线、步行/驾车切换、手机持续定位与跟随。</p>
+    <h3>资料与边界</h3>
+    <p>历史资料参考维基百科「东钱湖」「南宋石刻公园」「忠应庙」「岳鄂王庙」「史浩」等公开条目；票价为参考价，以景区当日公示为准。服务点为原型模拟点位。地图底图 © 高德地图，仅用于课程原型演示。</p>
+    <h3>技术说明</h3>
+    <p>单页 HTML/CSS/JS，无框架依赖；高德栅格瓦片 + 自研轻量地图引擎（投影、瓦片、标点、路线、模拟行进）；DeepSeek 通过官方 Chat Completions API 接入，Key 仅存本地。</p>
+    <div class="note-box"><b>使用提醒：</b>首次打开需联网加载地图瓦片；定位需要浏览器授权，若不可用会自动回退到“东钱湖游客中心”作为距离起点。位置只在浏览器本地使用，不上传服务器；对话若走站点的 DeepSeek 通道，会发送给 DeepSeek 用于生成回答，不用于其他用途。</div>
+  </div>
+  <div class="modal-foot"><button class="btn primary" type="button" id="aboutOk">知道了</button></div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* =========================================================
+   数据层：景点 / 服务点 / 主题路线
+   坐标均为 WGS-84，运行时转换为高德底图所需的 GCJ-02
+   历史资料参考维基百科「东钱湖」「南宋石刻公园」「忠应庙」
+   「岳鄂王庙」「史浩」等公开条目；票价为参考价。
+   ========================================================= */
+window.DQH_DATA = (function () {
+  "use strict";
+
+  const CATS = {
+    attraction: { label: "景点", short: "景", color: "#bf5a3c" },
+    toilet: { label: "厕所", short: "WC", color: "#3c6f8d" },
+    parking: { label: "停车", short: "P", color: "#4b5563" },
+    bike: { label: "骑行", short: "骑", color: "#2f7a66" },
+    visitor: { label: "咨询", short: "i", color: "#ad8748" },
+    food: { label: "餐饮", short: "食", color: "#a2662f" },
+    transport: { label: "交通", short: "交", color: "#c6473a" },
+    boat: { label: "观光船", short: "船", color: "#2e6f9e" }
+  };
+
+  const POIS = [
+    {
+      id: "taogong",
+      name: "陶公岛",
+      en: "TAOGONG ISLAND",
+      char: "陶",
+      cat: "attraction",
+      tag: "传说 · 范蠡与西施",
+      wgs: [29.7775534, 121.6445281],
+      ticket: "¥30",
+      ticketNote: "参考价",
+      hours: "08:30–17:00",
+      stay: "1–1.5 小时",
+      theme: "linear-gradient(135deg,#3b6b5f,#17332d 70%)",
+      one: "因范蠡而得名的湖湾半岛，传说中他与西施泛舟归隐的地方。",
+      intro:
+        "陶公岛位于东钱湖西北岸，是湖上最早被赋予人文想象的地方之一。“陶公”指春秋时期的范蠡——他助越王勾践灭吴后弃官经商，自号陶朱公。民间传说他携西施泛舟五湖，最终隐居东钱湖，留下“陶公钓矶”的遗迹。今天岛上仍以湖湾、垂钓和落日闻名。",
+      history: [
+        ["春秋", "传说范蠡功成身退，泛舟五湖，东钱湖民间由此有“陶公”之称。"],
+        ["唐宋", "东钱湖逐渐成为浙东重要的水利与游赏之地，陶公山一带形成聚落。"],
+        ["今天", "陶公钓矶、湖鲜与休闲游船，使这里成为看落日与亲近湖面的热门位置。"]
+      ],
+      person: {
+        name: "范蠡",
+        meta: "春秋 · 越国大夫 / 陶朱公",
+        text:
+          "助越王勾践灭吴后急流勇退，三聚三散，被后世奉为“商圣”。东钱湖陶公岛因他而得名；至于他是否真的与西施归隐于此，更多是地方传说。"
+      },
+      tips: [
+        "“陶公钓矶”是传说点，讲解时可用“相传”开头，避免把传说讲成定论。",
+        "傍晚湖面逆光，适合拍剪影；岛上餐饮以湖鲜为主。",
+        "若只想轻松看湖，可只走湖湾步道，不必走完整岛。"
+      ],
+      keywords: "陶公 范蠡 西施 陶朱公 钓鱼 钓矶 日落 湖湾"
+    },
+    {
+      id: "xiaoputuo",
+      name: "小普陀",
+      en: "XIAOPUTUO · XIAYU",
+      char: "禅",
+      cat: "attraction",
+      tag: "南宋 · 史浩为母建寺",
+      wgs: [29.7677541, 121.6639789],
+      ticket: "¥30",
+      ticketNote: "参考价",
+      hours: "07:30–17:00",
+      stay: "1–1.5 小时",
+      theme: "linear-gradient(135deg,#2b6b7a,#17332d 72%)",
+      one: "南宋宰相史浩为母亲凿出的“湖上普陀”，一岛一寺，水上观音。",
+      intro:
+        "小普陀在霞屿岛上，本名霞屿禅寺。相传南宋宰相史浩的母亲双目失明，无法远赴普陀山进香，史浩便在霞屿凿石为洞，仿普陀山供奉观音，建成“补陀洞天”，民间因此称这里为“小普陀”。走过长堤，水上观音、寺院与石窟在同一画面里。",
+      history: [
+        ["南宋", "史浩为满足母亲礼佛心愿，在霞屿建寺凿洞，称“补陀洞天”。"],
+        ["明清", "屡有修葺，成为东钱湖香火最盛的湖上寺院之一。"],
+        ["今天", "长堤、水上观音与霞屿禅寺构成东钱湖最具辨识度的湖上景观。"]
+      ],
+      person: {
+        name: "史浩",
+        meta: "1106—1194 · 南宋宰相",
+        text:
+          "明州鄞县人，绍兴十五年进士，官至右丞相，封魏国公，追封越王，谥忠定。史氏家族有“一门三丞相”之称。小普陀的故事，让他以“孝子”的形象留在东钱湖。"
+      },
+      tips: [
+        "入寺保持安静，佛像与石窟内不要使用闪光灯。",
+        "长堤无遮阴，夏天建议早上或傍晚前往。",
+        "可把“补陀洞天”作为讲解重点：它是“小普陀”名字的由来。"
+      ],
+      keywords: "小普陀 霞屿 禅寺 史浩 补陀洞天 观音 水上观音 母亲 孝"
+    },
+    {
+      id: "shike",
+      name: "南宋石刻公园",
+      en: "SOUTHERN SONG STONE CARVINGS",
+      char: "石",
+      cat: "attraction",
+      tag: "南宋 · 史氏家族墓道",
+      wgs: [29.7482056, 121.6830139],
+      ticket: "¥55",
+      ticketNote: "参考价",
+      hours: "08:00–16:30",
+      stay: "1.5–2 小时",
+      theme: "linear-gradient(135deg,#6b6250,#2c2a24 72%)",
+      one: "两百余尊南宋石像生，藏在东钱湖山谷里的“江南兵马俑”。",
+      intro:
+        "南宋石刻公园以史渐墓道为核心，把东钱湖周边散落的南宋墓道石刻集中保护展示。石虎、石羊、石马、武将、文臣依次排列，衣冠、甲胄、马具的细节仍清晰可辨，是研究南宋丧葬制度与雕刻艺术的实物标本。",
+      history: [
+        ["南宋", "史氏家族显赫，“一门三丞相”，在东钱湖一带留下大规模墓道石刻。"],
+        ["2006", "以史渐墓道为基础建成南宋石刻公园并对外开放。"],
+        ["2011", "三期扩建，增加石刻长廊与民俗主题展区。"],
+        ["今天", "东钱湖石刻为全国重点文物保护单位，公园是其中最集中的展示地。"]
+      ],
+      person: {
+        name: "史氏家族",
+        meta: "南宋 · 一门三丞相",
+        text:
+          "史浩、史弥远、史嵩之祖孙三代出宰相，家族墓道石刻规格高、数量多，是东钱湖南宋石刻的主体。公园里的石像生，正是这个家族兴衰留下的实物注脚。"
+      },
+      tips: [
+        "先看室内博物馆，再走史渐墓道，顺序会更清楚。",
+        "石刻怕风化，请勿触摸、攀爬。",
+        "园区16:30闭园，建议至少留出1.5小时。"
+      ],
+      keywords: "南宋 石刻 石像 史氏 史浩 史弥远 史嵩之 史渐 墓道 兵马俑 文保"
+    },
+    {
+      id: "hanling",
+      name: "韩岭老街",
+      en: "HANLING OLD STREET",
+      char: "街",
+      cat: "attraction",
+      tag: "千年 · 水陆商埠",
+      wgs: [29.7376378, 121.6640689],
+      ticket: "免费",
+      ticketNote: "街区开放",
+      hours: "全天 · 店铺约 09:00–21:00",
+      stay: "2 小时",
+      theme: "linear-gradient(135deg,#8a5a3c,#3a2a20 72%)",
+      one: "南岸的千年水陆商埠，一条老街把湖鲜、旧宅与市井留在原地。",
+      intro:
+        "韩岭老街在东钱湖南岸，依山面湖，是旧时宁波通往象山、奉化方向的水陆要冲。老街以条石铺路，两侧是清末民初的店铺与民居，前店后宅、上宅下店的格局保存较好。今天这里既是历史街区，也是吃湖鲜、看落日的地方。",
+      history: [
+        ["宋代", "韩岭一带形成聚落，因地处水陆要冲而逐渐繁荣。"],
+        ["明清", "老街成为宁波东南部重要的集市，商铺、客栈与码头沿湖分布。"],
+        ["今天", "经过保护性修缮，老街保留原有肌理，引入美术馆、民宿与餐饮。"]
+      ],
+      person: {
+        name: "韩岭人",
+        meta: "地方史 · 商埠记忆",
+        text:
+          "这条街没有单一的名人主角。它更像一部由商人、船工、渔民和店主共同写下的地方史——韩岭的“名人”，是那些把湖鲜、布匹和山货从码头运出去的人。"
+      },
+      tips: [
+        "上午人少，适合拍老街；傍晚适合在湖边看落日。",
+        "湖鲜餐馆集中在主街与湖边，点菜前先确认时价。",
+        "老街免费，部分展馆与体验项目单独收费。"
+      ],
+      keywords: "韩岭 老街 古街 商埠 湖鲜 集市 民居 落日 浙东"
+    },
+    {
+      id: "zhongying",
+      name: "忠应庙 · 王安石庙",
+      en: "ZHONGYING TEMPLE",
+      char: "庙",
+      cat: "attraction",
+      tag: "清代 · 纪念王安石",
+      wgs: [29.7676917, 121.6953472],
+      ticket: "免费",
+      ticketNote: "免费开放",
+      hours: "08:00–16:30",
+      stay: "40 分钟",
+      theme: "linear-gradient(135deg,#7a5a3a,#2f2419 72%)",
+      one: "村民为纪念王安石治湖而建的庙，清代建筑里藏着一段北宋水利史。",
+      intro:
+        "忠应庙又称王安石庙，位于东钱湖镇西村，现存建筑为清代。庙内供奉王安石泥彩塑像，两厢陈列王安石在鄞县的史迹。北宋庆历七年（1047），王安石任鄞县令，组织疏浚东钱湖、划定湖界，湖灌溉之利由此延续。",
+      history: [
+        ["北宋庆历七年（1047）", "王安石知鄞县，整治东钱湖水利，划定湖界。"],
+        ["清代", "忠应庙重建，成为地方祭祀王安石的场所。"],
+        ["1987", "公布为鄞县文物保护单位（今鄞州区）。"]
+      ],
+      person: {
+        name: "王安石",
+        meta: "1021—1086 · 北宋政治家、文学家",
+        text:
+          "字介甫，号半山，江西临川人。庆历七年任鄞县令，兴修水利、兴办学校；后主持熙宁变法。东钱湖百姓立庙纪念他，庙里的塑像与史迹陈列，讲的就是这段“县令治湖”的往事。"
+      },
+      tips: [
+        "庙内是文保单位，保持安静，不触碰塑像与陈列。",
+        "可把“王安石治湖”与东钱湖的水利史连起来讲。",
+        "若时间紧，可与小普陀安排在同一半天。"
+      ],
+      keywords: "忠应庙 王安石 王安石庙 鄞县 水利 治湖 清代 文保"
+    },
+    {
+      id: "fuquan",
+      name: "福泉山",
+      en: "FUQUAN MOUNTAIN",
+      char: "茶",
+      cat: "attraction",
+      tag: "茶山 · 登高望湖",
+      wgs: [29.7440, 121.7040],
+      ticket: "¥40",
+      ticketNote: "参考价",
+      hours: "08:00–17:00",
+      stay: "1.5–2 小时",
+      theme: "linear-gradient(135deg,#4d6b3f,#1e2c1b 72%)",
+      one: "东钱湖东南的茶山，登顶可望湖海，层层茶园是它的主角。",
+      intro:
+        "福泉山在东钱湖东南，山势舒缓，茶园顺着山脊铺开。这里自古有种茶传统，登高可俯瞰东钱湖，天气好时还能望见远处的海天。“一山观湖海，万翠拥福泉”是当地对它的概括。",
+      history: [
+        ["唐宋", "宁波一带已有植茶记载，东钱湖山地适宜茶树生长。"],
+        ["近代", "福泉山开辟规模化茶园，成为东钱湖茶业基地。"],
+        ["今天", "茶园、步道与观景台构成湖东南的慢行目的地。"]
+      ],
+      person: {
+        name: "福泉茶人",
+        meta: "茶文化 · 山地记忆",
+        text:
+          "福泉山的故事不属于某一位名人，而属于一代代茶农。采茶、炒茶、修梯田，把山坡变成了今天层层叠叠的茶园。"
+      },
+      tips: [
+        "山路弯多，自驾注意车速；徒步建议穿防滑鞋。",
+        "茶园坡地日晒强，带好帽子和水。",
+        "春季采茶季最有生活气息，出发前可问景区是否开放采茶体验。"
+      ],
+      keywords: "福泉山 茶 茶园 采茶 登高 望湖 湖海 步道"
+    },
+    {
+      id: "yuewang",
+      name: "岳鄂王庙",
+      en: "YUE FEI TEMPLE",
+      char: "岳",
+      cat: "attraction",
+      tag: "南宋始建 · 纪念岳飞",
+      wgs: [29.7820, 121.6510],
+      ticket: "免费",
+      ticketNote: "免费开放",
+      hours: "08:00–16:00",
+      stay: "30–40 分钟",
+      theme: "linear-gradient(135deg,#6b3f36,#2a1917 72%)",
+      one: "东钱湖畔纪念岳飞的庙宇，前身可追溯到南宋端平年间。",
+      intro:
+        "岳鄂王庙旧称岳众行祠，俗称西瓜庙，位于东钱湖镇莫枝村湖滨西路，是宁波纪念岳飞的庙宇。岳飞遇害后追封鄂王，庙名由此而来。现存建筑为清代至民国风格，1991年公布为鄞县文物保护单位（今鄞州区）。",
+      history: [
+        ["南宋端平年间", "始建，纪念抗金名将岳飞。"],
+        ["清代—民国", "现存建筑格局逐渐形成。"],
+        ["1991", "公布为鄞县文物保护单位（今鄞州区）。"]
+      ],
+      person: {
+        name: "岳飞",
+        meta: "1103—1142 · 南宋抗金名将",
+        text:
+          "字鹏举，相州汤阴人。以“精忠报国”著称，后以“莫须有”罪名遇害。宋宁宗时追封鄂王，东钱湖畔的这座庙因此得名“岳鄂王庙”。"
+      },
+      tips: [
+        "庙宇临湖，参观后可沿湖滨西路散步。",
+        "与陶公岛、小普陀同在湖西—北岸，适合串成一条线。",
+        "开放时间可能随季节调整，出发前建议确认。"
+      ],
+      keywords: "岳鄂王庙 岳飞 岳王庙 鄂王 精忠报国 莫须有 莫枝 西瓜庙"
+    }
+  ];
+
+  /* 服务点：为原型演示点位，位置按景点周边合理布设，实际以现场标识为准 */
+  const SERVICES = [
+    { id: "wc-taogong", name: "陶公岛入口公厕", cat: "toilet", wgs: [29.7783, 121.6452], desc: "免费 · 含无障碍间", detail: "游客服务点旁，步行 1 分钟", hours: "08:00–17:30" },
+    { id: "wc-xiaoputuo", name: "小普陀长堤公厕", cat: "toilet", wgs: [29.7686, 121.6648], desc: "免费 · 长堤中段", detail: "近水上观音，步行 2 分钟", hours: "07:30–17:00" },
+    { id: "wc-shike", name: "南宋石刻游客中心公厕", cat: "toilet", wgs: [29.7489, 121.6823], desc: "免费 · 含母婴室", detail: "游客中心一层", hours: "08:00–16:30" },
+    { id: "wc-hanling", name: "韩岭老街牌坊公厕", cat: "toilet", wgs: [29.7382, 121.6636], desc: "免费 · 老街入口", detail: "牌坊内侧，步行 1 分钟", hours: "08:00–21:00" },
+    { id: "wc-zhongying", name: "忠应庙停车场公厕", cat: "toilet", wgs: [29.7681, 121.6944], desc: "免费 · 停车场旁", detail: "庙前停车场东侧", hours: "08:00–16:30" },
+    { id: "wc-fuquan", name: "福泉山茶场公厕", cat: "toilet", wgs: [29.7451, 121.7031], desc: "免费 · 茶场服务点", detail: "观景台下方", hours: "08:00–17:00" },
+
+    { id: "pk-taogong", name: "陶公岛停车场", cat: "parking", wgs: [29.7789, 121.6437], desc: "小型车 ¥10/次", detail: "约 80 个车位 · 大巴可停", hours: "24 小时" },
+    { id: "pk-xiaoputuo", name: "小普陀停车场", cat: "parking", wgs: [29.7693, 121.6629], desc: "小型车 ¥10/次", detail: "约 120 个车位", hours: "07:00–18:00" },
+    { id: "pk-shike", name: "南宋石刻公园停车场", cat: "parking", wgs: [29.7486, 121.6840], desc: "小型车 ¥5/小时", detail: "约 60 个车位", hours: "08:00–17:00" },
+    { id: "pk-hanling", name: "韩岭老街停车场", cat: "parking", wgs: [29.7368, 121.6652], desc: "小型车 ¥5/小时", detail: "约 200 个车位 · 节假日紧张", hours: "24 小时" },
+    { id: "pk-fuquan", name: "福泉山停车场", cat: "parking", wgs: [29.7449, 121.7049], desc: "小型车 ¥10/次", detail: "约 50 个车位", hours: "08:00–17:00" },
+
+    { id: "bk-center", name: "游客中心骑行驿站", cat: "bike", wgs: [29.7392, 121.6611], desc: "¥20/小时 · 押金 ¥200", detail: "山地车 / 亲子车 · 可扫码租借", hours: "08:30–17:30" },
+    { id: "bk-hanling", name: "韩岭北口租车点", cat: "bike", wgs: [29.7388, 121.6647], desc: "¥15/小时 · 押金 ¥200", detail: "普通单车 · 支持异地还车", hours: "09:00–18:00" },
+    { id: "bk-xiaoputuo", name: "小普陀环湖驿站", cat: "bike", wgs: [29.7698, 121.6657], desc: "¥20/小时 · 押金 ¥200", detail: "公路车 / 电助力车", hours: "08:30–17:00" },
+    { id: "bk-shike", name: "南宋石刻骑行点", cat: "bike", wgs: [29.7489, 121.6851], desc: "¥15/小时 · 押金 ¥200", detail: "普通单车 · 近公园北门", hours: "08:30–16:30" },
+
+    { id: "vc-center", name: "东钱湖游客中心", cat: "visitor", wgs: [29.7387506, 121.6606625], desc: "咨询 · 寄存 · 导览图", detail: "环湖东路入口 · 可领取纸质地图", hours: "08:30–17:00" },
+    { id: "vc-hanling", name: "韩岭游客服务点", cat: "visitor", wgs: [29.7378, 121.6638], desc: "咨询 · 饮水 · 简易医疗", detail: "老街牌坊旁", hours: "09:00–17:00" },
+    { id: "vc-xiaoputuo", name: "小普陀咨询点", cat: "visitor", wgs: [29.7680, 121.6642], desc: "咨询 · 轮椅借用", detail: "长堤入口", hours: "08:00–16:30" },
+
+    { id: "fd-hanling", name: "韩岭老街·湖鲜小馆", cat: "food", wgs: [29.7379, 121.6640], desc: "湖鲜 · 人均 ¥80–120", detail: "原型示例商户，非真实推荐", hours: "10:30–20:30" },
+    { id: "fd-taogong", name: "陶公岛茶室", cat: "food", wgs: [29.7772, 121.6451], desc: "茶饮 · 简餐 · 人均 ¥40", detail: "湖湾观景位，原型示例", hours: "09:00–17:00" },
+    { id: "fd-fuquan", name: "福泉山茶餐厅", cat: "food", wgs: [29.7458, 121.7012], desc: "茶餐 · 人均 ¥50", detail: "茶园观景台旁，原型示例", hours: "10:00–16:30" }
+  ];
+
+  const ROUTES = [
+    {
+      id: "songyun",
+      name: "湖上宋韵",
+      kicker: "半日 · 第一次来东钱湖",
+      char: "宋",
+      theme: "linear-gradient(135deg,#1e5a4b,#17332d)",
+      desc: "从陶公岛的传说，到小普陀的孝心，再到南宋石刻的家族兴衰，一条线读完东钱湖的宋韵。",
+      stops: ["taogong", "xiaoputuo", "shike"],
+      duration: "约 4 小时",
+      distance: "约 8 km",
+      tag: "人文 / 首次来湖",
+      best: "上午出发，午后在石刻公园结束"
+    },
+    {
+      id: "qiannian",
+      name: "一湖千年",
+      kicker: "全日 · 把湖走成一圈",
+      char: "湖",
+      theme: "linear-gradient(135deg,#2b6b7a,#17332d)",
+      desc: "湖西的传说、湖心的寺院、湖东的王安石庙，再到南岸的韩岭老街，五个坐标串起东钱湖的千年。",
+      stops: ["taogong", "xiaoputuo", "zhongying", "shike", "hanling"],
+      duration: "约 7–8 小时",
+      distance: "约 15 km",
+      tag: "深度 / 人文",
+      best: "自驾或包车，中午在韩岭吃饭"
+    },
+    {
+      id: "manshan",
+      name: "湖山慢行",
+      kicker: "亲子 · 不赶路",
+      char: "慢",
+      theme: "linear-gradient(135deg,#4d6b3f,#1e2c1b)",
+      desc: "从游客中心出发，坐船或沿湖到小普陀，再去韩岭吃午饭。少走路、多坐船，适合带老人和孩子。",
+      stops: ["xiaoputuo", "hanling", "fuquan"],
+      duration: "约 5 小时",
+      distance: "约 9 km",
+      tag: "亲子 / 轻松",
+      best: "上午小普陀，下午韩岭与福泉山"
+    }
+  ];
+
+  /* 交通与观光船点
+     地铁东钱湖站坐标为公开坐标；环湖公交、观光船航线为原型示意，
+     班次、票价与码头位置请以运营方现场公告为准。 */
+  const TRANSPORT = [
+    {
+      id: "metro-dongqianhu",
+      name: "东钱湖站",
+      type: "metro",
+      line: "地铁4号线",
+      wgs: [29.784717, 121.624044],
+      desc: "往宁波火车站 / 慈城西",
+      detail: "B、C 口出站，换乘环湖公交或打车约 10 分钟到游客中心",
+      fare: "¥2–6",
+      hours: "06:03–23:01",
+      tag: "地铁"
+    },
+    {
+      id: "dock-center",
+      name: "游客中心码头",
+      type: "boat",
+      line: "湖上观光航线",
+      wgs: [29.7418, 121.6638],
+      desc: "环湖游船始发 · 近游客中心",
+      detail: "购票与候船在游客中心东侧码头，建议提前 15 分钟到",
+      fare: "¥60 起",
+      hours: "08:30–16:30",
+      tag: "观光船"
+    },
+    {
+      id: "dock-taogong",
+      name: "陶公岛码头",
+      type: "boat",
+      line: "湖上观光航线",
+      wgs: [29.7764, 121.6468],
+      desc: "陶公岛西岸 · 可上下客",
+      detail: "靠近陶公钓矶，风大时可能停航",
+      fare: "¥60 起",
+      hours: "08:30–16:30",
+      tag: "观光船"
+    },
+    {
+      id: "dock-xiaoputuo",
+      name: "小普陀码头",
+      type: "boat",
+      line: "湖上观光航线",
+      wgs: [29.7686, 121.6652],
+      desc: "霞屿岛北侧 · 近水上观音",
+      detail: "下船后步行约 3 分钟到霞屿禅寺",
+      fare: "¥60 起",
+      hours: "08:30–16:30",
+      tag: "观光船"
+    },
+    {
+      id: "dock-hanling",
+      name: "韩岭码头",
+      type: "boat",
+      line: "湖上观光航线",
+      wgs: [29.7392, 121.6658],
+      desc: "韩岭老街南岸 · 可上下客",
+      detail: "下船后步行约 5 分钟到韩岭老街牌坊",
+      fare: "¥60 起",
+      hours: "08:30–16:30",
+      tag: "观光船"
+    }
+  ];
+
+  const TRANSIT_LINES = [
+    {
+      id: "metro4",
+      name: "地铁4号线",
+      type: "metro",
+      color: "#c6473a",
+      desc: "从宁波市区到东钱湖最稳的方式：坐到东钱湖站，再换乘公交或打车进湖区。",
+      fare: "¥2–6",
+      interval: "约 6–8 分钟",
+      hours: "06:03–23:01",
+      stops: ["东钱湖站", "小洋江", "宁波火车站"],
+      points: [[29.784717, 121.624044], [29.7870, 121.6060], [29.7900, 121.5800]],
+      note: "东钱湖站为 4 号线车站，出站后距游客中心约 4 km，建议换乘。"
+    },
+    {
+      id: "bus-loop",
+      name: "环湖观光公交",
+      type: "bus",
+      color: "#3f7d5b",
+      desc: "沿湖串起游客中心、韩岭、南宋石刻、福泉山、小普陀与陶公岛，适合不想自驾的一天。",
+      fare: "¥2",
+      interval: "约 20–30 分钟",
+      hours: "08:00–17:00",
+      stops: ["游客中心", "韩岭老街", "南宋石刻", "福泉山", "忠应庙", "小普陀", "陶公岛", "岳鄂王庙"],
+      points: [
+        [29.7387506, 121.6606625], [29.7376378, 121.6640689], [29.7482056, 121.6830139],
+        [29.7440, 121.7040], [29.7676917, 121.6953472], [29.7677541, 121.6639789],
+        [29.7775534, 121.6445281], [29.7820, 121.6510], [29.7387506, 121.6606625]
+      ],
+      note: "原型按景点顺序绘制的示意环线，不代表实际公交走向与站点。"
+    },
+    {
+      id: "boat-loop",
+      name: "湖上观光航线",
+      type: "boat",
+      color: "#2e6f9e",
+      desc: "从水面看东钱湖：游客中心出发，经陶公岛、小普陀，到韩岭老街。",
+      fare: "¥60 起",
+      interval: "约 30 分钟",
+      hours: "08:30–16:30",
+      stops: ["游客中心码头", "陶公岛码头", "小普陀码头", "韩岭码头"],
+      points: [[29.7418, 121.6638], [29.7764, 121.6468], [29.7686, 121.6652], [29.7392, 121.6658], [29.7418, 121.6638]],
+      note: "航线与班次为原型示意，受天气与水位影响，以码头当日公告为准。"
+    }
+  ];
+
+  return { CATS, POIS, SERVICES, ROUTES, TRANSPORT, TRANSIT_LINES };
+})();
+</script>
+<script>
+/* =========================================================
+   Dongqian Lake · Xiaodong Guide
+   Core UI + lightweight map engine (AMap raster tiles, GCJ-02)
+   ========================================================= */
+(function () {
+  "use strict";
+
+  var DATA = window.DQH_DATA;
+  var POIS = DATA.POIS, SERVICES = DATA.SERVICES, ROUTES = DATA.ROUTES, CATS = DATA.CATS;
+  var TRANSPORT = DATA.TRANSPORT || [], TRANSIT_LINES = DATA.TRANSIT_LINES || [];
+  var BUS_STOPS = [{
+    id: "bus-center", name: "游客中心站", type: "bus", line: "环湖观光公交",
+    wgs: [29.7387506, 121.6606625], desc: "环湖线始发 · 游客中心",
+    detail: "原型示意站点，实际站点以公交公告为准", fare: "¥2", hours: "08:00–17:00", tag: "公交"
+  }].concat(POIS.map(function (p) {
+    return {
+      id: "bus-" + p.id, name: p.name + "站", type: "bus", line: "环湖观光公交",
+      wgs: p.wgs, desc: "环湖线 · 近" + p.name, detail: "原型示意站点，实际站点以公交公告为准",
+      fare: "¥2", hours: "08:00–17:00", tag: "公交"
+    };
+  }));
+  var TRANSPORT_ALL = TRANSPORT.concat(BUS_STOPS);
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var TILE = 256, MIN_Z = 11, MAX_Z = 18, PI = Math.PI;
+  var DEFAULT_USER = { wgs: [29.7387506, 121.6606625], label: "东钱湖游客中心", source: "default" };
+
+  var state = {
+    view: "map",
+    user: { wgs: DEFAULT_USER.wgs.slice(), label: DEFAULT_USER.label, source: "default" },
+    cat: "all",
+    selected: null,
+    activePoi: null,
+    activeRoute: null,
+    route: null,
+    guide: null,
+    poiTab: "intro",
+    serviceCat: "all",
+    serviceQuery: "",
+    showTransit: true,
+    navCoords: null,
+    map: {
+      center: { lat: 29.758, lon: 121.672 }, zoom: 14, layer: "street",
+      tiles: new Map(), errors: 0, ok: 0, tileZ: null,
+      hd: window.devicePixelRatio >= 1.5 && window.innerWidth > 900
+    }
+  };
+
+  /* ---------- helpers ---------- */
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  function haversine(a, b) {
+    var R = 6371, r = PI / 180;
+    var dLat = (b[0] - a[0]) * r, dLon = (b[1] - a[1]) * r;
+    var s = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(a[0] * r) * Math.cos(b[0] * r) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    return 2 * R * Math.asin(Math.min(1, Math.sqrt(s)));
+  }
+  function fmtDist(km) {
+    if (km == null || isNaN(km)) return "—";
+    if (km < 1) return Math.max(10, Math.round(km * 1000 / 10) * 10) + " m";
+    return km.toFixed(1) + " km";
+  }
+  function walkMin(km) { return Math.max(1, Math.round(km * 1000 / 75)); }
+  function distTo(wgs) { return haversine(state.user.wgs, wgs); }
+  function distWord() { return state.user.source === "gps" ? "距你" : "距游客中心"; }
+  function poiById(id) { return POIS.find(function (p) { return p.id === id; }); }
+  function serviceById(id) { return SERVICES.find(function (s) { return s.id === id; }); }
+  function transportById(id) { return TRANSPORT_ALL.find(function (t) { return t.id === id; }); }
+  function routeById(id) { return ROUTES.find(function (r) { return r.id === id; }); }
+  var toastTimer;
+  function toast(msg) {
+    var el = $("#toast");
+    el.textContent = msg;
+    el.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove("show"); }, 2800);
+  }
+
+  /* ---------- coordinates ---------- */
+  var A = 6378245.0, EE = 0.00669342162296594323;
+  function outOfChina(lat, lon) { return lon < 72.004 || lon > 137.8347 || lat < 0.8293 || lat > 55.8271; }
+  function tLat(x, y) {
+    var ret = -100 + 2 * x + 3 * y + 0.2 * y * y + 0.1 * x * y + 0.2 * Math.sqrt(Math.abs(x));
+    ret += (20 * Math.sin(6 * x * PI) + 20 * Math.sin(2 * x * PI)) * 2 / 3;
+    ret += (20 * Math.sin(y * PI) + 40 * Math.sin(y / 3 * PI)) * 2 / 3;
+    ret += (160 * Math.sin(y / 12 * PI) + 320 * Math.sin(y * PI / 30)) * 2 / 3;
+    return ret;
+  }
+  function tLon(x, y) {
+    var ret = 300 + x + 2 * y + 0.1 * x * x + 0.1 * x * y + 0.1 * Math.sqrt(Math.abs(x));
+    ret += (20 * Math.sin(6 * x * PI) + 20 * Math.sin(2 * x * PI)) * 2 / 3;
+    ret += (20 * Math.sin(x * PI) + 40 * Math.sin(x / 3 * PI)) * 2 / 3;
+    ret += (150 * Math.sin(x / 12 * PI) + 300 * Math.sin(x / 30 * PI)) * 2 / 3;
+    return ret;
+  }
+  function wgs2gcj(wgs) {
+    var lat = wgs[0], lon = wgs[1];
+    if (outOfChina(lat, lon)) return [lat, lon];
+    var dLat = tLat(lon - 105, lat - 35), dLon = tLon(lon - 105, lat - 35);
+    var rad = lat / 180 * PI, magic = Math.sin(rad);
+    magic = 1 - EE * magic * magic;
+    var sm = Math.sqrt(magic);
+    dLat = (dLat * 180) / ((A * (1 - EE)) / (magic * sm) * PI);
+    dLon = (dLon * 180) / (A / sm * Math.cos(rad) * PI);
+    return [lat + dLat, lon + dLon];
+  }
+  function project(lat, lon, z) {
+    var scale = TILE * Math.pow(2, z), sin = Math.sin(lat * PI / 180);
+    return { x: (lon + 180) / 360 * scale, y: (0.5 - Math.log((1 + sin) / (1 - sin)) / (4 * PI)) * scale };
+  }
+  function unproject(x, y, z) {
+    var scale = TILE * Math.pow(2, z), lon = x / scale * 360 - 180;
+    var n = PI - 2 * PI * y / scale;
+    return { lat: 180 / PI * Math.atan(0.5 * (Math.exp(n) - Math.exp(-n))), lon: lon };
+  }
+  POIS.forEach(function (p) { p.gcj = wgs2gcj(p.wgs); });
+  SERVICES.forEach(function (s) { s.gcj = wgs2gcj(s.wgs); });
+  TRANSPORT_ALL.forEach(function (t) { t.gcj = wgs2gcj(t.wgs); });
+
+  /* ---------- map refs ---------- */
+  var mapEl = $("#map"), tileLayer = $("#tileLayer"), markerLayer = $("#markerLayer");
+  var routeSvg = $("#routeSvg"), transitSvg = $("#transitSvg"), navSvg = $("#navSvg"), lakeLabel = $("#lakeLabel"), meMarker = $("#meMarker");
+  var guideLayer = $("#guideLayer"), popup = $("#poiPopup"), fbNote = $("#fbNote");
+
+  function tileUrl(layer, x, y, z) {
+    var s = (x + y) % 4 + 1;
+    if (layer === "sat") return "https://webst0" + s + ".is.autonavi.com/appmaptile?style=6&x=" + x + "&y=" + y + "&z=" + z;
+    return "https://webrd0" + s + ".is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x=" + x + "&y=" + y + "&z=" + z;
+  }
+  function clearTiles() {
+    tileLayer.innerHTML = "";
+    state.map.tiles.clear();
+    state.map.errors = 0;
+    state.map.ok = 0;
+    state.map.tileZ = null;
+  }
+  function tileZoomFor(z) {
+    var base;
+    if (state.map.tileZ != null) {
+      base = state.map.tileZ - (state.map.hd && state.map.tileZ < 18 ? 1 : 0);
+      // 0.6 级滞回，避免连续缩放时反复整层重载
+      if (z >= base - 0.45 && z <= base + 0.55) return state.map.tileZ;
+    }
+    base = Math.round(z);
+    if (state.map.hd && base < 17) base += 1;
+    return clamp(base, MIN_Z, MAX_Z);
+  }
+  function ensureTiles() {
+    var w = mapEl.clientWidth, h = mapEl.clientHeight;
+    if (!w || !h) return;
+    var tz = tileZoomFor(state.map.zoom);
+    if (state.map.tileZ !== tz) clearTiles();
+    state.map.tileZ = tz;
+    var scale = Math.pow(2, state.map.zoom - tz);
+    var c = project(state.map.center.lat, state.map.center.lon, tz);
+    var halfW = w / (2 * scale), halfH = h / (2 * scale);
+    var x0 = Math.floor((c.x - halfW) / TILE), x1 = Math.floor((c.x + halfW) / TILE);
+    var y0 = Math.floor((c.y - halfH) / TILE), y1 = Math.floor((c.y + halfH) / TILE);
+    var need = {};
+    for (var x = x0; x <= x1; x++) {
+      for (var y = y0; y <= y1; y++) {
+        var key = tz + "/" + x + "/" + y;
+        need[key] = 1;
+        if (!state.map.tiles.has(key)) {
+          (function (key, x, y) {
+            var img = document.createElement("img");
+            img.alt = "";
+            img.draggable = false;
+            img.decoding = "async";
+            img.addEventListener("load", function () {
+              img.classList.add("on");
+              state.map.ok++;
+              fbNote.style.opacity = "0";
+            });
+            img.addEventListener("error", function () {
+              state.map.errors++;
+              img.style.visibility = "hidden";
+              if (state.map.errors > 8 && state.map.ok === 0) fbNote.textContent = "底图加载失败，景点标点仍可查看";
+            });
+            img.src = tileUrl(state.map.layer, x, y, tz);
+            tileLayer.appendChild(img);
+            state.map.tiles.set(key, img);
+          })(key, x, y);
+        }
+      }
+    }
+    state.map.tiles.forEach(function (img, key) {
+      if (!need[key]) { img.remove(); state.map.tiles.delete(key); }
+    });
+  }
+  function positionTiles() {
+    var w = mapEl.clientWidth, h = mapEl.clientHeight;
+    if (!w || !h) return;
+    var tz = state.map.tileZ || tileZoomFor(state.map.zoom);
+    var scale = Math.pow(2, state.map.zoom - tz);
+    var c = project(state.map.center.lat, state.map.center.lon, tz);
+    var ox = c.x - w / (2 * scale), oy = c.y - h / (2 * scale);
+    var size = TILE * scale;
+    state.map.tiles.forEach(function (img, key) {
+      var p = key.split("/");
+      img.style.width = size + "px";
+      img.style.height = size + "px";
+      img.style.transform = "translate3d(" + ((+p[1] * TILE - ox) * scale) + "px," + ((+p[2] * TILE - oy) * scale) + "px,0)";
+    });
+  }
+  function renderMap() {
+    var w = mapEl.clientWidth, h = mapEl.clientHeight;
+    if (!w || !h) return;
+    ensureTiles();
+    positionTiles();
+    placeMarkers();
+    placeMe();
+    placeLake();
+    drawRoute();
+    drawTransit();
+    if (state.navCoords) drawNavRoute(state.navCoords);
+    updateScale();
+    repositionPopup();
+  }
+  function placeMarkers() {
+    var w = mapEl.clientWidth, h = mapEl.clientHeight;
+    if (!w || !h) return;
+    var c = project(state.map.center.lat, state.map.center.lon, state.map.zoom);
+    var ox = c.x - w / 2, oy = c.y - h / 2;
+    $$(".marker", markerLayer).forEach(function (el) {
+      var it = el._item;
+      if (!it) return;
+      var p = project(it.gcj[0], it.gcj[1], state.map.zoom);
+      var x = p.x - ox, y = p.y - oy;
+      el.style.transform = "translate3d(" + x + "px," + y + "px,0)";
+      el.style.display = el._hidden ? "none" : ((x < -80 || x > w + 80 || y < -100 || y > h + 100) ? "none" : "");
+    });
+    if (state.guide && state.guide.pos) placeGuideDot(state.guide.pos);
+  }
+  function placeMe() {
+    var circle = $("#accuracyCircle");
+    if (state.user.source !== "gps") {
+      meMarker.classList.remove("show");
+      if (circle) circle.style.display = "none";
+      return;
+    }
+    meMarker.classList.add("show");
+    var g = wgs2gcj(state.user.wgs);
+    var w = mapEl.clientWidth, h = mapEl.clientHeight;
+    var c = project(state.map.center.lat, state.map.center.lon, state.map.zoom);
+    var p = project(g[0], g[1], state.map.zoom);
+    var x = p.x - c.x + w / 2, y = p.y - c.y + h / 2;
+    meMarker.style.left = x + "px";
+    meMarker.style.top = y + "px";
+    if (circle) {
+      var acc = state.user.accuracy;
+      if (acc && acc > 0) {
+        var mpp = 156543.03392 * Math.cos(state.map.center.lat * PI / 180) / Math.pow(2, state.map.zoom);
+        var d = clamp(acc * 2 / mpp, 24, 220);
+        circle.style.display = "block";
+        circle.style.width = d + "px";
+        circle.style.height = d + "px";
+        circle.style.left = x + "px";
+        circle.style.top = y + "px";
+      } else {
+        circle.style.display = "none";
+      }
+    }
+  }
+  function placeLake() {
+    var w = mapEl.clientWidth, h = mapEl.clientHeight;
+    var c = project(state.map.center.lat, state.map.center.lon, state.map.zoom);
+    var p = project(29.762, 121.666, state.map.zoom);
+    var x = p.x - c.x + w / 2, y = p.y - c.y + h / 2;
+    lakeLabel.style.left = x + "px";
+    lakeLabel.style.top = y + "px";
+    lakeLabel.style.opacity = (x < -100 || x > w + 100 || y < -80 || y > h + 80) ? 0 : 1;
+  }
+  function updateScale() {
+    var mpp = 156543.03392 * Math.cos(state.map.center.lat * PI / 180) / Math.pow(2, state.map.zoom);
+    var opts = [50, 100, 200, 500, 1000, 2000, 5000], best = opts[0];
+    opts.forEach(function (o) { if (o <= 80 * mpp) best = o; });
+    $("#scaleBar").textContent = best >= 1000 ? (best / 1000) + " km" : best + " m";
+  }
+  function zoomBy(d) {
+    var z = clamp(state.map.zoom + d, MIN_Z, MAX_Z);
+    if (Math.abs(z - state.map.zoom) < 0.01) return;
+    state.map.zoom = z;
+    renderMap();
+  }
+  function zoomAt(cx, cy, d) {
+    var rect = mapEl.getBoundingClientRect(), x = cx - rect.left, y = cy - rect.top;
+    var w = mapEl.clientWidth, h = mapEl.clientHeight;
+    var c = project(state.map.center.lat, state.map.center.lon, state.map.zoom);
+    var before = unproject(c.x - w / 2 + x, c.y - h / 2 + y, state.map.zoom);
+    var z = clamp(state.map.zoom + d, MIN_Z, MAX_Z);
+    if (Math.abs(z - state.map.zoom) < 0.01) return;
+    var bp = project(before.lat, before.lon, z);
+    var nc = unproject(bp.x - (x - w / 2), bp.y - (y - h / 2), z);
+    state.map.zoom = z;
+    state.map.center.lat = nc.lat;
+    state.map.center.lon = nc.lon;
+    renderMap();
+  }
+  function fitPoints(points, pad) {
+    var w = mapEl.clientWidth, h = mapEl.clientHeight;
+    if (!w || !h || !points.length) return;
+    pad = pad || 50;
+    var desktop = window.innerWidth > 1024;
+    var useW = w - (desktop ? 390 : pad * 2);
+    var useH = h - pad * 2 - (desktop ? 0 : 50);
+    var z = MAX_Z;
+    for (; z > MIN_Z; z--) {
+      var xs = points.map(function (p) { return project(p.lat, p.lon, z).x; });
+      var ys = points.map(function (p) { return project(p.lat, p.lon, z).y; });
+      if (Math.max.apply(null, xs) - Math.min.apply(null, xs) <= useW &&
+          Math.max.apply(null, ys) - Math.min.apply(null, ys) <= useH) break;
+    }
+    var cx = points.reduce(function (s, p) { return s + project(p.lat, p.lon, z).x; }, 0) / points.length;
+    var cy = points.reduce(function (s, p) { return s + project(p.lat, p.lon, z).y; }, 0) / points.length;
+    var center = unproject(cx - (desktop ? 155 : 0), cy, z);
+    state.map.zoom = z;
+    state.map.center.lat = center.lat;
+    state.map.center.lon = center.lon;
+    clearTiles();
+    renderMap();
+  }
+  function fitAll() {
+    fitPoints(POIS.map(function (p) { return { lat: p.gcj[0], lon: p.gcj[1] }; }), 50);
+  }
+  function fitCat(cat) {
+    if (cat === "all" || cat === "attraction") { fitAll(); return; }
+    if (cat === "transport") {
+      var all = TRANSPORT_ALL.map(function (t) { return { lat: t.gcj[0], lon: t.gcj[1] }; });
+      if (all.length) fitPoints(all, 80);
+      return;
+    }
+    if (cat === "boat") {
+      var boats = TRANSPORT_ALL.filter(function (t) { return t.type === "boat"; }).map(function (t) { return { lat: t.gcj[0], lon: t.gcj[1] }; });
+      if (boats.length) fitPoints(boats, 80);
+      return;
+    }
+    var pts = SERVICES.filter(function (s) { return s.cat === cat; }).map(function (s) { return { lat: s.gcj[0], lon: s.gcj[1] }; });
+    if (pts.length) fitPoints(pts, 80);
+  }
+  function focusOn(item, z) {
+    state.map.center.lat = item.gcj[0];
+    state.map.center.lon = item.gcj[1];
+    state.map.zoom = z || 15;
+    clearTiles();
+    renderMap();
+  }
+
+  /* ---------- markers ---------- */
+  function buildMarkers() {
+    markerLayer.innerHTML = "";
+    POIS.forEach(function (p, i) {
+      var el = document.createElement("div");
+      el.className = "marker attraction";
+      el._item = p;
+      el.innerHTML = '<button class="hit" type="button" aria-label="' + esc(p.name) + '"><span class="pulse"></span>' +
+        '<span class="pin"><span class="body"><span>' + (i + 1) + '</span></span></span><span class="tag">' + esc(p.name) + '</span></button>';
+      el.querySelector(".hit").addEventListener("click", function (e) {
+        e.stopPropagation();
+        selectPoi(p.id);
+        showPoiPopup(p);
+      });
+      markerLayer.appendChild(el);
+    });
+    SERVICES.forEach(function (s) {
+      var el = document.createElement("div");
+      el.className = "marker service";
+      el._item = s;
+      el.innerHTML = '<button class="hit" type="button" aria-label="' + esc(s.name) + '">' +
+        '<span class="dot c-' + s.cat + '">' + CATS[s.cat].short + '</span><span class="label">' + esc(s.name) + '</span></button>';
+      el.querySelector(".hit").addEventListener("click", function (e) {
+        e.stopPropagation();
+        selectService(s.id);
+        showServicePopup(s);
+      });
+      markerLayer.appendChild(el);
+    });
+    TRANSPORT_ALL.forEach(function (t) {
+      var el = document.createElement("div");
+      el.className = "marker transport t-" + t.type;
+      el._item = t;
+      var short = t.type === "metro" ? "M" : t.type === "bus" ? "B" : "船";
+      el.innerHTML = '<button class="hit" type="button" aria-label="' + esc(t.name) + '">' +
+        '<span class="dot">' + short + '</span><span class="tag">' + esc(t.name) + '</span></button>';
+      el.querySelector(".hit").addEventListener("click", function (e) {
+        e.stopPropagation();
+        selectTransport(t.id);
+        showTransportPopup(t);
+      });
+      markerLayer.appendChild(el);
+    });
+  }
+  function applyFilters() {
+    $$(".marker.attraction", markerLayer).forEach(function (el) {
+      el._hidden = !(state.cat === "all" || state.cat === "attraction");
+    });
+    $$(".marker.service", markerLayer).forEach(function (el) {
+      el._hidden = !(state.cat !== "all" && state.cat !== "attraction" && el._item.cat === state.cat);
+    });
+    $$(".marker.transport", markerLayer).forEach(function (el) {
+      var t = el._item.type;
+      var ok = state.showTransit && (
+        state.cat === "transport" ||
+        (state.cat === "boat" && t === "boat") ||
+        (state.cat === "all" && t !== "bus")
+      );
+      el._hidden = !ok;
+    });
+    $$(".chip[data-cat]").forEach(function (c) { c.classList.toggle("active", c.dataset.cat === state.cat); });
+    placeMarkers();
+    drawTransit();
+  }
+  function selectPoi(id) {
+    state.selected = { type: "poi", id: id };
+    $$(".marker", markerLayer).forEach(function (el) {
+      el.classList.toggle("active", !!(el._item && el._item.id === id && el.classList.contains("attraction")));
+    });
+    $$(".poi-row").forEach(function (r) { r.classList.toggle("active", r.dataset.poi === id); });
+    var row = $('.poi-row[data-poi="' + id + '"]');
+    if (row) row.scrollIntoView({ block: "nearest" });
+  }
+  function selectService(id) {
+    state.selected = { type: "service", id: id };
+    $$(".marker", markerLayer).forEach(function (el) {
+      el.classList.toggle("active", !!(el._item && el._item.id === id && el.classList.contains("service")));
+    });
+  }
+  function selectTransport(id) {
+    state.selected = { type: "transport", id: id };
+    $$(".marker", markerLayer).forEach(function (el) {
+      el.classList.toggle("active", !!(el._item && el._item.id === id && el.classList.contains("transport")));
+    });
+  }
+  function clearSelection() {
+    state.selected = null;
+    $$(".marker", markerLayer).forEach(function (el) { el.classList.remove("active"); });
+    $$(".poi-row").forEach(function (r) { r.classList.remove("active"); });
+    hidePopup();
+  }
+
+  /* ---------- popup ---------- */
+  function showPoiPopup(p) {
+    popup.classList.add("show");
+    popup.classList.remove("below");
+    popup.dataset.type = "poi";
+    popup.dataset.id = p.id;
+    popup.innerHTML = '<div class="pp-top"><b>' + esc(p.name) + '</b><span>' + CATS[p.cat].label + '</span></div>' +
+      '<div class="pp-line"><em>' + distWord() + " " + fmtDist(distTo(p.wgs)) + " · " + esc(p.ticket) + '</em> · ' + esc(p.one) + '</div>' +
+      '<div class="pp-actions"><button type="button" data-act="detail">展开讲解 <svg class="icon"><use href="#i-arrow"/></svg></button>' +
+      '<button type="button" data-act="nav" class="pp-dist">导航前往</button></div>';
+    repositionPopup();
+  }
+  function showTransportPopup(t) {
+    popup.classList.add("show");
+    popup.classList.remove("below");
+    popup.dataset.type = "transport";
+    popup.dataset.id = t.id;
+    popup.innerHTML = '<div class="pp-top"><b>' + esc(t.name) + '</b><span>' + esc(t.line) + '</span></div>' +
+      '<div class="pp-line"><em>' + distWord() + " " + fmtDist(distTo(t.wgs)) + " · " + esc(t.fare) + '</em> · ' + esc(t.desc) + '</div>' +
+      '<div class="pp-actions"><button type="button" data-act="transit">交通页 <svg class="icon"><use href="#i-arrow"/></svg></button>' +
+      '<button type="button" data-act="nav" class="pp-dist">导航前往</button></div>';
+    repositionPopup();
+  }
+  function showServicePopup(s) {
+    popup.classList.add("show");
+    popup.classList.remove("below");
+    popup.dataset.type = "service";
+    popup.dataset.id = s.id;
+    popup.innerHTML = '<div class="pp-top"><b>' + esc(s.name) + '</b><span>' + CATS[s.cat].label + '</span></div>' +
+      '<div class="pp-line"><em>' + distWord() + " " + fmtDist(distTo(s.wgs)) + " · " + esc(s.desc) + '</em> · ' + esc(s.hours) + '</div>' +
+      '<div class="pp-actions"><button type="button" data-act="svc-detail">' + esc(s.detail) + '</button>' +
+      '<button type="button" data-act="nav" class="pp-dist">导航前往</button></div>';
+    repositionPopup();
+  }
+  function hidePopup() { popup.classList.remove("show"); }
+  function repositionPopup() {
+    if (!popup.classList.contains("show") || !state.selected) return;
+    var item = state.selected.type === "poi" ? poiById(state.selected.id)
+      : state.selected.type === "transport" ? transportById(state.selected.id)
+      : serviceById(state.selected.id);
+    if (!item) return;
+    var w = mapEl.clientWidth, h = mapEl.clientHeight;
+    var c = project(state.map.center.lat, state.map.center.lon, state.map.zoom);
+    var p = project(item.gcj[0], item.gcj[1], state.map.zoom);
+    var x = p.x - c.x + w / 2, y = p.y - c.y + h / 2;
+    var pw = popup.offsetWidth || 268, ph = popup.offsetHeight || 100;
+    var left = clamp(x - pw / 2, 10, w - pw - 10);
+    var top = y - 48 - ph;
+    popup.classList.remove("below");
+    if (top < 12) { top = y + 14; popup.classList.add("below"); }
+    popup.style.left = left + "px";
+    popup.style.top = top + "px";
+    popup.style.setProperty("--arrow-x", (x - left) + "px");
+  }
+  popup.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-act]");
+    if (!b || !state.selected) return;
+    var item = state.selected.type === "poi" ? poiById(state.selected.id)
+      : state.selected.type === "transport" ? transportById(state.selected.id)
+      : serviceById(state.selected.id);
+    if (!item) return;
+    if (b.dataset.act === "detail") openPoi(item.id);
+    if (b.dataset.act === "nav") openAmap(item);
+    if (b.dataset.act === "svc-detail") toast(item.detail);
+    if (b.dataset.act === "transit") { hidePopup(); go("transport"); }
+  });
+
+  /* ---------- map gestures ---------- */
+  var pointers = new Map(), drag = null, pinch = null, moved = false;
+  mapEl.addEventListener("pointerdown", function (e) {
+    if (e.button != null && e.button !== 0) return;
+    if (e.target.closest(".marker, .poi-popup, .map-controls, .map-top, .map-chips, .map-panel, .guide-bar, .arrival-card")) return;
+    mapEl.setPointerCapture(e.pointerId);
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    moved = false;
+    if (pointers.size === 1) {
+      drag = { x: e.clientX, y: e.clientY, center: { lat: state.map.center.lat, lon: state.map.center.lon }, z: state.map.zoom };
+      mapEl.classList.add("dragging");
+    } else if (pointers.size === 2) {
+      var a = Array.from(pointers.values());
+      pinch = { d: Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y), z: state.map.zoom };
+      drag = null;
+    }
+  });
+  mapEl.addEventListener("pointermove", function (e) {
+    if (!pointers.has(e.pointerId)) return;
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pointers.size === 2 && pinch) {
+      var a = Array.from(pointers.values());
+      var d = Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y);
+      var z = clamp(pinch.z + Math.log2(d / Math.max(1, pinch.d)), MIN_Z, MAX_Z);
+      if (Math.abs(z - state.map.zoom) > 0.015) { state.map.zoom = z; renderMap(); }
+      return;
+    }
+    if (!drag) return;
+    var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (Math.abs(dx) + Math.abs(dy) > 4) moved = true;
+    var c = project(drag.center.lat, drag.center.lon, drag.z);
+    var nc = unproject(c.x - dx, c.y - dy, drag.z);
+    state.map.center.lat = nc.lat;
+    state.map.center.lon = nc.lon;
+    renderMap();
+  });
+  function endPointer(e) {
+    pointers.delete(e.pointerId);
+    if (pointers.size < 2) pinch = null;
+    if (!pointers.size) { drag = null; mapEl.classList.remove("dragging"); }
+  }
+  mapEl.addEventListener("pointerup", endPointer);
+  mapEl.addEventListener("pointercancel", endPointer);
+  mapEl.addEventListener("click", function (e) {
+    if (moved) { moved = false; return; }
+    if (e.target.closest(".marker, .poi-popup, .guide-bar, .arrival-card")) return;
+    clearSelection();
+  });
+  mapEl.addEventListener("wheel", function (e) {
+    if (e.target.closest(".marker, .poi-popup, .map-panel, .map-top")) return;
+    e.preventDefault();
+    var step = e.deltaY < 0 ? 0.35 : -0.35;
+    if (Math.abs(e.deltaY) > 80) step *= 1.4;
+    zoomAt(e.clientX, e.clientY, step);
+  }, { passive: false });
+  mapEl.addEventListener("dblclick", function (e) {
+    if (e.target.closest(".marker, .poi-popup")) return;
+    zoomAt(e.clientX, e.clientY, 0.7);
+  });
+  $("#zoomIn").addEventListener("click", function () { zoomBy(0.5); });
+  $("#zoomOut").addEventListener("click", function () { zoomBy(-0.5); });
+  $("#fitBtn").addEventListener("click", function () { fitAll(); toast("已回到全域视图"); });
+  $("#layerBtn").addEventListener("click", function () {
+    state.map.layer = state.map.layer === "street" ? "sat" : "street";
+    clearTiles();
+    renderMap();
+    toast(state.map.layer === "sat" ? "已切换到卫星底图" : "已切换到街道底图");
+  });
+  $("#transitBtn").addEventListener("click", function () {
+    state.showTransit = !state.showTransit;
+    applyFilters();
+    toast(state.showTransit ? "交通线已显示" : "交通线已隐藏");
+  });
+  function syncHdBtn() {
+    var b = $("#hdBtn");
+    if (b) b.classList.toggle("hd-on", !!state.map.hd);
+  }
+  $("#hdBtn").addEventListener("click", function () {
+    state.map.hd = !state.map.hd;
+    syncHdBtn();
+    clearTiles();
+    renderMap();
+    toast(state.map.hd ? "高清底图已开启：更清晰，但流量与加载时间增加" : "已切回流畅模式");
+  });
+
+  /* ---------- chips / poi list ---------- */
+  var CHIPS = [{ id: "all", label: "全部" }, { id: "attraction", label: "景点" }, { id: "transport", label: "交通" }, { id: "boat", label: "观光船" }, { id: "toilet", label: "厕所" }, { id: "parking", label: "停车" }, { id: "bike", label: "骑行" }, { id: "visitor", label: "咨询" }, { id: "food", label: "餐饮" }];
+  function chipHtml() {
+    return CHIPS.map(function (c) { return '<button type="button" class="chip' + (c.id === state.cat ? " active" : "") + '" data-cat="' + c.id + '">' + c.label + '</button>'; }).join("");
+  }
+  function buildChips() {
+    $("#mapChips").innerHTML = chipHtml();
+    $("#panelChips").innerHTML = chipHtml();
+    $$(".chip[data-cat]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        state.cat = b.dataset.cat;
+        applyFilters();
+        fitCat(state.cat);
+        if (state.cat !== "all" && state.cat !== "attraction") toast("已显示" + CATS[state.cat].label + "点");
+      });
+    });
+  }
+  function renderPoiList() {
+    $("#poiList").innerHTML = POIS.map(function (p, i) {
+      return '<button type="button" class="poi-row" data-poi="' + p.id + '"><span class="poi-num">' + (i + 1) + '</span>' +
+        '<span class="poi-info"><b>' + esc(p.name) + '</b><small>' + esc(p.tag) + '</small>' +
+        '<span class="poi-meta"><em>' + distWord() + " " + fmtDist(distTo(p.wgs)) + '</em><span>' + esc(p.ticket) + '</span><span>' + esc(p.stay) + '</span></span></span></button>';
+    }).join("");
+    $$("#poiList .poi-row").forEach(function (row) {
+      row.addEventListener("click", function () {
+        var p = poiById(row.dataset.poi);
+        focusOn(p, 15);
+        selectPoi(p.id);
+        showPoiPopup(p);
+      });
+    });
+  }
+
+  /* ---------- search ---------- */
+  function searchAll(q) {
+    q = (q || "").trim().toLowerCase();
+    if (!q) return [];
+    var out = [];
+    POIS.forEach(function (p) {
+      if ((p.name + " " + p.tag + " " + p.keywords + " " + p.en).toLowerCase().indexOf(q) > -1) out.push({ type: "poi", item: p, rank: 0 });
+    });
+    SERVICES.forEach(function (s) {
+      if ((s.name + " " + s.desc + " " + s.detail + " " + CATS[s.cat].label).toLowerCase().indexOf(q) > -1) out.push({ type: "service", item: s, rank: 1 });
+    });
+    TRANSPORT_ALL.forEach(function (t) {
+      if ((t.name + " " + t.line + " " + t.desc + " " + t.detail + " 地铁 公交 船 码头").toLowerCase().indexOf(q) > -1) out.push({ type: "transport", item: t, rank: 2 });
+    });
+    out.sort(function (a, b) { return a.rank - b.rank || distTo(a.item.wgs) - distTo(b.item.wgs); });
+    return out.slice(0, 8);
+  }
+  function renderDrop(box, q) {
+    var list = q ? searchAll(q) : POIS.slice(0, 5).map(function (p) { return { type: "poi", item: p }; });
+    if (!list.length) box.innerHTML = '<div class="search-empty">没有找到，试试“厕所”“韩岭”或“南宋石刻”</div>';
+    else box.innerHTML = list.map(function (r) {
+      var it = r.item, isPoi = r.type === "poi", isTrans = r.type === "transport";
+      var color = isTrans ? (it.type === "metro" ? "#c6473a" : it.type === "bus" ? "#3f7d5b" : "#2e6f9e") : CATS[it.cat].color;
+      var ico = isPoi ? (POIS.indexOf(it) + 1) : isTrans ? (it.type === "metro" ? "M" : it.type === "bus" ? "B" : "船") : CATS[it.cat].short;
+      var sub = isPoi ? esc(it.tag) : isTrans ? esc(it.line) + " · " + esc(it.desc) : CATS[it.cat].label + " · " + esc(it.desc);
+      return '<button type="button" class="search-item" data-rtype="' + r.type + '" data-rid="' + it.id + '">' +
+        '<span class="si-ico" style="color:' + color + '">' + ico + '</span>' +
+        '<span class="si-main"><b>' + esc(it.name) + '</b><small>' + sub + '</small></span>' +
+        '<span class="si-dist">' + fmtDist(distTo(it.wgs)) + '</span></button>';
+    }).join("");
+    box.classList.add("show");
+    $$(".search-item", box).forEach(function (b) {
+      b.addEventListener("click", function () {
+        box.classList.remove("show");
+        var it = b.dataset.rtype === "poi" ? poiById(b.dataset.rid)
+          : b.dataset.rtype === "transport" ? transportById(b.dataset.rid)
+          : serviceById(b.dataset.rid);
+        if (b.dataset.rtype === "poi") { go("map"); focusOn(it, 15); selectPoi(it.id); openPoi(it.id); }
+        else if (b.dataset.rtype === "transport") goMapToTransport(it);
+        else goMapToService(it);
+      });
+    });
+  }
+  function bindSearch(input, box) {
+    var t;
+    input.addEventListener("input", function () {
+      clearTimeout(t);
+      t = setTimeout(function () { renderDrop(box, input.value); }, 120);
+    });
+    input.addEventListener("focus", function () { renderDrop(box, input.value); });
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") box.classList.remove("show");
+      if (e.key === "Enter") {
+        var f = $(".search-item", box);
+        if (f) { e.preventDefault(); f.click(); }
+      }
+    });
+    document.addEventListener("click", function (e) {
+      if (!input.parentNode.contains(e.target) && !box.contains(e.target)) box.classList.remove("show");
+    });
+  }
+
+  /* ---------- poi sheet ---------- */
+  function metaCell(k, v, clay) {
+    return '<div class="meta-cell"><span>' + esc(k) + '</span><b class="' + (clay ? "ticket" : "") + '">' + esc(v) + '</b></div>';
+  }
+  function openPoi(id) {
+    var p = poiById(id);
+    if (!p) return;
+    state.activePoi = p;
+    state.poiTab = "intro";
+    $("#poiGrad").style.background = p.theme;
+    $("#poiChar").textContent = p.char;
+    $("#poiCat").textContent = CATS[p.cat].label;
+    $("#poiName").textContent = p.name;
+    $("#poiEn").textContent = p.en;
+    $("#poiOne").textContent = p.one;
+    $("#poiMeta").innerHTML = metaCell("距离", distWord() + " " + fmtDist(distTo(p.wgs))) +
+      metaCell("票价", p.ticket, true) + metaCell("开放", p.hours) + metaCell("建议", p.stay);
+    $$("#poiTabs button").forEach(function (b) {
+      var on = b.dataset.tab === "intro";
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    renderPoiPanel("intro");
+    openSheet($("#poiSheet"));
+    selectPoi(p.id);
+    hidePopup();
+  }
+  function renderPoiPanel(tab) {
+    var p = state.activePoi;
+    if (!p) return;
+    var el = $("#poiPanel");
+    if (tab === "intro") {
+      el.innerHTML = '<div class="quote">“' + esc(p.one) + '”</div><p>' + esc(p.intro) + '</p>' +
+        '<p style="color:var(--muted);font-size:11.5px;margin-top:8px">票价为参考价，以景区当日公示为准。</p>';
+    } else if (tab === "history") {
+      el.innerHTML = p.history.map(function (h) {
+        return '<div class="hist-item"><span class="hy">' + esc(h[0]) + '</span><p>' + esc(h[1]) + '</p></div>';
+      }).join("");
+    } else if (tab === "person") {
+      el.innerHTML = '<div class="person-card"><div class="person-char">' + esc(p.person.name.slice(0, 1)) + '</div>' +
+        '<div class="person-info"><b>' + esc(p.person.name) + '</b><span>' + esc(p.person.meta) + '</span><p>' + esc(p.person.text) + '</p></div></div>';
+    } else {
+      el.innerHTML = '<ul class="tips-list">' + p.tips.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + '</ul>' +
+        '<p style="color:var(--muted);font-size:11px;margin-top:8px">开放时间与票价可能随季节调整，出发前建议再确认。</p>';
+    }
+  }
+  $$("#poiTabs button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      state.poiTab = b.dataset.tab;
+      $$("#poiTabs button").forEach(function (x) {
+        x.classList.toggle("active", x === b);
+        x.setAttribute("aria-selected", x === b ? "true" : "false");
+      });
+      renderPoiPanel(state.poiTab);
+    });
+  });
+  $("#poiClose").addEventListener("click", closeSheets);
+  $("#askAboutPoi").addEventListener("click", function () {
+    var p = state.activePoi;
+    closeSheets();
+    go("chat");
+    setTimeout(function () {
+      if (window.DQH_CHAT) window.DQH_CHAT.ask("请给我讲讲" + p.name + "的历史和名人故事，控制在150字左右。");
+    }, 260);
+  });
+  $("#speakPoi").addEventListener("click", function () {
+    if (!state.activePoi) return;
+    if (window.speechSynthesis && speechSynthesis.speaking) { speechSynthesis.cancel(); toast("已停止语音"); return; }
+    speak(state.activePoi.name + "。" + state.activePoi.one + state.activePoi.intro);
+  });
+  $("#navPoi").addEventListener("click", function () {
+    if (!state.activePoi) return;
+    if (window.DQH_NAV) window.DQH_NAV.open(state.activePoi);
+    else openAmap(state.activePoi);
+  });
+  $("#amapPoi").addEventListener("click", function () { if (state.activePoi) openAmap(state.activePoi); });
+
+  /* ---------- routes ---------- */
+  function renderRoutes() {
+    $("#routeGrid").innerHTML = ROUTES.map(function (r) {
+      return '<button type="button" class="route-card" data-route="' + r.id + '">' +
+        '<div class="rc-art" style="background:' + r.theme + '"><span class="rc-char">' + r.char + '</span><span>' + esc(r.kicker) + '</span><b>' + esc(r.name) + '</b></div>' +
+        '<div class="rc-body"><p>' + esc(r.desc) + '</p><div class="rc-stops">' +
+        r.stops.map(function (id) { return '<span>' + esc(poiById(id).name) + '</span>'; }).join("") +
+        '</div><div class="rc-foot"><span class="rc-stat"><b>' + esc(r.duration) + '</b> · ' + esc(r.distance) + '</span>' +
+        '<span class="rc-go">查看路线 <svg class="icon"><use href="#i-arrow"/></svg></span></div></div></button>';
+    }).join("");
+    $$(".route-card").forEach(function (c) { c.addEventListener("click", function () { openRoute(c.dataset.route); }); });
+  }
+  function openRoute(id) {
+    var r = routeById(id);
+    if (!r) return;
+    state.activeRoute = r;
+    var stops = r.stops.map(function (sid, i) {
+      var p = poiById(sid), next = r.stops[i + 1] ? poiById(r.stops[i + 1]) : null;
+      var leg = next ? "下一段 " + fmtDist(haversine(p.wgs, next.wgs)) + " · 步行约 " + walkMin(haversine(p.wgs, next.wgs)) + " 分钟" : "终点";
+      return '<button type="button" class="rd-stop" data-stop="' + sid + '"><span class="rd-num">' + (i + 1) + '</span>' +
+        '<span class="rd-main"><b>' + esc(p.name) + '</b><small>' + esc(p.tag) + ' · ' + esc(p.ticket) + '</small>' +
+        '<small style="color:var(--clay)">' + leg + '</small></span><span class="rd-side">' + esc(p.stay) + '</span></button>';
+    }).join("");
+    $("#routeBody").innerHTML = '<div class="route-detail-head"><div class="rd-char">' + r.char + '</div><div>' +
+      '<h2 style="font-family:var(--serif);font-size:22px;font-weight:600">' + esc(r.name) + '</h2>' +
+      '<div class="rd-meta"><span>' + esc(r.kicker) + '</span><span>' + esc(r.duration) + '</span><span>' + esc(r.distance) + '</span><span>' + esc(r.tag) + '</span></div></div></div>' +
+      '<p style="font-size:12px;color:var(--muted);line-height:1.75;margin-top:10px">' + esc(r.desc) + '</p>' +
+      '<div class="rd-stops">' + stops + '</div>' +
+      '<div class="note-box" style="margin-top:2px"><b>建议：</b>' + esc(r.best) + '。路线距离为景点间直线估算，实际请以导航为准。</div>';
+    $$("#routeBody .rd-stop").forEach(function (b) {
+      b.addEventListener("click", function () {
+        closeSheets();
+        go("map");
+        focusOn(poiById(b.dataset.stop), 15);
+        setTimeout(function () { openPoi(b.dataset.stop); }, 220);
+      });
+    });
+    openSheet($("#routeSheet"));
+  }
+  $("#routeClose").addEventListener("click", closeSheets);
+  $("#routeMapBtn").addEventListener("click", function () {
+    var r = state.activeRoute;
+    closeSheets();
+    go("map");
+    if (r) {
+      state.route = r;
+      fitPoints(r.stops.map(function (id) { var p = poiById(id); return { lat: p.gcj[0], lon: p.gcj[1] }; }), 60);
+    }
+  });
+  $("#startGuide").addEventListener("click", function () {
+    var r = state.activeRoute;
+    closeSheets();
+    if (r) startGuide(r);
+  });
+
+  function drawRoute() {
+    var w = mapEl.clientWidth, h = mapEl.clientHeight;
+    routeSvg.setAttribute("viewBox", "0 0 " + w + " " + h);
+    routeSvg.innerHTML = "";
+    if (!state.route) return;
+    var c = project(state.map.center.lat, state.map.center.lon, state.map.zoom);
+    var pts = state.route.stops.map(function (id) {
+      var p = poiById(id), q = project(p.gcj[0], p.gcj[1], state.map.zoom);
+      return { x: q.x - c.x + w / 2, y: q.y - c.y + h / 2 };
+    });
+    if (pts.length < 2) return;
+    var d = "M" + pts[0].x + "," + pts[0].y;
+    for (var i = 1; i < pts.length; i++) {
+      var a = pts[i - 1], b = pts[i];
+      var mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+      d += " Q" + a.x + "," + a.y + " " + mx + "," + my;
+      if (i === pts.length - 1) d += " T" + b.x + "," + b.y;
+    }
+    var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", d);
+    path.setAttribute("class", "route-line");
+    routeSvg.appendChild(path);
+  }
+
+  function drawTransit() {
+    var w = mapEl.clientWidth, h = mapEl.clientHeight;
+    if (!transitSvg) return;
+    transitSvg.setAttribute("viewBox", "0 0 " + w + " " + h);
+    transitSvg.innerHTML = "";
+    if (!state.showTransit || !w || !h) return;
+    var c = project(state.map.center.lat, state.map.center.lon, state.map.zoom);
+    TRANSIT_LINES.forEach(function (line) {
+      if (state.cat === "boat" && line.type !== "boat") return;
+      var pts = line.points.map(function (pt) {
+        var g = wgs2gcj(pt);
+        var q = project(g[0], g[1], state.map.zoom);
+        return { x: q.x - c.x + w / 2, y: q.y - c.y + h / 2 };
+      });
+      if (pts.length < 2) return;
+      var d = "M" + pts[0].x + "," + pts[0].y;
+      for (var i = 1; i < pts.length; i++) {
+        var a = pts[i - 1], b = pts[i];
+        var mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+        d += " Q" + a.x + "," + a.y + " " + mx + "," + my;
+        if (i === pts.length - 1) d += " T" + b.x + "," + b.y;
+      }
+      var casing = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      casing.setAttribute("d", d);
+      casing.setAttribute("class", "transit-casing");
+      transitSvg.appendChild(casing);
+      var p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      p.setAttribute("d", d);
+      p.setAttribute("class", "transit-line " + line.type);
+      p.setAttribute("stroke", line.color);
+      transitSvg.appendChild(p);
+    });
+  }
+
+  function drawNavRoute(coords) {
+    state.navCoords = coords || null;
+    if (!navSvg) return;
+    var w = mapEl.clientWidth, h = mapEl.clientHeight;
+    navSvg.setAttribute("viewBox", "0 0 " + w + " " + h);
+    navSvg.innerHTML = "";
+    if (!coords || coords.length < 2 || !w || !h) return;
+    var c = project(state.map.center.lat, state.map.center.lon, state.map.zoom);
+    var pts = coords.map(function (cd) {
+      var g = wgs2gcj([cd[1], cd[0]]);
+      var q = project(g[0], g[1], state.map.zoom);
+      return { x: q.x - c.x + w / 2, y: q.y - c.y + h / 2 };
+    });
+    var d = "M" + pts[0].x + "," + pts[0].y;
+    for (var i = 1; i < pts.length; i++) d += " L" + pts[i].x + "," + pts[i].y;
+    var casing = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    casing.setAttribute("d", d);
+    casing.setAttribute("class", "nav-casing");
+    navSvg.appendChild(casing);
+    var line = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    line.setAttribute("d", d);
+    line.setAttribute("class", "nav-line");
+    navSvg.appendChild(line);
+  }
+  function clearNavRoute() {
+    state.navCoords = null;
+    if (navSvg) navSvg.innerHTML = "";
+  }
+  function fitWgsPoints(coords) {
+    var pts = coords.map(function (cd) {
+      var g = wgs2gcj([cd[1], cd[0]]);
+      return { lat: g[0], lon: g[1] };
+    });
+    if (pts.length) fitPoints(pts, 70);
+  }
+  function mapFollow(lat, lon, z) {
+    state.map.center.lat = lat;
+    state.map.center.lon = lon;
+    if (z && z !== state.map.zoom) {
+      state.map.zoom = clamp(z, MIN_Z, MAX_Z);
+      clearTiles();
+    }
+    renderMap();
+  }
+
+  /* ---------- guide ---------- */
+  function placeGuideDot(pos) {
+    var dot = $("#guideDot");
+    if (!dot) return;
+    var w = mapEl.clientWidth, h = mapEl.clientHeight;
+    var c = project(state.map.center.lat, state.map.center.lon, state.map.zoom);
+    var p = project(pos.lat, pos.lon, state.map.zoom);
+    dot.style.left = (p.x - c.x + w / 2) + "px";
+    dot.style.top = (p.y - c.y + h / 2) + "px";
+  }
+  function startGuide(r) {
+    stopGuide(true);
+    state.route = r;
+    state.activeRoute = r;
+    document.body.classList.add("guiding");
+    go("map");
+    var pts = r.stops.map(function (id) { var p = poiById(id); return { lat: p.gcj[0], lon: p.gcj[1] }; });
+    fitPoints(pts, 70);
+    state.guide = { route: r, leg: 0, t0: performance.now(), playing: true, arrived: false, pos: { lat: pts[0].lat, lon: pts[0].lon } };
+    var dot = document.createElement("div");
+    dot.className = "me-marker show guide-dot";
+    dot.id = "guideDot";
+    dot.innerHTML = '<div class="ring"><div class="core"></div></div><span class="guide-tag">模拟位置</span>';
+    guideLayer.appendChild(dot);
+    placeGuideDot(state.guide.pos);
+    $("#guideBar").classList.add("show");
+    $("#gbProgress").style.width = "0%";
+    $("#gbTitle").textContent = "从" + poiById(r.stops[0]).name + "出发";
+    $("#gbSub").textContent = r.name + " · " + r.duration + " · 模拟导览";
+    $("#gbPause").innerHTML = '<svg class="icon"><use href="#i-pause"/></svg>';
+    toast("导览开始：从" + poiById(r.stops[0]).name + "出发");
+    requestAnimationFrame(tickGuide);
+  }
+  function tickGuide(now) {
+    var g = state.guide;
+    if (!g || !g.playing) return;
+    var from = poiById(g.route.stops[g.leg]), to = poiById(g.route.stops[g.leg + 1]);
+    if (!to) { finishGuide(); return; }
+    var d = haversine(from.wgs, to.wgs);
+    var duration = clamp(d * 1500, 4500, 11000);
+    var t = clamp((now - g.t0) / duration, 0, 1);
+    g.pos = { lat: from.gcj[0] + (to.gcj[0] - from.gcj[0]) * t, lon: from.gcj[1] + (to.gcj[1] - from.gcj[1]) * t };
+    placeGuideDot(g.pos);
+    $("#gbProgress").style.width = (t * 100) + "%";
+    $("#gbTitle").textContent = "前往 " + to.name;
+    $("#gbSub").textContent = fmtDist(d) + " · 步行约 " + walkMin(d) + " 分钟 · 第 " + (g.leg + 1) + "/" + (g.route.stops.length - 1) + " 段";
+    if (t >= 1) { arriveAt(g.leg + 1); return; }
+    requestAnimationFrame(tickGuide);
+  }
+  function arriveAt(index) {
+    var g = state.guide;
+    if (!g) return;
+    var p = poiById(g.route.stops[index]);
+    g.playing = false;
+    g.arrived = true;
+    g.leg = index;
+    g.pos = { lat: p.gcj[0], lon: p.gcj[1] };
+    placeGuideDot(g.pos);
+    $("#gbTitle").textContent = "已到达 " + p.name;
+    $("#gbSub").textContent = "点“继续前往”去下一站，或展开讲解";
+    $("#gbProgress").style.width = "100%";
+    $("#acKicker").textContent = "已到达 · 第 " + (index + 1) + " 站";
+    $("#acName").textContent = p.name;
+    $("#acText").textContent = p.one;
+    $("#acNext").textContent = index >= g.route.stops.length - 1 ? "完成导览" : "继续前往";
+    $("#arrivalCard").classList.add("show");
+    state.activePoi = p;
+    speak(p.name + "。" + p.one);
+  }
+  function resumeGuide() {
+    var g = state.guide;
+    if (!g) return;
+    $("#arrivalCard").classList.remove("show");
+    if (g.leg >= g.route.stops.length - 1) { finishGuide(); return; }
+    g.playing = true;
+    g.arrived = false;
+    g.t0 = performance.now();
+    if (window.speechSynthesis) speechSynthesis.cancel();
+    requestAnimationFrame(tickGuide);
+  }
+  function finishGuide() {
+    state.guide = null;
+    document.body.classList.remove("guiding");
+    $("#guideBar").classList.remove("show");
+    $("#arrivalCard").classList.remove("show");
+    var d = $("#guideDot");
+    if (d) d.remove();
+    toast("导览结束，湖山仍在。");
+  }
+  function stopGuide(silent) {
+    document.body.classList.remove("guiding");
+    if (state.guide) {
+      state.guide = null;
+      var d = $("#guideDot");
+      if (d) d.remove();
+    }
+    $("#guideBar").classList.remove("show");
+    $("#arrivalCard").classList.remove("show");
+    if (!silent) toast("已结束模拟导览");
+  }
+  $("#gbStop").addEventListener("click", function () { stopGuide(false); });
+  $("#gbPause").addEventListener("click", function () {
+    var g = state.guide;
+    if (!g) return;
+    if (g.playing) {
+      g.playing = false;
+      g.pausedAt = performance.now();
+      $("#gbPause").innerHTML = '<svg class="icon"><use href="#i-play"/></svg>';
+      $("#gbTitle").textContent = "导览已暂停";
+    } else if (!g.arrived) {
+      g.t0 += performance.now() - (g.pausedAt || performance.now());
+      g.playing = true;
+      $("#gbPause").innerHTML = '<svg class="icon"><use href="#i-pause"/></svg>';
+      requestAnimationFrame(tickGuide);
+    }
+  });
+  $("#acNext").addEventListener("click", function () {
+    if (!state.guide) return;
+    if (state.guide.leg >= state.guide.route.stops.length - 1) finishGuide();
+    else resumeGuide();
+  });
+  $("#acDetail").addEventListener("click", function () {
+    if (!state.activePoi) return;
+    openPoi(state.activePoi.id);
+  });
+
+  /* ---------- services ---------- */
+  function buildServiceChips() {
+    var list = [{ id: "all", label: "全部" }, { id: "toilet", label: "厕所" }, { id: "parking", label: "停车场" }, { id: "bike", label: "自行车" }, { id: "visitor", label: "游客中心" }, { id: "food", label: "餐饮" }];
+    $("#serviceChips").innerHTML = list.map(function (c) {
+      return '<button type="button" class="chip' + (c.id === state.serviceCat ? " active" : "") + '" data-scat="' + c.id + '">' + c.label + '</button>';
+    }).join("");
+    $$("#serviceChips [data-scat]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        state.serviceCat = b.dataset.scat;
+        $$("#serviceChips .chip").forEach(function (x) { x.classList.toggle("active", x === b); });
+        renderServices();
+      });
+    });
+  }
+  function renderServices() {
+    var q = state.serviceQuery.trim().toLowerCase();
+    var list = SERVICES.filter(function (s) {
+      if (state.serviceCat !== "all" && s.cat !== state.serviceCat) return false;
+      if (q && (s.name + " " + s.desc + " " + s.detail + " " + CATS[s.cat].label).toLowerCase().indexOf(q) === -1) return false;
+      return true;
+    }).sort(function (a, b) { return distTo(a.wgs) - distTo(b.wgs); });
+    $("#serviceCount").textContent = "共 " + list.length + " 个服务点 · 按" + (state.user.source === "gps" ? "距你" : "距游客中心") + "由近到远排序";
+    if (!list.length) { $("#serviceList").innerHTML = '<div class="empty">没有找到匹配的服务点，换个关键词试试。</div>'; return; }
+    $("#serviceList").innerHTML = list.map(function (s) {
+      return '<button type="button" class="service-item" data-service="' + s.id + '"><span class="service-ico c-' + s.cat + '">' + CATS[s.cat].short + '</span>' +
+        '<span class="service-main"><b>' + esc(s.name) + '</b><small>' + esc(s.desc) + ' · ' + esc(s.hours) + '</small></span>' +
+        '<span class="service-side"><b>' + fmtDist(distTo(s.wgs)) + '</b><span>步行 ' + walkMin(distTo(s.wgs)) + ' 分钟</span></span></button>';
+    }).join("");
+    $$("#serviceList .service-item").forEach(function (b) {
+      b.addEventListener("click", function () { goMapToService(serviceById(b.dataset.service)); });
+    });
+  }
+  function goMapToService(s) {
+    go("map");
+    state.cat = s.cat;
+    applyFilters();
+    focusOn(s, 16);
+    selectService(s.id);
+    showServicePopup(s);
+    toast("已在地图上标出：" + s.name);
+  }
+
+  function goMapToTransport(t) {
+    go("map");
+    state.showTransit = true;
+    state.cat = t.type === "boat" ? "boat" : "transport";
+    applyFilters();
+    focusOn(t, 16);
+    selectTransport(t.id);
+    showTransportPopup(t);
+    toast("已在地图上标出：" + t.name);
+  }
+  function showLineOnMap(line) {
+    go("map");
+    state.showTransit = true;
+    state.cat = line.type === "boat" ? "boat" : "transport";
+    applyFilters();
+    var pts = line.points.map(function (p) {
+      var g = wgs2gcj(p);
+      return { lat: g[0], lon: g[1] };
+    });
+    if (pts.length) fitPoints(pts, 70);
+    toast(line.name + " · 已在地图显示");
+  }
+  function renderTransport() {
+    var typeName = { metro: "地铁", bus: "公交", boat: "观光船" };
+    $("#transitGrid").innerHTML = TRANSIT_LINES.map(function (line) {
+      return '<article class="transit-card">' +
+        '<div class="tc-top" style="background:linear-gradient(135deg,' + line.color + ',#17332d 120%)">' +
+          '<span class="tc-badge">' + typeName[line.type] + ' · ' + esc(line.type === "boat" ? "水上" : "陆路") + '</span>' +
+          '<h2>' + esc(line.name) + '</h2><p>' + esc(line.hours) + '</p></div>' +
+        '<div class="tc-body"><p class="tc-desc">' + esc(line.desc) + '</p>' +
+          '<div class="tc-stops">' + line.stops.map(function (s) { return "<span>" + esc(s) + "</span>"; }).join("") + '</div>' +
+          '<div class="tc-stats"><div>票价<b>' + esc(line.fare) + '</b></div><div>班次<b>' + esc(line.interval) + '</b></div>' +
+          '<div>运营<b>' + esc(line.hours) + '</b></div><div>类型<b>' + typeName[line.type] + '</b></div></div>' +
+          '<div class="tc-actions"><button type="button" class="btn ghost" data-line="' + line.id + '">地图查看</button>' +
+          '<button type="button" class="btn ghost" data-line-ask="' + line.id + '">问小东</button></div>' +
+          '<div class="tc-note">' + esc(line.note) + '</div></div></article>';
+    }).join("");
+    $$("#transitGrid [data-line]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var line = TRANSIT_LINES.find(function (l) { return l.id === b.dataset.line; });
+        if (line) showLineOnMap(line);
+      });
+    });
+    $$("#transitGrid [data-line-ask]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var line = TRANSIT_LINES.find(function (l) { return l.id === b.dataset.lineAsk; });
+        if (!line) return;
+        go("chat");
+        setTimeout(function () {
+          if (window.DQH_CHAT) window.DQH_CHAT.ask("我准备坐" + line.name + "去东钱湖，怎么安排？");
+        }, 260);
+      });
+    });
+
+    var boats = TRANSPORT.filter(function (t) { return t.type === "boat"; });
+    $("#boatGrid").innerHTML = boats.map(function (b) {
+      return '<button type="button" class="boat-card" data-boat="' + b.id + '">' +
+        '<span class="boat-ico">船</span><span class="boat-main"><b>' + esc(b.name) + '</b><small>' + esc(b.desc) + '</small></span>' +
+        '<span class="boat-side">' + esc(b.fare) + '<br>' + esc(b.hours) + '</span></button>';
+    }).join("");
+    $$("#boatGrid [data-boat]").forEach(function (b) {
+      b.addEventListener("click", function () { goMapToTransport(transportById(b.dataset.boat)); });
+    });
+  }
+
+  /* ---------- locate / amap ---------- */
+  function locate() {
+    if (window.DQH_GEO) { window.DQH_GEO.start(); return; }
+    if (!navigator.geolocation) { toast("当前浏览器不支持定位，已使用游客中心作为起点"); return; }
+    toast("正在获取定位…");
+    navigator.geolocation.getCurrentPosition(function (pos) {
+      state.user = { wgs: [pos.coords.latitude, pos.coords.longitude], label: "我的位置", source: "gps" };
+      renderPoiList(); renderServices();
+      if (state.activePoi) openPoi(state.activePoi.id);
+      if (state.selected && state.selected.type === "poi") showPoiPopup(poiById(state.selected.id));
+      focusOn({ gcj: wgs2gcj(state.user.wgs) }, 16);
+      toast("定位成功，距离已按你的位置更新");
+    }, function () {
+      toast("定位不可用，已使用东钱湖游客中心作为距离起点");
+      state.user = { wgs: DEFAULT_USER.wgs.slice(), label: DEFAULT_USER.label, source: "default" };
+      renderPoiList(); renderServices(); renderMap();
+    }, { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 });
+  }
+  $("#locBtn").addEventListener("click", locate);
+  $("#locateMapBtn").addEventListener("click", locate);
+
+  function openAmap(item) {
+    var g = item.gcj || wgs2gcj(item.wgs);
+    var url = "https://uri.amap.com/marker?position=" + g[1].toFixed(6) + "," + g[0].toFixed(6) +
+      "&name=" + encodeURIComponent(item.name) + "&src=dongqianhu&coordinate=gaode&callnative=0";
+    window.open(url, "_blank", "noopener");
+  }
+
+  /* ---------- views / sheets ---------- */
+  function go(view) {
+    if (view !== "map" && state.guide) stopGuide(true);
+    state.view = view;
+    $$(".view").forEach(function (v) { v.classList.toggle("active", v.id === "view-" + view); });
+    $$("[data-view]").forEach(function (b) { b.classList.toggle("active", b.dataset.view === view); });
+    window.scrollTo(0, 0);
+    if (view === "map") setTimeout(renderMap, 30);
+    if (view === "services") renderServices();
+    if (view === "chat" && window.DQH_CHAT) window.DQH_CHAT.scroll();
+    if (view === "transport") renderTransport();
+  }
+  $$("[data-view]").forEach(function (b) {
+    b.addEventListener("click", function (e) { e.preventDefault(); go(b.dataset.view); });
+  });
+  $("#topChatBtn").addEventListener("click", function () { go("chat"); $("#chatText").focus(); });
+  $("#panelPromo").addEventListener("click", function () {
+    go("chat");
+    setTimeout(function () { if (window.DQH_CHAT) window.DQH_CHAT.ask("我有半天时间，第一次来东钱湖，帮我排一条路线。"); }, 260);
+  });
+
+  function openSheet(el) {
+    closeSheets();
+    $("#backdrop").classList.add("show");
+    document.body.classList.add("locked");
+    el.classList.add("open");
+    el.setAttribute("aria-hidden", "false");
+  }
+  function closeSheets() {
+    $$(".sheet").forEach(function (s) { s.classList.remove("open"); s.setAttribute("aria-hidden", "true"); });
+    $$(".modal").forEach(function (m) { m.classList.remove("open"); });
+    $("#backdrop").classList.remove("show");
+    document.body.classList.remove("locked");
+  }
+  $("#backdrop").addEventListener("click", closeSheets);
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeSheets(); });
+  function openModal(el) {
+    closeSheets();
+    $("#backdrop").classList.add("show");
+    document.body.classList.add("locked");
+    el.classList.add("open");
+  }
+  $("#aboutBtn").addEventListener("click", function () { openModal($("#aboutModal")); });
+  $("#aboutClose").addEventListener("click", closeSheets);
+  $("#aboutOk").addEventListener("click", closeSheets);
+
+  function speak(text) {
+    if (!window.speechSynthesis) { toast("当前浏览器不支持语音播报"); return; }
+    speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(String(text).replace(/[“”"#*]/g, ""));
+    u.lang = "zh-CN";
+    u.rate = 0.95;
+    speechSynthesis.speak(u);
+  }
+
+  /* ---------- boot ---------- */
+  function boot() {
+    buildChips();
+    buildMarkers();
+    applyFilters();
+    renderPoiList();
+    renderRoutes();
+    renderTransport();
+    syncHdBtn();
+    buildServiceChips();
+    renderServices();
+    bindSearch($("#mapSearch"), $("#searchDrop"));
+    bindSearch($("#panelSearch"), $("#panelResults"));
+    $("#serviceSearch").addEventListener("input", function () { state.serviceQuery = this.value; renderServices(); });
+    $("#mapSearchGo").addEventListener("click", function () {
+      var q = $("#mapSearch").value.trim();
+      if (!q) return;
+      var r = searchAll(q)[0];
+      if (!r) { toast("没有找到匹配结果"); return; }
+      if (r.type === "poi") { go("map"); focusOn(r.item, 15); selectPoi(r.item.id); openPoi(r.item.id); }
+      else goMapToService(r.item);
+    });
+    setTimeout(function () {
+      fitAll();
+    }, 60);
+    var params = new URLSearchParams(location.search);
+    if (window.DQH_CHAT) window.DQH_CHAT.init();
+    if (params.get("view")) go(params.get("view"));
+    window.addEventListener("resize", function () {
+      clearTimeout(window._rz);
+      window._rz = setTimeout(renderMap, 120);
+    });
+    window.addEventListener("error", function (e) { console.error(e.error || e.message); });
+  }
+  document.addEventListener("DOMContentLoaded", boot);
+
+  window.DQH_APP = {
+    state: state, POIS: POIS, SERVICES: SERVICES, ROUTES: ROUTES, CATS: CATS,
+    esc: esc, fmtDist: fmtDist, walkMin: walkMin, distTo: distTo, distWord: distWord,
+    poiById: poiById, serviceById: serviceById, routeById: routeById,
+    go: go, toast: toast, speak: speak, openPoi: openPoi, openRoute: openRoute,
+    openAmap: openAmap, closeSheets: closeSheets, openModal: openModal, openSheet: openSheet,
+    focusOn: focusOn, renderPoiList: renderPoiList, renderServices: renderServices,
+    goMapToService: goMapToService, getUser: function () { return state.user; },
+    wgs2gcj: wgs2gcj, fitPoints: fitPoints, fitWgsPoints: fitWgsPoints,
+    drawNavRoute: drawNavRoute, clearNavRoute: clearNavRoute, mapFollow: mapFollow,
+    getZoom: function () { return state.map.zoom; },
+    clearLocation: function () {
+      state.user = { wgs: DEFAULT_USER.wgs.slice(), label: DEFAULT_USER.label, source: "default", accuracy: 0 };
+      renderPoiList(); renderServices(); renderMap();
+    },
+    setUser: function (wgs, label, source, accuracy) {
+      state.user = { wgs: wgs, label: label, source: source, accuracy: accuracy || 0 };
+      renderPoiList(); renderServices(); renderMap();
+    }
+  };
+})();
+</script>
+<script>
+/* =========================================================
+   Xiaodong AI chat: local knowledge base + optional DeepSeek
+   ========================================================= */
+(function () {
+  "use strict";
+
+  var APP = window.DQH_APP;
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  var CFG_KEY = "dqh_deepseek_cfg_v1";
+  var IS_FILE = location.protocol === "file:";
+  var cfg = {
+    enabled: !IS_FILE,
+    key: "",
+    model: "deepseek-chat",
+    endpoint: IS_FILE ? "https://api.deepseek.com/chat/completions" : "/api/chat"
+  };
+  var chat = [];
+  var initialized = false;
+  var uiBound = false;
+  var sending = false;
+  var draftEnabled = false;
+  var hadStoredCfg = false;
+
+  function loadCfg() {
+    try {
+      var raw = localStorage.getItem(CFG_KEY);
+      if (raw) { cfg = Object.assign(cfg, JSON.parse(raw)); hadStoredCfg = true; }
+    } catch (e) {}
+  }
+  function saveCfg() {
+    try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch (e) {}
+  }
+  function depthOn() {
+    if (!cfg.enabled) return false;
+    if (cfg.key) return true;
+    return cfg.endpoint.charAt(0) === "/" || /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?\//i.test(cfg.endpoint);
+  }
+
+  function updateStatus() {
+    var on = depthOn();
+    var badge = $("#dsBadge");
+    if (badge) {
+      badge.className = "ds-badge" + (on ? "" : " off");
+      badge.textContent = on ? "DeepSeek 深度问答已启用" : "DeepSeek 深度问答未启用";
+    }
+    var st = $("#chatStatus");
+    if (st) st.textContent = on ? "东钱湖 AI 讲解员 · DeepSeek 驱动" : "东钱湖 AI 讲解员 · 本地讲解库";
+  }
+  function checkPublicHealth() {
+    if (IS_FILE || cfg.endpoint.charAt(0) !== "/" || hadStoredCfg) return;
+    fetch("/api/health", { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (d) {
+      if (d && d.deepseek === false) {
+        cfg.enabled = false;
+        updateStatus();
+      } else if (d && d.deepseek === true) {
+        cfg.enabled = true;
+        updateStatus();
+      }
+    }).catch(function () {
+      if (!hadStoredCfg) {
+        cfg.enabled = false;
+        cfg.endpoint = "https://api.deepseek.com/chat/completions";
+        updateStatus();
+      }
+    });
+  }
+
+  function esc(s) { return APP.esc(s); }
+  function rich(text) {
+    var safe = esc(text);
+    safe = safe.replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+    return safe.split("\n").map(function (line) { return '<div class="m-line">' + (line || "&nbsp;") + "</div>"; }).join("");
+  }
+  function scroll() {
+    var log = $("#chatLog");
+    if (log) log.scrollTop = log.scrollHeight;
+  }
+  function addMsg(role, text, silent) {
+    var wrap = document.createElement("div");
+    wrap.className = "msg " + role;
+    wrap.innerHTML = '<div class="m-avatar">' + (role === "assistant" ? "东" : "我") + '</div>' +
+      '<div><div class="bubble">' + rich(text) + '</div>' +
+      (role === "assistant" ? '<div class="m-tools"><button type="button" data-speak>语音播报</button><button type="button" data-copy>复制</button></div>' : "") + '</div>';
+    $("#chatLog").appendChild(wrap);
+    if (!silent) chat.push({ role: role, text: text });
+    if (role === "assistant") {
+      var sp = wrap.querySelector("[data-speak]");
+      var cp = wrap.querySelector("[data-copy]");
+      if (sp) sp.addEventListener("click", function () { APP.speak(text); });
+      if (cp) cp.addEventListener("click", function () {
+        if (navigator.clipboard) navigator.clipboard.writeText(text).then(function () { APP.toast("已复制"); });
+      });
+    }
+    scroll();
+  }
+  function typing(on) {
+    var el = $("#typingMsg");
+    if (on) {
+      if (el) return;
+      var wrap = document.createElement("div");
+      wrap.className = "msg assistant";
+      wrap.id = "typingMsg";
+      wrap.innerHTML = '<div class="m-avatar">东</div><div class="bubble"><span class="typing"><i></i><i></i><i></i></span></div>';
+      $("#chatLog").appendChild(wrap);
+      scroll();
+    } else if (el) el.remove();
+  }
+
+  function allTickets() {
+    return APP.POIS.map(function (p) { return "· " + p.name + " " + p.ticket; }).join("\n");
+  }
+  function nearest(cat, n) {
+    return APP.SERVICES.filter(function (s) { return s.cat === cat; })
+      .sort(function (a, b) { return APP.distTo(a.wgs) - APP.distTo(b.wgs); }).slice(0, n || 3);
+  }
+  function findPoi(text) {
+    for (var i = 0; i < APP.POIS.length; i++) {
+      var p = APP.POIS[i];
+      if (text.indexOf(p.name) > -1) return p;
+      var ks = p.keywords.split(" ");
+      for (var j = 0; j < ks.length; j++) {
+        if (ks[j] && ks[j].length >= 2 && text.indexOf(ks[j]) > -1) return p;
+      }
+    }
+    return null;
+  }
+  function answerLocal(q) {
+    var t = q.replace(/\s+/g, "");
+    var p = findPoi(t);
+    var ticket = /门票|票价|多少钱|价格|收费/.test(t);
+    var person = /名人|人物|谁|故事|事迹/.test(t);
+    var history = /历史|由来|为什么|来历|年代|南宋|北宋|清代|关系|传说|隐居/.test(t);
+    var dist = /多远|距离|怎么去|在哪|位置|导航/.test(t);
+
+    if (/你好|你是谁|介绍一下你|你能做什么|小东/.test(t) && !p && !/厕所|停车|路线/.test(t)) {
+      return "我是小东，东钱湖的 AI 讲解员。可以给你讲陶公岛、小普陀、南宋石刻、韩岭、忠应庙、福泉山、岳鄂王庙的故事，也能查厕所、停车、骑行点，按你的时间排路线。想先听哪一处？";
+    }
+    if (p) {
+      if (ticket) return p.name + "的票价为 " + p.ticket + "（" + p.ticketNote + "），开放时间 " + p.hours + "，建议停留 " + p.stay + "。票价可能随季节调整，出发前以景区公示为准。";
+      if (person) return "和" + p.name + "有关的人物是" + p.person.name + "（" + p.person.meta + "）。" + p.person.text;
+      if (dist) {
+        var d = APP.distTo(p.wgs);
+        return "从" + (APP.getUser().source === "gps" ? "你现在的位置" : "东钱湖游客中心") + "到" + p.name + "约 " + APP.fmtDist(d) + "，步行约 " + APP.walkMin(d) + " 分钟。点地图上的标点能看到票价和简介，点“导航前往”会打开高德地图。";
+      }
+      if (history || /介绍|讲讲|说说|值得/.test(t)) return p.one + "\n" + p.intro + "\n（票价为参考价，以景区公示为准。）";
+      return p.one + " " + p.person.name + "的故事也很值得听。你可以问我“" + p.name + "有什么名人故事”。";
+    }
+    if (/厕所|洗手间|卫生间|wc/i.test(t)) {
+      var ws = nearest("toilet", 3);
+      return "离你最近的厕所是：\n" + ws.map(function (s) { return "· " + s.name + "（" + APP.fmtDist(APP.distTo(s.wgs)) + "，" + s.desc + "）"; }).join("\n") + "\n在“服务”页可以按距离查看全部厕所点。";
+    }
+    if (/停车|车位|停车场/.test(t)) {
+      var ps = nearest("parking", 3);
+      return "附近停车场：\n" + ps.map(function (s) { return "· " + s.name + "（" + APP.fmtDist(APP.distTo(s.wgs)) + "，" + s.desc + "）"; }).join("\n") + "\n节假日韩岭老街车位紧张，建议早到或停在游客中心换乘。";
+    }
+    if (/自行车|骑行|租车|单车/.test(t)) {
+      var bs = nearest("bike", 3);
+      return "可以租车的地方：\n" + bs.map(function (s) { return "· " + s.name + "（" + APP.fmtDist(APP.distTo(s.wgs)) + "，" + s.desc + "）"; }).join("\n") + "\n环湖骑行注意机动车，部分路段坡度较大。";
+    }
+    if (/路线|怎么玩|怎么走|安排|半天|一天|一日|半日|亲子|老人|孩子/.test(t)) {
+      var r = /半天|半日/.test(t) ? APP.routeById("songyun") : /亲子|老人|孩子/.test(t) ? APP.routeById("manshan") : /一天|一日|全日/.test(t) ? APP.routeById("qiannian") : null;
+      if (r) return "推荐「" + r.name + "」：" + r.desc + "\n共 " + r.stops.length + " 站，" + r.duration + "，" + r.distance + "。在“路线”页点开这条线，可以让小东模拟带你走一遍，到站自动讲解。";
+      return "三条路线可以选：\n· 湖上宋韵（半日，陶公岛—小普陀—南宋石刻）\n· 一湖千年（全日，五个坐标）\n· 湖山慢行（亲子，小普陀—韩岭—福泉山）\n告诉我你有半天还是一天、带不带老人孩子，我帮你选。";
+    }
+    if (ticket) return "七处景点的参考票价：\n" + allTickets() + "\n票价为参考价，以景区当日公示为准。";
+    if (/湖|东钱湖|介绍/.test(t)) {
+      return "东钱湖在宁波鄞州，是浙江最大的天然淡水湖之一，素有“西子风韵、太湖气魄”的说法。湖不大，但故事很密：范蠡西施的传说、史浩为母建的小普陀、南宋史氏家族的墓道石刻、王安石治湖的忠应庙，都在湖边。你可以先选一条路线，我陪你慢慢走。";
+    }
+    return "这个问题我暂时没有把握。你可以换个问法，比如：\n· “小普陀为什么叫小普陀？”\n· “带爸妈半天怎么走？”\n· “最近的厕所在哪？”\n· “南宋石刻门票多少？”\n我会尽量用东钱湖的资料回答你。";
+  }
+
+  function systemPrompt() {
+    var facts = APP.POIS.map(function (p) {
+      return p.name + "（" + p.tag + "，票价" + p.ticket + "，开放" + p.hours + "，" + p.one + "；人物：" + p.person.name + "）";
+    }).join("；");
+    return "你是东钱湖景区的 AI 讲解员“小东”，说话温和、简洁、有画面感，像一位熟悉当地的年轻向导。" +
+      "只依据以下资料回答，不要编造票价、年代和人物关系；不确定时就说“以景区展陈为准”。" +
+      "回答控制在80—180字，可用1—2个短段落，不要使用Markdown标题。" +
+      "问路线时结合景点距离给半天/一天建议；问服务设施时告诉最近点位和步行时间。" +
+      "景点资料：" + facts +
+      "。服务设施：厕所、停车场、自行车租赁点分布在陶公岛、小普陀、南宋石刻、韩岭、福泉山等入口附近。" +
+      "票价为参考价，需提醒以景区公示为准。";
+  }
+
+  async function askDeepSeek(text) {
+    var ctrl = new AbortController();
+    var timer = setTimeout(function () { ctrl.abort(); }, 28000);
+    var msgs = [{ role: "system", content: systemPrompt() }];
+    chat.slice(-8).forEach(function (m) {
+      if (m.role === "user" || m.role === "assistant") msgs.push({ role: m.role, content: m.text });
+    });
+    try {
+      var res = await fetch(cfg.endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + cfg.key },
+        body: JSON.stringify({ model: cfg.model, messages: msgs, temperature: 0.7, max_tokens: 600 }),
+        signal: ctrl.signal
+      });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      var data = await res.json();
+      var out = data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+      if (!out) throw new Error("empty");
+      return out.trim();
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  async function send(text) {
+    text = (text || "").trim();
+    if (!text || sending) return;
+    sending = true;
+    addMsg("user", text);
+    var input = $("#chatText");
+    input.value = "";
+    input.style.height = "auto";
+    typing(true);
+    var reply = "", viaDS = false;
+    try {
+      if (depthOn()) {
+        try {
+          reply = await askDeepSeek(text);
+          viaDS = true;
+        } catch (e) {
+          var why = /401/.test(e.message) ? "API Key 无效或未授权" : /403/.test(e.message) ? "接口拒绝访问" : /503/.test(e.message) ? "公共站点暂未配置 DeepSeek" : /abort/i.test(e.name || e.message) ? "请求超时" : "网络或跨域问题";
+          reply = answerLocal(text) + "\n\n（DeepSeek 调用失败：" + why + "，以上由本地讲解库回答。普通访客无需填写 Key；若你是站点管理员，请配置服务端环境变量。）";
+        }
+      } else {
+        await new Promise(function (r) { setTimeout(r, 420); });
+        reply = answerLocal(text);
+      }
+    } catch (e) {
+      reply = "我刚才走神了，请再问一次。";
+    }
+    typing(false);
+    addMsg("assistant", reply);
+    if (viaDS && chat.length) chat[chat.length - 1].via = "deepseek";
+    sending = false;
+  }
+
+  function welcome() {
+    addMsg("assistant", "你好，我是小东。东钱湖的七处古迹、湖边服务、半天或一天的路线，都可以问我。\n你可以先说一句：“我第一次来，只有半天。”", true);
+    var prompts = ["小普陀为什么叫小普陀？", "带爸妈半天怎么走？", "最近的厕所在哪？", "南宋石刻门票多少？", "范蠡和东钱湖有什么关系？"];
+    $("#chatSuggest").innerHTML = prompts.map(function (p) { return '<button type="button">' + esc(p) + "</button>"; }).join("");
+    $$("#chatSuggest button").forEach(function (b) {
+      b.addEventListener("click", function () { send(b.textContent); });
+    });
+  }
+
+  function bindUI() {
+    $("#chatForm").addEventListener("submit", function (e) { e.preventDefault(); send($("#chatText").value); });
+    $("#chatText").addEventListener("input", function () {
+      this.style.height = "auto";
+      this.style.height = Math.min(100, this.scrollHeight) + "px";
+    });
+    $("#chatText").addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); send(this.value); }
+    });
+    $("#clearChat").addEventListener("click", function () {
+      chat = [];
+      $("#chatLog").innerHTML = "";
+      welcome();
+      APP.toast("对话已清空");
+    });
+    $("#settingsBtn").addEventListener("click", openSettings);
+    $("#openDsSettings").addEventListener("click", openSettings);
+    $("#settingsClose").addEventListener("click", APP.closeSheets);
+    $("#dsCancel").addEventListener("click", APP.closeSheets);
+    $("#dsSwitch").addEventListener("click", function () {
+      draftEnabled = !draftEnabled;
+      this.classList.toggle("on", draftEnabled);
+      this.setAttribute("aria-pressed", draftEnabled ? "true" : "false");
+    });
+    $("#dsSave").addEventListener("click", function () {
+      cfg.enabled = draftEnabled;
+      cfg.key = $("#dsKey").value.trim();
+      cfg.model = $("#dsModel").value.trim() || "deepseek-chat";
+      cfg.endpoint = $("#dsEndpoint").value.trim() || "https://api.deepseek.com/chat/completions";
+      saveCfg();
+      updateStatus();
+      APP.closeSheets();
+      APP.toast(depthOn() ? "DeepSeek 已接入，小东会优先调用" : "已保存，当前使用本地讲解库");
+    });
+    $("#micBtn").addEventListener("click", mic);
+    $("#dsTest").addEventListener("click", async function () {
+      var key = $("#dsKey").value.trim();
+      var endpoint = $("#dsEndpoint").value.trim() || "https://api.deepseek.com/chat/completions";
+      var model = $("#dsModel").value.trim() || "deepseek-chat";
+      var out = $("#dsTestResult");
+      var btn = this;
+      if (!key && endpoint.charAt(0) !== "/" && !/localhost|127\.0\.0\.1/.test(endpoint)) {
+        out.textContent = "请先填 API Key，或把接口地址改为本地代理 /api/chat。";
+        out.style.color = "#b54708";
+        return;
+      }
+      btn.disabled = true;
+      btn.textContent = "正在连接…";
+      out.textContent = "正在请求 DeepSeek…";
+      out.style.color = "";
+      var ctrl = new AbortController();
+      var timer = setTimeout(function () { ctrl.abort(); }, 20000);
+      try {
+        var res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key },
+          body: JSON.stringify({ model: model, messages: [{ role: "user", content: "只回复四个字：连接成功" }], max_tokens: 20 }),
+          signal: ctrl.signal
+        });
+        var txt = await res.text();
+        if (!res.ok) throw new Error("HTTP " + res.status + " " + txt.slice(0, 120));
+        var data = JSON.parse(txt);
+        var content = data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+        out.textContent = "连接成功：" + (content || "已收到响应") + " · 模型 " + model;
+        out.style.color = "#1e5a4b";
+      } catch (e) {
+        var why = /401/.test(e.message) ? "API Key 无效或未授权" : /403/.test(e.message) ? "接口拒绝访问" : /abort/i.test(e.name || "") ? "请求超时" : "网络或跨域失败";
+        out.textContent = "连接失败：" + why + "。" + (why === "网络或跨域失败" ? "可改用本地代理 /api/chat。" : "");
+        out.style.color = "#b54708";
+      } finally {
+        clearTimeout(timer);
+        btn.disabled = false;
+        btn.textContent = "测试 DeepSeek 连接";
+      }
+    });
+  }
+
+  function init() {
+    loadCfg();
+    updateStatus();
+    checkPublicHealth();
+    if (!uiBound) { bindUI(); uiBound = true; }
+    if (!initialized) {
+      initialized = true;
+      welcome();
+    }
+  }
+
+  function openSettings() {
+    loadCfg();
+    $("#dsKey").value = cfg.key || "";
+    $("#dsModel").value = cfg.model || "deepseek-chat";
+    $("#dsEndpoint").value = cfg.endpoint || "https://api.deepseek.com/chat/completions";
+    draftEnabled = !!cfg.enabled;
+    var sw = $("#dsSwitch");
+    sw.classList.toggle("on", draftEnabled);
+    sw.setAttribute("aria-pressed", draftEnabled ? "true" : "false");
+    APP.openModal($("#settingsModal"));
+  }
+
+  function mic() {
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { APP.toast("当前浏览器不支持语音输入，请直接打字"); return; }
+    try {
+      var rec = new SR();
+      rec.lang = "zh-CN";
+      rec.interimResults = false;
+      rec.maxAlternatives = 1;
+      rec.onresult = function (e) {
+        var text = e.results[0][0].transcript;
+        $("#chatText").value = text;
+        send(text);
+      };
+      rec.onerror = function () { APP.toast("语音识别没有成功，请再试一次或直接打字"); };
+      rec.start();
+      APP.toast("请开始说话…");
+    } catch (e) { APP.toast("语音输入启动失败"); }
+  }
+
+  window.DQH_CHAT = { init: init, ask: send, scroll: scroll, openSettings: openSettings };
+})();
+</script>
+<script>
+/* =========================================================
+   V3: online routing (OSRM) + mobile geolocation watch
+   ========================================================= */
+(function () {
+  "use strict";
+
+  var APP = window.DQH_APP;
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  var OSRM = {
+    foot: { base: "https://routing.openstreetmap.de/routed-foot/route/v1/foot/", label: "步行" },
+    car: { base: "https://routing.openstreetmap.de/routed-car/route/v1/driving/", label: "驾车" }
+  };
+
+  var nav = { target: null, mode: "foot", route: null, loading: false, token: 0 };
+  var geo = { watchId: null, following: false, first: true, last: null, announced: {} };
+
+  function fmtDistance(m) {
+    if (m == null) return "—";
+    if (m < 1000) return Math.max(10, Math.round(m / 10) * 10) + " m";
+    return (m / 1000).toFixed(1) + " km";
+  }
+  function fmtDuration(sec) {
+    if (sec == null) return "—";
+    var min = Math.round(sec / 60);
+    if (min < 60) return Math.max(1, min) + " 分钟";
+    return Math.floor(min / 60) + " 小时 " + (min % 60) + " 分";
+  }
+  function pointLabel() {
+    return APP.getUser().source === "gps" ? "我的位置" : "游客中心";
+  }
+  function showNavLoading(text) {
+    $("#navTitle").textContent = "在线导航";
+    $("#navSub").textContent = text || "正在计算路线…";
+    $("#navStats").innerHTML = "";
+    $("#navSteps").innerHTML = '<div class="nav-loading"><span class="spinner"></span>正在向 OpenStreetMap 请求路线…</div>';
+    $("#navStart").disabled = true;
+  }
+  function showNavError(msg) {
+    $("#navSub").textContent = "路线获取失败";
+    $("#navStats").innerHTML = "";
+    $("#navSteps").innerHTML = '<div class="note-box">' + APP.esc(msg) + '<br>可以稍后重试，或点“高德打开”使用高德地图。</div>';
+    $("#navStart").disabled = true;
+  }
+
+  function stepText(step) {
+    var type = (step.maneuver && step.maneuver.type) || "";
+    var mod = (step.maneuver && step.maneuver.modifier) || "";
+    var name = step.name || "";
+    var types = { depart: "出发", arrive: "到达", turn: "转向", "new name": "继续", continue: "继续", merge: "汇入", fork: "选择岔路", roundabout: "进入环岛", "on ramp": "上匝道", "off ramp": "下匝道", "end of road": "路尽头" };
+    var mods = { left: "左转", right: "右转", straight: "直行", "slight left": "稍向左", "slight right": "稍向右", uturn: "掉头" };
+    var t = types[type] || type || "前行";
+    if (mods[mod]) t += " · " + mods[mod];
+    if (name) t += " · " + name;
+    return t;
+  }
+
+  async function calc() {
+    if (!nav.target) return;
+    var token = ++nav.token;
+    nav.loading = true;
+    showNavLoading();
+    var user = APP.getUser();
+    var start = user.wgs;
+    var t = nav.target;
+    var cfg = OSRM[nav.mode] || OSRM.foot;
+    var coords = start[1].toFixed(6) + "," + start[0].toFixed(6) + ";" + t.wgs[1].toFixed(6) + "," + t.wgs[0].toFixed(6);
+    var url = cfg.base + coords + "?overview=full&geometries=geojson&steps=true&alternatives=false";
+    var ctrl = new AbortController();
+    var timer = setTimeout(function () { ctrl.abort(); }, 25000);
+    try {
+      var res = await fetch(url, { signal: ctrl.signal });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      var data = await res.json();
+      if (data.code !== "Ok" || !data.routes || !data.routes.length) throw new Error("没有找到可通行路线");
+      if (token !== nav.token) return;
+      var route = data.routes[0];
+      nav.route = route;
+      $("#navTitle").textContent = pointLabel() + " → " + t.name;
+      $("#navSub").textContent = cfg.label + " · " + fmtDistance(route.distance) + " · 约 " + fmtDuration(route.duration);
+      $("#navStats").innerHTML =
+        '<div class="nav-stat"><span>距离</span><b>' + fmtDistance(route.distance) + '</b></div>' +
+        '<div class="nav-stat"><span>预计</span><b>' + fmtDuration(route.duration) + '</b></div>' +
+        '<div class="nav-stat"><span>方式</span><b>' + cfg.label + '</b></div>';
+      var steps = [];
+      (route.legs || []).forEach(function (leg) { (leg.steps || []).forEach(function (s) { steps.push(s); }); });
+      $("#navSteps").innerHTML = steps.slice(0, 7).map(function (s, i) {
+        return '<div class="nav-step"><span class="ns-i">' + (i + 1) + '</span><span>' + APP.esc(stepText(s)) + '</span><span class="ns-d">' + fmtDistance(s.distance) + '</span></div>';
+      }).join("") + (steps.length > 7 ? '<div class="nav-step"><span class="ns-i">…</span><span>共 ' + steps.length + ' 步，打开高德可看完整指引</span></div>' : "");
+      $("#navStart").disabled = false;
+      APP.drawNavRoute(route.geometry.coordinates);
+      APP.fitWgsPoints(route.geometry.coordinates);
+      APP.toast("路线已计算：" + fmtDistance(route.distance) + " · " + fmtDuration(route.duration));
+    } catch (e) {
+      if (token !== nav.token) return;
+      var why = /abort/i.test(e.name || e.message) ? "请求超时，请检查网络" : /Failed to fetch|NetworkError/i.test(e.message) ? "网络或跨域失败，请检查网络" : e.message;
+      showNavError("在线路线暂不可用：" + why);
+    } finally {
+      clearTimeout(timer);
+      if (token === nav.token) nav.loading = false;
+    }
+  }
+
+  function open(item) {
+    if (!item) return;
+    nav.target = item;
+    nav.mode = "foot";
+    $$("#navModes button").forEach(function (b) { b.classList.toggle("active", b.dataset.mode === "foot"); });
+    APP.go("map");
+    APP.openSheet($("#navSheet"));
+    $("#navTitle").textContent = "在线导航";
+    $("#navSub").textContent = "准备从" + pointLabel() + "出发";
+    $("#navStats").innerHTML = "";
+    $("#navSteps").innerHTML = "";
+    calc();
+  }
+
+  function updateGeoPill(text, state) {
+    var pill = $("#geoPill");
+    if (!pill) return;
+    pill.className = "geo-pill" + (state ? " " + state : "");
+    $("#geoText").textContent = text;
+  }
+  function openGeoHelp() {
+    APP.openModal($("#geoModal"));
+  }
+
+  function nearestPoi(lat, lon) {
+    var best = null, bd = Infinity;
+    APP.POIS.forEach(function (p) {
+      var R = 6371, r = Math.PI / 180;
+      var dLat = (p.wgs[0] - lat) * r, dLon = (p.wgs[1] - lon) * r;
+      var s = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat * r) * Math.cos(p.wgs[0] * r) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      var d = 2 * R * Math.asin(Math.min(1, Math.sqrt(s)));
+      if (d < bd) { bd = d; best = p; }
+    });
+    return { poi: best, km: bd };
+  }
+
+  function onPosition(pos) {
+    var lat = pos.coords.latitude, lon = pos.coords.longitude, acc = pos.coords.accuracy || 0;
+    geo.last = pos;
+    APP.setUser([lat, lon], "我的位置", "gps", acc);
+    updateGeoPill(acc ? "已定位 ±" + Math.round(acc) + " m" : "已定位", "ok");
+    if (geo.first) {
+      geo.first = false;
+      APP.focusOn({ gcj: APP.wgs2gcj([lat, lon]) }, 16);
+      if (window.DQH_NAV && DQH_NAV.isActive()) setTimeout(function () { DQH_NAV.recalc(); }, 400);
+    } else if (geo.following) {
+      APP.mapFollow(lat, lon, APP.getZoom());
+    }
+    var near = nearestPoi(lat, lon);
+    if (near.poi && near.km < 0.12 && !geo.announced[near.poi.id]) {
+      geo.announced[near.poi.id] = true;
+      APP.toast("你已到达 " + near.poi.name + " 附近，点标点听讲解");
+    }
+  }
+  function onError(err) {
+    var msg = err.code === 1 ? "定位被拒绝" : err.code === 2 ? "定位不可用" : "定位超时";
+    if (geo.watchId != null) {
+      try { navigator.geolocation.clearWatch(geo.watchId); } catch (e) {}
+      geo.watchId = null;
+    }
+    updateGeoPill(msg, "err");
+    if (err.code === 1) openGeoHelp();
+    else APP.toast(msg + "，可点右上角定位按钮重试");
+  }
+  function start(follow) {
+    if (follow != null) geo.following = !!follow;
+    if (!navigator.geolocation) {
+      updateGeoPill("浏览器不支持定位", "err");
+      APP.toast("当前浏览器不支持定位，已使用游客中心作为起点");
+      return;
+    }
+    if (geo.watchId != null) {
+      updateGeoPill("定位已开启", "ok");
+      if (geo.following && geo.last) APP.mapFollow(geo.last.coords.latitude, geo.last.coords.longitude, APP.getZoom());
+      return;
+    }
+    updateGeoPill("正在请求定位…", "pending");
+    geo.first = true;
+    geo.watchId = navigator.geolocation.watchPosition(onPosition, onError, {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 5000
+    });
+    APP.toast("正在请求手机定位权限…");
+    setTimeout(function () {
+      if (geo.watchId != null && !geo.last) updateGeoPill("等待定位信号…", "pending");
+    }, 5000);
+  }
+  function stop() {
+    if (geo.watchId != null) {
+      navigator.geolocation.clearWatch(geo.watchId);
+      geo.watchId = null;
+    }
+    geo.following = false;
+    geo.last = null;
+    updateGeoPill("定位已关闭", "");
+    if (APP.clearLocation) APP.clearLocation();
+    APP.closeSheets();
+  }
+
+  function init() {
+    $("#geoPill").addEventListener("click", function () { start(true); });
+    $("#navClose").addEventListener("click", function () { APP.closeSheets(); });
+    $("#navAmap").addEventListener("click", function () { if (nav.target) APP.openAmap(nav.target); });
+    $("#navStart").addEventListener("click", function () {
+      if (!nav.route) { APP.toast("路线还没算好"); return; }
+      APP.closeSheets();
+      start(true);
+      APP.toast("跟随已开启：蓝点是你的位置，沿蓝色路线前进");
+    });
+    $$("#navModes button").forEach(function (b) {
+      b.addEventListener("click", function () {
+        if (nav.loading || nav.mode === b.dataset.mode) return;
+        nav.mode = b.dataset.mode;
+        $$("#navModes button").forEach(function (x) { x.classList.toggle("active", x === b); });
+        nav.route = null;
+        calc();
+      });
+    });
+    $("#geoClose").addEventListener("click", function () { APP.closeSheets(); });
+    $("#geoRetry").addEventListener("click", function () { APP.closeSheets(); start(true); });
+    $("#geoStop").addEventListener("click", stop);
+    }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+
+  window.DQH_NAV = { open: open, calc: calc, recalc: calc, isActive: function () { return !!nav.route; } };
+  window.DQH_GEO = { start: start, stop: stop, setFollow: function (v) { geo.following = !!v; } };
+})();
+</script>
+</body>
+</html>
