@@ -15,6 +15,10 @@
 <title>东钱湖 · 小东智游 · 公共测试版</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4IiB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCI+CiAgPHJlY3Qgd2lkdGg9IjEyOCIgaGVpZ2h0PSIxMjgiIHJ4PSIyNiIgZmlsbD0iI2YzZWFkOSIvPgogIDxjaXJjbGUgY3g9IjY0IiBjeT0iNjYiIHI9IjQ3IiBmaWxsPSIjZTlkY2M2Ii8+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCw2KSBzY2FsZSgyKSI+CiAgICA8cGF0aCBkPSJNMTUgMjdjMC05LjQgNy42LTE2IDE3LTE2czE3IDYuNiAxNyAxNiIgZmlsbD0iI2M4Njc0YSIvPgogICAgPHBhdGggZD0iTTEyLjQgMjYuNmgzOS4yYzEuOSAwIDMuMiAxLjMgMyAyLjktLjQgMi42LTMuMiA0LjItNi42IDQuMkgxNmMtMy40IDAtNi4yLTEuNi02LjYtNC4yLS4yLTEuNiAxLjEtMi45IDMtMi45WiIgZmlsbD0iI2E0NGMzMSIvPgogICAgPGNpcmNsZSBjeD0iMzIiIGN5PSIzNyIgcj0iMTIuNiIgZmlsbD0iI2Y0ZDZiOCIvPgogICAgPHBhdGggZD0iTTE5LjYgMzQuMmMxLTcgNi0xMS4yIDEyLjQtMTEuMnMxMS40IDQuMiAxMi40IDExLjJjLTMtNC02LjgtNi0xMi40LTZzLTkuNCAyLTEyLjQgNloiIGZpbGw9IiMzYTJhMjIiLz4KICAgIDxjaXJjbGUgY3g9IjI3LjQiIGN5PSIzNi42IiByPSIxLjc1IiBmaWxsPSIjMmIyMTE5Ii8+CiAgICA8Y2lyY2xlIGN4PSIzNi42IiBjeT0iMzYuNiIgcj0iMS43NSIgZmlsbD0iIzJiMjExOSIvPgogICAgPGVsbGlwc2UgY3g9IjIzLjYiIGN5PSI0MC40IiByeD0iMi4zIiByeT0iMS40IiBmaWxsPSIjZTc5YzdmIiBvcGFjaXR5PSIuNTUiLz4KICAgIDxlbGxpcHNlIGN4PSI0MC40IiBjeT0iNDAuNCIgcng9IjIuMyIgcnk9IjEuNCIgZmlsbD0iI2U3OWM3ZiIgb3BhY2l0eT0iLjU1Ii8+CiAgICA8cGF0aCBkPSJNMjkuMiA0MS44YzEuNyAxLjcgNCAxLjcgNS42IDAiIHN0cm9rZT0iIzhkNGEzMyIgc3Ryb2tlLXdpZHRoPSIxLjQiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogICAgPHBhdGggZD0iTTIwLjYgNTMuMmMyLjItNC40IDYuNC02LjYgMTEuNC02LjZzOS4yIDIuMiAxMS40IDYuNiIgZmlsbD0iIzJlNWI0OSIvPgogIDwvZz4KPC9zdmc+">
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://webrd01.is.autonavi.com" crossorigin>
+<link rel="preconnect" href="https://webrd02.is.autonavi.com" crossorigin>
+<link rel="preconnect" href="https://webst01.is.autonavi.com" crossorigin>
+<link rel="dns-prefetch" href="https://routing.openstreetmap.de">
 <style>
 :root{
   --paper:#f6f1e7;
@@ -1266,10 +1270,10 @@ h1,h2,h3,h4{font-weight:500;letter-spacing:.01em}
 .lang-btn{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.02em;width:auto;padding:0 9px;border-radius:3px}
 
 /* ---------- 新手引导 ---------- */
-.tour-root{position:fixed;inset:0;z-index:300;display:none}
+.tour-root{position:fixed;inset:0;z-index:300;display:none;pointer-events:none}
 .tour-root.show{display:block}
 .tour-hole{
-  position:absolute;border-radius:8px;pointer-events:auto;
+  position:absolute;border-radius:8px;pointer-events:none;
   box-shadow:0 0 0 9999px rgba(14,18,13,.72), 0 0 0 1px rgba(240,199,155,.55), 0 0 34px 6px rgba(240,199,155,.22);
   transition:all .28s cubic-bezier(.2,.8,.2,1);
 }
@@ -1277,6 +1281,7 @@ h1,h2,h3,h4{font-weight:500;letter-spacing:.01em}
   position:absolute;z-index:2;background:var(--card);border:1px solid var(--line-2);
   border-radius:4px;padding:15px 16px 13px;box-shadow:0 24px 60px -30px rgba(20,26,20,.6);
   transition:left .28s cubic-bezier(.2,.8,.2,1),top .28s cubic-bezier(.2,.8,.2,1);
+  pointer-events:auto;overflow-y:auto;
 }
 .tour-tip::before{
   content:"";position:absolute;width:10px;height:10px;background:var(--card);
@@ -1294,23 +1299,47 @@ h1,h2,h3,h4{font-weight:500;letter-spacing:.01em}
 .tour-acts button{flex:1;font-size:11px;padding:8px 10px;border-radius:3px;border:1px solid var(--line)}
 .tour-acts .tour-skip{background:var(--card);color:var(--muted)}
 .tour-acts .tour-next{background:var(--ink);color:var(--paper);border-color:var(--ink);font-weight:600}
-body.tour-on{overflow:hidden}
+body.tour-on{overflow:auto}
+.tour-hint{display:none;font-family:var(--mono);font-size:8px;letter-spacing:.04em;color:var(--muted);margin-top:7px;text-align:center}
+@media (max-width:1024px){ .tour-hint{display:block} }
+@media (max-width:640px){
+  .tour-tip{padding:13px 14px 12px;max-height:calc(100vh - 24px)}
+  .tour-tip h3{font-size:17px}
+  .tour-tip p{font-size:11px;line-height:1.75}
+  .tour-acts button{padding:9px 10px;font-size:11.5px}
+}
 
-/* ---------- 图层 ---------- */
+/* ---------- 图层 / 地图显示面板 ---------- */
 .layers-pop{
-  position:absolute;right:16px;top:100px;z-index:22;width:186px;display:none;
+  position:absolute;right:16px;top:100px;z-index:22;width:206px;display:none;
   background:var(--card);border:1px solid var(--line);border-radius:4px;
-  box-shadow:var(--shadow);padding:10px 12px 12px;
+  box-shadow:var(--shadow);padding:10px 12px 11px;
 }
 .layers-pop.show{display:block}
-.lp-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.lp-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .lp-head b{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--muted)}
 .lp-head .icon{width:12px;height:12px}
-.lp-row{display:flex;align-items:center;gap:7px;padding:5px 0;font-size:11.5px;cursor:pointer}
-.lp-row input{width:13px;height:13px;accent-color:var(--clay);flex:none}
-.lp-row span{flex:1}
-.lp-row em{font-family:var(--mono);font-size:8.5px;color:var(--muted);font-style:normal}
-.lp-note{font-family:var(--mono);font-size:8px;color:var(--muted);line-height:1.6;margin-top:6px;padding-top:6px;border-top:1px dashed var(--line)}
+.lp-quick{display:flex;gap:4px;margin-bottom:7px}
+.lp-quick button{flex:1;font-size:9px;padding:4px 0;border:1px solid var(--line);border-radius:2px;background:var(--card-2);color:var(--ink-2)}
+.lp-quick button:hover{border-color:var(--clay);color:var(--clay)}
+.lp-list{display:flex;flex-direction:column;gap:1px}
+.lp-row{display:flex;align-items:center;gap:7px;padding:6px 2px;cursor:pointer;border-radius:2px}
+.lp-row:hover{background:var(--card-2)}
+.lp-dot{width:7px;height:7px;border-radius:50%;flex:none;opacity:.35;transition:opacity .15s}
+.lp-row.on .lp-dot{opacity:1}
+.lp-name{flex:1;font-size:11.5px;color:var(--muted);transition:color .15s}
+.lp-row.on .lp-name{color:var(--ink)}
+.lp-row em{font-family:var(--mono);font-size:8.5px;color:var(--muted);font-style:normal;margin-right:2px}
+.lp-sw{width:26px;height:15px;border-radius:999px;background:var(--paper-2);border:1px solid var(--line);position:relative;flex:none;transition:background .18s,border-color .18s}
+.lp-sw i{position:absolute;left:2px;top:1.5px;width:10px;height:10px;border-radius:50%;background:var(--muted);transition:transform .18s,background .18s}
+.lp-row.on .lp-sw{background:rgba(46,91,73,.14);border-color:rgba(46,91,73,.4)}
+.lp-row.on .lp-sw i{transform:translateX(11px);background:var(--jade)}
+.lp-seg-title{font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;color:var(--muted);margin:9px 0 5px;padding-top:8px;border-top:1px dashed var(--line)}
+.lp-seg{display:flex;gap:3px}
+.lp-seg button{flex:1;font-size:9.5px;padding:4px 0;border:1px solid var(--line);border-radius:2px;background:var(--card-2);color:var(--muted)}
+.lp-seg button.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.lp-note{font-family:var(--mono);font-size:8px;color:var(--muted);line-height:1.6;margin-top:8px;padding-top:7px;border-top:1px dashed var(--line)}
+.marker.no-label .tag{display:none!important}
 
 /* ---------- 我的 ---------- */
 .me-bar{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8.5px;color:var(--muted);margin-bottom:12px;letter-spacing:.04em}
@@ -1804,14 +1833,21 @@ body.tour-on{overflow:hidden}
         <button type="button" id="locateMapBtn" aria-label="定位"><svg class="icon"><use href="#i-locate"/></svg></button>
       </div>
 
-      <div class="layers-pop" id="layersPop" role="dialog" aria-label="地图图层">
-        <div class="lp-head"><b data-i18n="layers.title">地图图层</b><button type="button" class="icon-btn" id="layersClose" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div>
-        <label class="lp-row"><input type="checkbox" data-layer="attraction" checked><span data-i18n="layers.heritage">人文古迹</span><em>9</em></label>
-        <label class="lp-row"><input type="checkbox" data-layer="fun" checked><span data-i18n="layers.fun">亲子玩乐</span><em>4</em></label>
-        <label class="lp-row"><input type="checkbox" data-layer="hotel"><span data-i18n="layers.hotel">住宿</span><em>5</em></label>
-        <label class="lp-row"><input type="checkbox" data-layer="services" checked><span data-i18n="layers.services">服务点</span><em>21</em></label>
-        <label class="lp-row"><input type="checkbox" data-layer="transport" checked><span data-i18n="layers.transit">交通线</span><em>13</em></label>
-        <p class="lp-note" data-i18n="layers.note">住宿默认关闭，勾选后才显示</p>
+      <div class="layers-pop" id="layersPop" role="dialog" aria-label="地图显示设置">
+        <div class="lp-head"><b>地图显示</b><button type="button" class="icon-btn" id="layersClose" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div>
+        <div class="lp-quick">
+          <button type="button" data-lp="all">全选</button>
+          <button type="button" data-lp="none">全关</button>
+          <button type="button" data-lp="heritage">只看人文</button>
+        </div>
+        <div class="lp-list" id="lpList"></div>
+        <div class="lp-seg-title">名称标注</div>
+        <div class="lp-seg" id="lpLabelSeg">
+          <button type="button" data-label="auto">自动</button>
+          <button type="button" data-label="always">全显</button>
+          <button type="button" data-label="never">隐藏</button>
+        </div>
+        <p class="lp-note" id="lpCount">当前显示 0 个点位</p>
       </div>
 
       <button class="geo-pill" id="geoPill" type="button"><span class="gp-dot"></span><span id="geoText">定位未开启</span></button>
@@ -3862,6 +3898,7 @@ window.DQH_DATA = (function () {
     serviceQuery: "",
     showTransit: true,
     layers: { attraction: true, fun: true, hotel: false, services: true, transport: true },
+    labelMode: "auto",
     navCoords: null,
     map: {
       center: { lat: 29.758, lon: 121.672 }, zoom: 14, layer: "street",
@@ -3950,8 +3987,9 @@ window.DQH_DATA = (function () {
   var routeSvg = $("#routeSvg"), transitSvg = $("#transitSvg"), navSvg = $("#navSvg"), lakeLabel = $("#lakeLabel"), meMarker = $("#meMarker");
   var guideLayer = $("#guideLayer"), popup = $("#poiPopup"), fbNote = $("#fbNote");
 
-  function tileUrl(layer, x, y, z) {
-    var s = (x + y) % 4 + 1;
+  function tileUrl(layer, x, y, z, shift) {
+    /* shift：重试时换一个子域，绕开单个节点的偶发失败 */
+    var s = ((x + y + (shift || 0)) % 4) + 1;
     if (layer === "sat") return "https://webst0" + s + ".is.autonavi.com/appmaptile?style=6&x=" + x + "&y=" + y + "&z=" + z;
     return "https://webrd0" + s + ".is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x=" + x + "&y=" + y + "&z=" + z;
   }
@@ -4001,6 +4039,14 @@ window.DQH_DATA = (function () {
               fbNote.style.opacity = "0";
             });
             img.addEventListener("error", function () {
+              var tries = +(img.dataset.retry || 0);
+              if (tries < 2) {
+                img.dataset.retry = tries + 1;
+                setTimeout(function () {
+                  img.src = tileUrl(state.map.layer, x, y, tz, tries + 1);
+                }, 420 * (tries + 1));
+                return;
+              }
               state.map.errors++;
               img.style.visibility = "hidden";
               if (state.map.errors > 8 && state.map.ok === 0) fbNote.textContent = "底图加载失败，景点标点仍可查看";
@@ -4050,13 +4096,29 @@ window.DQH_DATA = (function () {
     if (!w || !h) return;
     var c = project(state.map.center.lat, state.map.center.lon, state.map.zoom);
     var ox = c.x - w / 2, oy = c.y - h / 2;
+    var mode = labelMode();
+    var z = state.map.zoom;
+    /* 自动模式：低缩放只给人文景点留名字，放大后逐步放开 */
+    var autoLimit = z >= 16 ? 99 : z >= 15 ? 6 : z >= 14 ? 3 : 0;
+    var shown = 0;
     $$(".marker", markerLayer).forEach(function (el) {
       var it = el._item;
       if (!it) return;
       var p = project(it.gcj[0], it.gcj[1], state.map.zoom);
       var x = p.x - ox, y = p.y - oy;
       el.style.transform = "translate3d(" + x + "px," + y + "px,0)";
-      el.style.display = el._hidden ? "none" : ((x < -80 || x > w + 80 || y < -100 || y > h + 100) ? "none" : "");
+      var off = (x < -80 || x > w + 80 || y < -100 || y > h + 100);
+      el.style.display = (el._hidden || off) ? "none" : "";
+      if (el._hidden || off) return;
+      var showLabel;
+      if (mode === "never") showLabel = false;
+      else if (mode === "always") showLabel = true;
+      else {
+        var isPoi = el.classList.contains("attraction");
+        showLabel = isPoi && it.cat !== "hotel" && shown < autoLimit;
+        if (showLabel) shown++;
+      }
+      el.classList.toggle("no-label", !showLabel);
     });
     if (state.guide && state.guide.pos) placeGuideDot(state.guide.pos);
   }
@@ -5293,6 +5355,9 @@ window.DQH_DATA = (function () {
     if (view === "culture") renderCulture();
     if (view === "stone") renderStone();
     if (view === "me" && window.DQH_AUTH) DQH_AUTH.render();
+    /* 轮播图按需加载：只有真正进到这一页才解码大图 */
+    var host = $("#view-" + view);
+    if (host) $$(".photo-hero", host).forEach(startHero);
   }
   $$("[data-view]").forEach(function (b) {
     b.addEventListener("click", function (e) { e.preventDefault(); go(b.dataset.view); });
@@ -5404,28 +5469,81 @@ window.DQH_DATA = (function () {
     window.addEventListener("resize", function () { applyWidth(panel.getBoundingClientRect().width || 334); });
   }
 
-  /* ---------- 图层 ---------- */
-  var LAYER_KEY = "dqh_layers_v1";
+  /* ---------- 图层 / 地图显示 ---------- */
+  var LAYER_KEY = "dqh_layers_v2";
+  var LAYER_DEF = [
+    { id: "attraction", zh: "人文古迹", en: "Heritage", color: "#bf5a3c", count: function () { return POIS.filter(function (p) { return p.cat === "attraction"; }).length; } },
+    { id: "fun", zh: "亲子玩乐", en: "Family", color: "#2f7d6a", count: function () { return POIS.filter(function (p) { return p.cat === "fun"; }).length; } },
+    { id: "hotel", zh: "住宿", en: "Stays", color: "#9a6b2f", count: function () { return POIS.filter(function (p) { return p.cat === "hotel"; }).length; } },
+    { id: "services", zh: "服务点", en: "Services", color: "#3c6f8d", count: function () { return SERVICES.length; } },
+    { id: "transport", zh: "交通点", en: "Transit", color: "#c6473a", count: function () { return TRANSPORT_ALL.length; } }
+  ];
+  function labelMode() { return state.labelMode || "auto"; }
+  function visibleCount() {
+    return $$(".marker", markerLayer).filter(function (el) { return !el._hidden; }).length;
+  }
+  function renderLayers() {
+    var EN = window.DQH_I18N && DQH_I18N.isEN();
+    var list = $("#lpList");
+    if (!list) return;
+    list.innerHTML = LAYER_DEF.map(function (d) {
+      var on = !!state.layers[d.id];
+      return '<label class="lp-row' + (on ? " on" : "") + '" data-layer="' + d.id + '">' +
+        '<span class="lp-dot" style="background:' + d.color + '"></span>' +
+        '<span class="lp-name">' + (EN ? d.en : d.zh) + '</span>' +
+        '<em>' + d.count() + '</em>' +
+        '<span class="lp-sw" aria-hidden="true"><i></i></span></label>';
+    }).join("");
+    $$("#lpList .lp-row").forEach(function (row) {
+      row.addEventListener("click", function (e) {
+        e.preventDefault();
+        var id = row.dataset.layer;
+        state.layers[id] = !state.layers[id];
+        saveLayers();
+        renderLayers();
+        applyFilters();
+      });
+    });
+    $$("#lpLabelSeg button").forEach(function (b) {
+      b.classList.toggle("active", b.dataset.label === labelMode());
+    });
+    var c = $("#lpCount");
+    if (c) c.textContent = (EN ? "Showing " : "当前显示 ") + visibleCount() + (EN ? " places" : " 个点位");
+  }
+  function saveLayers() {
+    try { localStorage.setItem(LAYER_KEY, JSON.stringify({ layers: state.layers, label: labelMode() })); } catch (e) {}
+  }
   function initLayers() {
     try {
       var saved = JSON.parse(localStorage.getItem(LAYER_KEY) || "null");
-      if (saved) Object.keys(state.layers).forEach(function (k) { if (k in saved) state.layers[k] = !!saved[k]; });
+      if (saved && saved.layers) Object.keys(state.layers).forEach(function (k) { if (k in saved.layers) state.layers[k] = !!saved.layers[k]; });
+      if (saved && saved.label) state.labelMode = saved.label;
     } catch (e) {}
+    renderLayers();
     var pop = $("#layersPop");
-    $$("#layersPop input[data-layer]").forEach(function (cb) {
-      cb.checked = !!state.layers[cb.dataset.layer];
-      cb.addEventListener("change", function () {
-        state.layers[cb.dataset.layer] = cb.checked;
-        try { localStorage.setItem(LAYER_KEY, JSON.stringify(state.layers)); } catch (e) {}
-        applyFilters();
-        if (cb.checked && cb.dataset.layer === "hotel") toast("已在地图上显示 5 处住宿");
-      });
-    });
     $("#layersBtn").addEventListener("click", function (e) {
       e.stopPropagation();
       pop.classList.toggle("show");
+      if (pop.classList.contains("show")) renderLayers();
     });
     $("#layersClose").addEventListener("click", function () { pop.classList.remove("show"); });
+    $$("#layersPop [data-lp]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var k = b.dataset.lp;
+        if (k === "all") LAYER_DEF.forEach(function (d) { state.layers[d.id] = true; });
+        else if (k === "none") LAYER_DEF.forEach(function (d) { state.layers[d.id] = false; });
+        else if (k === "heritage") {
+          LAYER_DEF.forEach(function (d) { state.layers[d.id] = d.id === "attraction"; });
+        }
+        saveLayers(); renderLayers(); applyFilters();
+      });
+    });
+    $$("#lpLabelSeg button").forEach(function (b) {
+      b.addEventListener("click", function () {
+        state.labelMode = b.dataset.label;
+        saveLayers(); renderLayers(); placeMarkers();
+      });
+    });
     document.addEventListener("click", function (e) {
       if (pop.classList.contains("show") && !pop.contains(e.target) && !e.target.closest("#layersBtn")) pop.classList.remove("show");
     });
@@ -5434,7 +5552,6 @@ window.DQH_DATA = (function () {
 
   function boot() {
     initPanelSize();
-    initHeroes();
     initLayers();
     buildChips();
     buildMarkers();
@@ -7054,6 +7171,7 @@ window.DQH_DATA = (function () {
       '    <button type="button" class="tour-skip"></button>' +
       '    <button type="button" class="tour-next"></button>' +
       '  </div>' +
+      '  <div class="tour-hint">左右滑动切换 · 上下滑动可滚动页面</div>' +
       '</div>';
     document.body.appendChild(root);
     hole = root.querySelector(".tour-hole");
@@ -7061,12 +7179,40 @@ window.DQH_DATA = (function () {
     hole.addEventListener("click", function (e) { e.stopPropagation(); });
     root.querySelector(".tour-skip").addEventListener("click", finish);
     root.querySelector(".tour-next").addEventListener("click", next);
+    tip.addEventListener("touchstart", function (e) { e.stopPropagation(); }, { passive: true });
+    tip.addEventListener("click", function (e) { e.stopPropagation(); });
     window.addEventListener("resize", function () { if (active) place(); });
+    window.addEventListener("scroll", function () { if (active) place(); }, { passive: true });
+
+    /* 手机：左右滑动切换步骤；上下滑动交给页面正常滚动 */
+    var tStart = null;
+    document.addEventListener("touchstart", function (e) {
+      if (!active || e.touches.length !== 1) { tStart = null; return; }
+      tStart = { x: e.touches[0].clientX, y: e.touches[0].clientY, t: Date.now() };
+    }, { passive: true });
+    document.addEventListener("touchend", function (e) {
+      if (!active || !tStart) return;
+      var t = e.changedTouches[0];
+      var dx = t.clientX - tStart.x, dy = t.clientY - tStart.y;
+      var dt = Date.now() - tStart.t;
+      tStart = null;
+      if (dt > 700) return;
+      if (Math.abs(dx) > 56 && Math.abs(dx) > Math.abs(dy) * 1.6) {
+        if (dx < 0) next(); else prev();
+      }
+    }, { passive: true });
+
     document.addEventListener("keydown", function (e) {
       if (!active) return;
       if (e.key === "Escape") finish();
       if (e.key === "Enter") next();
     });
+  }
+
+  function prev() {
+    if (idx <= 0) { finish(); return; }
+    idx--;
+    render();
   }
 
   function goView(v) {
@@ -7103,14 +7249,27 @@ window.DQH_DATA = (function () {
     tip.style.transform = "none";
     var tw = Math.min(360, window.innerWidth - 24);
     tip.style.width = tw + "px";
+    tip.style.maxHeight = Math.max(150, window.innerHeight - 24) + "px";
     tip.classList.remove("below", "above");
     var spaceBelow = window.innerHeight - (y + h);
-    var below = spaceBelow > 200 || spaceBelow > y;
+    var below = spaceBelow > 210 || spaceBelow > y;
     var left = Math.min(Math.max(12, x + w / 2 - tw / 2), window.innerWidth - tw - 12);
+    var th = tip.offsetHeight || 150;
+    var top;
+    if (below) top = Math.min(y + h + 14, window.innerHeight - th - 10);
+    else top = Math.max(10, y - 14 - th);
     tip.classList.add(below ? "below" : "above");
     tip.style.left = left + "px";
-    tip.style.top = (below ? y + h + 14 : Math.max(12, y - 14)) + "px";
-    if (!below) tip.style.transform = "translateY(-100%)";
+    tip.style.top = top + "px";
+  }
+
+  function reveal(el) {
+    if (!el) return;
+    try {
+      el.scrollIntoView({ block: "center", behavior: "smooth" });
+    } catch (e) {
+      el.scrollIntoView();
+    }
   }
 
   function render() {
@@ -7126,8 +7285,15 @@ window.DQH_DATA = (function () {
       ? (window.DQH_I18N ? DQH_I18N.t("tour.done") : "开始使用")
       : (window.DQH_I18N ? DQH_I18N.t("tour.next") : "下一步");
     goView(step.view);
-    setTimeout(place, 120);
-    setTimeout(place, 420);
+    var el = null;
+    String(step.sel).split(",").some(function (s) {
+      el = document.querySelector(s.trim());
+      return !!el;
+    });
+    if (el) reveal(el);
+    setTimeout(place, 140);
+    setTimeout(place, 460);
+    setTimeout(place, 900);
   }
 
   function next() {
@@ -7174,5 +7340,13 @@ window.DQH_DATA = (function () {
   });
 })();
 </script>
+  <script>
+    /* 离线可用 + 二次访问加速（file:// 下自动跳过） */
+    if ("serviceWorker" in navigator && location.protocol === "https:") {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("sw.js").catch(function () {});
+      });
+    }
+  </script>
 </body>
 </html>
